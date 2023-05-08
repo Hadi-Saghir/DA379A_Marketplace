@@ -33,8 +33,7 @@ public class ClientHandler implements Runnable {
         ) {
             Object inputObject;
             while ((inputObject = in.readObject()) != null) {
-                // Echo back the input to the client
-                out.writeObject("Server: " + inputObject.toString());
+                //call requestHandler
             }
             // Close the client socket
             client.getSocket().close();
