@@ -10,10 +10,18 @@ public class StartServer {
             ServerController serverController = new ServerController(port);
             Thread thread = new Thread(serverController);
             thread.start();
-            System.out.println("Press any Enter to kill the server");
             Scanner scanner = new Scanner(System.in);
+
+            try {
+                Thread.sleep(5000); // Pause for 1 second
+            } catch (InterruptedException e) {
+                // Handle the InterruptedException if necessary
+            }
+
+            System.out.println("Press Enter to kill the server");
             scanner.nextLine();
             serverController.stop();
+
         } catch (IOException e) {
             System.out.println("Error starting server: " + e.getMessage());
         }
