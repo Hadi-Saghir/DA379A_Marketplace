@@ -1,31 +1,29 @@
 package Handlers;
 
-import Shared.Request;
+import Shared.Notification;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * This class will is part of the application of the chain of responsibility software design pattern
  * The purpose of this class is to handles clients (incl. login /sign ups)*/
 public class ClientHandler implements Runnable {
+    private Client client;
+    private ConcurrentLinkedQueue<Notification> buffer;
 
-    private ClientBuffer clientBuffer;
-
-    public ClientHandler(ClientBuffer clientBuffer) {
-        this.clientBuffer = clientBuffer;
+    public ClientHandler(Client client) {
+        this.client = client;
+        this.buffer = new ConcurrentLinkedQueue<>();
     }
 
     @Override
     public void run() {
-        // Get a client from the buffer
-        Client client = null;
-        try {
-            client = clientBuffer.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         try (
                 // Open input and output streams to the client socket
                 ObjectOutputStream out = new ObjectOutputStream(client.getSocket().getOutputStream());
@@ -41,4 +39,6 @@ public class ClientHandler implements Runnable {
             System.out.println("Error handling client: " + e.getMessage());
         }
     }
+
+
 }
