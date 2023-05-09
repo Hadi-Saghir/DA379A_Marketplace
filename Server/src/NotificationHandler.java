@@ -2,6 +2,7 @@ import Handlers.Client;
 import Handlers.ClientHandler;
 import Shared.Notification;
 
+import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -11,10 +12,18 @@ import java.util.Observer;
  * This class will apply the observer software design pattern
  * The purpose of this class is to generate observe for events that trigger a notification*/
 public class NotificationHandler implements Observer {
-    private Map<Client, ClientHandler> outputStreams;
+    private Map<Client, ClientHandler> onlineClients;
 
-    public NotificationHandler(Map<Client, ClientHandler> outputStreams) {
-        this.outputStreams = outputStreams;
+    public NotificationHandler(Map<Client, ClientHandler> onlineClients) {
+
+    }
+
+    public void addNewClient(Client client, ClientHandler clientHandler){
+        onlineClients.put(client, clientHandler);
+    }
+
+    public void removeClient(Client client){
+        onlineClients.remove(client);
     }
 
     @Override
@@ -25,6 +34,9 @@ public class NotificationHandler implements Observer {
             String message = notification.getMessage();
 
             ObjectOutputStream outputStream;
+
+            outputStream = new ObjectOutputStream();
+
             synchronized (outputStreams) {
                 outputStream = outputStreams.get(clientId);
             }

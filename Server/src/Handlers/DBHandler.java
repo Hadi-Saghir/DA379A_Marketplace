@@ -20,7 +20,7 @@ public class DBHandler {
         return null;
     }
 
-    public boolean addProduct(User seller, String type, double price, int year, String color, String condition) {
+    public boolean addProduct(String seller, String type, double price, int year, String color, String condition) {
         return false;
     }
 
@@ -28,23 +28,23 @@ public class DBHandler {
         return null;
     }
 
-    public boolean buyProduct(User buyer, int product) {
+    public boolean sellProduct(int seller, int offerId) {
         return false;
     }
 
-    public boolean makeOffer(User seller, int offer) {
+    public boolean makeOffer(int buyer, int productId) {
         return false;
     }
 
-    public List<Product> getPurchases(User buyer, String startDate, String endDate) {
+    public List<Product> getPurchases(int buyer, String startDate, String endDate) {
         return null;
     }
 
-    public boolean registerInterest(User user, String type) {
+    public boolean registerInterest(int user, String type) {
         return false;
     }
 
-    public List<Product> getNotifications(User user) {
+    public List<Product> getNotifications(int user) {
         return null;
     }
 

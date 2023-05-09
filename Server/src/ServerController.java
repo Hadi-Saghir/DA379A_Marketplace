@@ -11,7 +11,8 @@ public class ServerController implements Runnable{
 
     private ServerSocket serverSocket;
     private ClientBuffer clientBuffer;
-
+    private DBHandler dbHandler;
+    private RequestHandler requestHandler;
     private LinkedHashMap<Client, ClientHandler> clientHandlers;
     private ExecutorService executorService;
     private AtomicBoolean running;
@@ -20,6 +21,8 @@ public class ServerController implements Runnable{
         System.out.println("Server starting.");
         serverSocket = new ServerSocket(port);
         clientBuffer = new ClientBuffer();
+        dbHandler = new DBHandler();
+        requestHandler = new RequestHandler(dbHandler);
         // Create a thread pool with a maximum of 10 threads
         executorService = Executors.newFixedThreadPool(10);
         running = new AtomicBoolean(true);
@@ -43,7 +46,7 @@ public class ServerController implements Runnable{
                 Client client = new Client(socket);
                 clientBuffer.add(client);
                 // Submit a task to the thread pool to handle the client request
-                ClientHandler clientHandler = new ClientHandler(client);
+                ClientHandler clientHandler = new ClientHandler(client, requestHandler);
                 executorService.submit(clientHandler);
             } catch (IOException e) {
                 System.out.println("Error accepting client connection: " + e.getMessage());

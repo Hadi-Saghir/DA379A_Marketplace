@@ -12,7 +12,7 @@ public class Request implements Serializable {
         LOGIN,
         ADD_PRODUCT,
         SEARCH_PRODUCT,
-        BUY_PRODUCT,
+        SELL_PRODUCT,
         Make_Offer,
         REGISTER_INTEREST,
         GET_PURCHASE_HISTORY
@@ -24,14 +24,6 @@ public class Request implements Serializable {
     public Request(RequestType type) {
         this.type = type;
     }
-
-    public static final int REGISTER = 1;
-    public static final int LOGIN = 2;
-    public static final int ADD_PRODUCT = 3;
-    public static final int SEARCH_PRODUCT = 4;
-    public static final int BUY_PRODUCT = 5;
-    public static final int REGISTER_INTEREST = 6;
-    public static final int GET_PURCHASE_HISTORY = 7;
 
 
 
@@ -58,7 +50,6 @@ public class Request implements Serializable {
 
     // buy product data
     private int productId;
-    private int sellerId;
 
     // buy product data
     private int offerId;
@@ -114,14 +105,14 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request buyProduct(int productId, int sellerId) {
-        Request request = new Request(RequestType.BUY_PRODUCT);
-        request.setProductId(productId);
-        request.setSellerId(sellerId);
+    public static Request sellProduct(int offerID, int sellerId) {
+        Request request = new Request(RequestType.SELL_PRODUCT);
+        request.setOfferId(offerID);
+        request.setUserId(sellerId);
         return request;
     }
 
-    public static Request offer(int offerId, int buyerId) {
+    public static Request makeOffer(int offerId, int buyerId) {
         Request request = new Request(RequestType.Make_Offer);
         request.setOfferId(offerId);
         request.setUserId(buyerId);
@@ -269,14 +260,6 @@ public class Request implements Serializable {
 
     public void setProductId(int productId) {
         this.productId = productId;
-    }
-
-    public int getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(int sellerId) {
-        this.sellerId = sellerId;
     }
 
     public String getInterestedProductType() {
