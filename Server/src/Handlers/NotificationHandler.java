@@ -37,7 +37,7 @@ public class NotificationHandler{
         public void update(Observable o, Object arg) {
             if (arg instanceof Notification) {
                 Notification notification = (Notification) arg;
-                LinkedHashMap<Client, ClientHandler> onlineClients = ServerController.getOnlineClients();
+                LinkedHashMap<Client, ClientHandler> onlineClients = ClientHandler.getOnlineClients();
                 Boolean online = false;
                 for(Client client: onlineClients.keySet()){
                     if(client.getCurrClientId().equals(notification.getClientId())){

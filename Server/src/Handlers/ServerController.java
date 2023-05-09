@@ -14,7 +14,6 @@ public class ServerController implements Runnable{
     private ServerSocket serverSocket;
     private DBHandler dbHandler;
     private RequestHandler requestHandler;
-    private static LinkedHashMap<Client, ClientHandler> onlineClients;
     private ExecutorService executorService;
     private AtomicBoolean running;
 
@@ -54,17 +53,5 @@ public class ServerController implements Runnable{
                 System.out.println("Error accepting client connection: " + e.getMessage());
             }
         }
-    }
-
-    public synchronized static void addOnlineClient(Client client, ClientHandler clientHandler){
-        onlineClients.put(client, clientHandler);
-    }
-
-    public synchronized static void removeOnlineClient(Client client){
-        onlineClients.remove(client);
-    }
-
-    public synchronized static LinkedHashMap<Client, ClientHandler> getOnlineClients(){
-        return onlineClients;
     }
 }

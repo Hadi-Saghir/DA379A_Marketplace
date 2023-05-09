@@ -21,12 +21,14 @@ public class Client {
     }
 
     //Should solely be used when user logs on ().
-    public void loggedIn(String userId) {
+    public String loggedIn(String userId) {
         this.currClientId = userId;
+        return this.currClientId;
     }
 
     //Should solely be used when user logs out.
-    public void loggedOut() {
+    public String loggedOut() {
         this.currClientId = String.valueOf(clientId++);
+        return this.currClientId;
     }
 }

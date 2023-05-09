@@ -1,6 +1,7 @@
 package Handlers;
 
 
+import Shared.Notification;
 import Shared.Product;
 import Shared.User;
 
@@ -12,12 +13,14 @@ import java.util.List;
  * The purpose of this class is to handles queries to the database*/
 public class DBHandler {
 
-    public boolean registerUser(String firstName, String lastName, String dob, String email, String username, String password) {
-        return false;
+    public String registerUser(String firstName, String lastName, String dob, String email, String username, String password) {
+        String res = "userId";
+        return res;
     }
 
-    public User loginUser(String username, String password) {
-        return null;
+    public String loginUser(String username, String password) {
+        String res = "userId";
+        return res;
     }
 
     public boolean addProduct(String seller, String type, double price, int year, String color, String condition) {
@@ -44,7 +47,7 @@ public class DBHandler {
         return false;
     }
 
-    public List<Product> getNotifications(int user) {
+    public List<Notification> getNotifications(int user) {
         return null;
     }
 
