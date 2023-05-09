@@ -48,4 +48,8 @@ public class DBHandler {
         return null;
     }
 
+    public boolean addNotification(String user,String message){
+        return false;
+    }
+
 }

@@ -5,18 +5,28 @@ import java.net.Socket;
 public class Client {
     private Socket socket;
     private static int clientId = 0;
-    private int currClientId;
+    private String currClientId;
 
     public Client(Socket socket) {
         this.socket = socket;
-        currClientId = clientId++;
+        currClientId = String.valueOf(clientId++);
     }
 
     public Socket getSocket() {
         return socket;
     }
 
-    public int getCurrClientId() {
+    public String getCurrClientId() {
         return currClientId;
+    }
+
+    //Should solely be used when user logs on ().
+    public void loggedIn(String userId) {
+        this.currClientId = userId;
+    }
+
+    //Should solely be used when user logs out.
+    public void loggedOut() {
+        this.currClientId = String.valueOf(clientId++);
     }
 }

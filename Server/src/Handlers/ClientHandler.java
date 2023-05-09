@@ -6,17 +6,14 @@ import Shared.Request;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+
+
 
 /**
  * This class will is part of the application of the chain of responsibility software design pattern
  * The purpose of this class is to handles clients (incl. login /sign ups)*/
 public class ClientHandler implements Runnable {
     private Client client;
-    private ConcurrentLinkedQueue<Notification> buffer;
     private RequestHandler requestHandler;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -24,7 +21,6 @@ public class ClientHandler implements Runnable {
     public ClientHandler(Client client, RequestHandler requestHandler) {
         this.client = client;
         this.requestHandler = requestHandler;
-        this.buffer = new ConcurrentLinkedQueue<>();
         try {
             out = new ObjectOutputStream(client.getSocket().getOutputStream());
             in = new ObjectInputStream(client.getSocket().getInputStream());

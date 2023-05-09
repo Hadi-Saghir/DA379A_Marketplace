@@ -1,3 +1,5 @@
+package Handlers;
+
 import Handlers.*;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -10,27 +12,28 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ServerController implements Runnable{
 
     private ServerSocket serverSocket;
-    private ClientBuffer clientBuffer;
     private DBHandler dbHandler;
     private RequestHandler requestHandler;
-    private LinkedHashMap<Client, ClientHandler> clientHandlers;
+    private static LinkedHashMap<Client, ClientHandler> onlineClients;
     private ExecutorService executorService;
     private AtomicBoolean running;
 
     public ServerController(int port) throws IOException {
-        System.out.println("Server starting.");
+        System.out.println("Server starting");
+        //Server
         serverSocket = new ServerSocket(port);
-        clientBuffer = new ClientBuffer();
+        running = new AtomicBoolean(true);
+
+        // Client thread pool and requestHandler
+        executorService = Executors.newFixedThreadPool(10);
         dbHandler = new DBHandler();
         requestHandler = new RequestHandler(dbHandler);
-        // Create a thread pool with a maximum of 10 threads
-        executorService = Executors.newFixedThreadPool(10);
-        running = new AtomicBoolean(true);
 
     }
 
+    //kill switch
     public void stop() throws IOException {
-        System.out.println("Server stopping.");
+        System.out.println("Server stopping");
         running.set(false);
         executorService.shutdown();
         serverSocket.close();
@@ -38,13 +41,12 @@ public class ServerController implements Runnable{
 
     @Override
     public void run() {
-        System.out.println("Server started.");
+        System.out.println("Server started");
         while (running.get()) {
             try {
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected.");
                 Client client = new Client(socket);
-                clientBuffer.add(client);
                 // Submit a task to the thread pool to handle the client request
                 ClientHandler clientHandler = new ClientHandler(client, requestHandler);
                 executorService.submit(clientHandler);
@@ -52,5 +54,17 @@ public class ServerController implements Runnable{
                 System.out.println("Error accepting client connection: " + e.getMessage());
             }
         }
+    }
+
+    public synchronized static void addOnlineClient(Client client, ClientHandler clientHandler){
+        onlineClients.put(client, clientHandler);
+    }
+
+    public synchronized static void removeOnlineClient(Client client){
+        onlineClients.remove(client);
+    }
+
+    public synchronized static LinkedHashMap<Client, ClientHandler> getOnlineClients(){
+        return onlineClients;
     }
 }

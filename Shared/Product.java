@@ -2,11 +2,11 @@ package Shared;
 
 public class Product {
     private ProductType type;
+    private ProductState state;
     private double price;
     private int yearOfProduction;
     private String color;
     private String condition;
-    private boolean isSold;
 
     private enum ProductType{
         BOOK,
@@ -20,14 +20,20 @@ public class Product {
         OTHER
     }
 
+    private enum ProductState {
+        AVAILABLE,
+        PENDING,
+        SOLD
+    }
 
-    public Product(ProductType type, double price, int yearOfProduction, String color, String condition) {
+
+    public Product(ProductType type, double price, int yearOfProduction, String color, String condition, ProductState state) {
         this.type = type;
         this.price = price;
         this.yearOfProduction = yearOfProduction;
         this.color = color;
         this.condition = condition;
-        this.isSold = false;
+        this.state = state;
     }
 
     // Getters and setters
@@ -72,11 +78,11 @@ public class Product {
         this.condition = condition;
     }
 
-    public boolean isSold() {
-        return isSold;
+    public ProductState getState() {
+        return state;
     }
 
-    public void setSold(boolean sold) {
-        isSold = sold;
+    public void setState(ProductState state) {
+        this.state = state;
     }
 }

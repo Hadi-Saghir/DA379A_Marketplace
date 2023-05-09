@@ -113,4 +113,8 @@ public class RequestHandler {
         int user = request.getUserId();
         return dbHandler.getNotifications(user);
     }
+
+    public synchronized boolean addNotifications(String clientId, String message) {
+        return dbHandler.addNotification(clientId, message);
+    }
 }
