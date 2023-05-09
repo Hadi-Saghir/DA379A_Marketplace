@@ -8,7 +8,7 @@ public class Product {
     private String condition;
     private boolean isSold;
 
-    public enum ProductType{
+    private enum ProductType{
         BOOK,
         ELECTRONICS,
         CLOTHING,
@@ -19,6 +19,8 @@ public class Product {
         FOOD,
         OTHER
     }
+
+
     public Product(ProductType type, double price, int yearOfProduction, String color, String condition) {
         this.type = type;
         this.price = price;
