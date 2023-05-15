@@ -1,9 +1,6 @@
 package Handlers;
 
 
-import shared.Notification;
-import shared.Product;
-
 import java.util.List;
 
 
@@ -11,7 +8,7 @@ import java.util.List;
  * This class will is part of the application of the chain of responsibility software design pattern
  * The purpose of this class is to handles queries to the database*/
 public class DBHandler {
-
+/*
     public String registerUser(String firstName, String lastName, String dob, String email, String username, String password) {
         String res = "userId";
         return res;
@@ -53,5 +50,5 @@ public class DBHandler {
     public boolean addNotification(String user,String message){
         return false;
     }
-
+    */
 }

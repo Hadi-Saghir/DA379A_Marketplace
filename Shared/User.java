@@ -3,6 +3,7 @@ package Shared;
 import java.time.LocalDate;
 
 public class User {
+    private static final long serialVersionUID = 5L;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;

@@ -1,6 +1,9 @@
 package Shared;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
+    private static final long serialVersionUID = 2L;
     private ProductType type;
     private ProductState state;
     private double price;
@@ -8,7 +11,7 @@ public class Product {
     private String color;
     private String condition;
 
-    private enum ProductType{
+    public enum ProductType{
         BOOK,
         ELECTRONICS,
         CLOTHING,
@@ -20,7 +23,7 @@ public class Product {
         OTHER
     }
 
-    private enum ProductState {
+    public enum ProductState {
         AVAILABLE,
         PENDING,
         SOLD

@@ -12,16 +12,43 @@ import java.util.*;
  * The purpose of this class is to generate observe for events that trigger a notification*/
 public class NotificationHandler extends Handler{
     private NotificationQueue notificationQueue;
+    private Database db;
     private Handler nextHandler;
     public NotificationHandler(Database db, Handler nextHandler) {
         super(nextHandler);
+        this.db = db;
         notificationQueue = new NotificationQueue();
         notificationQueue.addObserver(new NotificationObserver());
     }
 
     @Override
     protected void handleRequest(Request request, ClientHandler clientHandler) {
+        Request.RequestType requestType = request.getType();
+        String msg = "invalid";
+        int concernedUsers[] = null;
 
+        switch (requestType) {
+            case ADD_PRODUCT:
+                concernedUsers = request.getConcernedUserId();
+                msg = "New product you might be interested in!";
+                break;
+            case SELL_PRODUCT:
+                concernedUsers = request.getConcernedUserId();
+                msg = "Seller has accepted your offer!!";
+                break;
+            case Make_Offer:
+                concernedUsers = request.getConcernedUserId();
+                msg = "New offer!!";
+                break;
+        }
+
+        if(concernedUsers != null) {
+            for (int clientId: concernedUsers
+                 ) {
+                notificationQueue.addNotification(new Notification(clientId, msg));
+            }
+
+        }
     }
 
 

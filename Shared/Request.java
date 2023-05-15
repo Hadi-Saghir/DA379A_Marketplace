@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Request implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3L;
 
     // request types
     public enum RequestType {
@@ -25,6 +25,8 @@ public class Request implements Serializable {
         this.type = type;
     }
 
+    //Additional information
+    private int[] concernedUserId; // this id help identify which user we need to notify
 
 
     // user data
@@ -112,10 +114,11 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request makeOffer(int offerId, int buyerId) {
+    public static Request makeOffer(int productId, int buyerId, double price) {
         Request request = new Request(RequestType.Make_Offer);
-        request.setOfferId(offerId);
+        request.setProductId(productId);
         request.setUserId(buyerId);
+        request.setPrice(price);
         return request;
     }
 
@@ -312,6 +315,14 @@ public class Request implements Serializable {
 
     public void setType(RequestType type) {
         this.type = type;
+    }
+
+    public int[] getConcernedUserId() {
+        return concernedUserId;
+    }
+
+    public void setConcernedUserId(int[] concernedUserId) {
+        this.concernedUserId = concernedUserId;
     }
 
     public RequestType getType() {

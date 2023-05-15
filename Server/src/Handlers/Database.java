@@ -5,8 +5,7 @@ import Shared.Notification;
 import Shared.Product;
 import Shared.Product.ProductType;
 import Shared.Product.ProductState;
-import Shared.Request;
-import Shared.User;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 
 /**
  * This class will is part of the application of the chain of responsibility software design pattern
- * The purpose of this class is to handles queries to the database
+ * The purpose of this class is to handle queries to the database
  */
 public class Database {
     private static final String DB_URL = "jdbc:mysql://aws.connect.psdb.cloud/miniproject?sslMode=VERIFY_IDENTITY";
