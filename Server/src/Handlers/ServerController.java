@@ -1,10 +1,8 @@
 package Handlers;
 
-import Handlers.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -12,8 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ServerController implements Runnable{
 
     private ServerSocket serverSocket;
-    private DBHandler dbHandler;
-    private RequestHandler requestHandler;
+    private Database db;
     private ExecutorService executorService;
     private AtomicBoolean running;
 
@@ -22,11 +19,7 @@ public class ServerController implements Runnable{
         //Server
         serverSocket = new ServerSocket(port);
         running = new AtomicBoolean(true);
-
-        // Client thread pool and requestHandler
         executorService = Executors.newFixedThreadPool(10);
-        dbHandler = new DBHandler();
-        requestHandler = new RequestHandler(dbHandler);
 
     }
 
@@ -47,7 +40,9 @@ public class ServerController implements Runnable{
                 System.out.println("New client connected.");
                 Client client = new Client(socket);
                 // Submit a task to the thread pool to handle the client request
-                ClientHandler clientHandler = new ClientHandler(client, requestHandler);
+                ClientHandler clientHandler = new ClientHandler(client);
+                RequestHandler requestHandler = new RequestHandler(db,null);
+                AuthenticationHandler authenticationHandler = new AuthenticationHandler(db,requestHandler);
                 executorService.submit(clientHandler);
             } catch (IOException e) {
                 System.out.println("Error accepting client connection: " + e.getMessage());
