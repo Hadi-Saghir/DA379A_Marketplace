@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 /**
  * This class will apply the factory software design pattern
