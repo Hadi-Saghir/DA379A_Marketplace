@@ -1,4 +1,4 @@
-package shared;
+package Shared;
 
 import java.io.Serializable;
 import java.time.LocalDate;

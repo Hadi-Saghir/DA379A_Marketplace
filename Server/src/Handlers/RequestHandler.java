@@ -1,8 +1,9 @@
 package Handlers;
 
-import shared.Notification;
-import shared.Product;
-import shared.Request;
+import Shared.Request;
+import Shared.Notification;
+import Shared.Product;
+import Shared.Request;
 
 import java.util.List;
 
@@ -25,31 +26,31 @@ public class RequestHandler extends Handler {
 
 
     @Override
-    public void handleRequest(Request request, ClientHandler requester) {
+    public void handleRequest(Request request, ClientHandler clientHandler) {
         switch (request.getType().toString()) {
             case "REGISTER":
-                registerUser(request, requester);
+                registerUser(request, clientHandler);
                 break;
             case "LOGIN":
-                loginUser(request, requester);
+                loginUser(request, clientHandler);
                 break;
             case "ADD_PRODUCT":
-                addProduct(request, requester);
+                addProduct(request, clientHandler);
                 break;
             case "SEARCH_PRODUCT":
-                searchProducts(request, requester);
+                searchProducts(request, clientHandler);
                 break;
             case "SELL_PRODUCT":
-                sellProduct(request, requester);
+                sellProduct(request, clientHandler);
                 break;
             case "MAKE_OFFER":
-                makeOffer(request, requester);
+                makeOffer(request, clientHandler);
                 break;
             case "REGISTER_INTEREST":
-                registerInterest(request, requester);
+                registerInterest(request, clientHandler);
                 break;
             case "GET_PURCHASE_HISTORY":
-                getPurchases(request, requester);
+                getPurchases(request, clientHandler);
                 break;
             default:
                 break;

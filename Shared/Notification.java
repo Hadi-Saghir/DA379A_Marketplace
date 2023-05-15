@@ -1,4 +1,4 @@
-package shared;
+package Shared;
 
 public class Notification {
     private String clientId;

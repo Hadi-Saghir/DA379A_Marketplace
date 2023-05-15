@@ -194,7 +194,6 @@ public class Database {
             System.out.println(p.getType());
 
         }
-
          */
     }
 
