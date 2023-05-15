@@ -1,6 +1,7 @@
 package Handlers;
 
 import Shared.Notification;
+import Shared.Request;
 
 import java.io.IOException;
 import java.util.*;
@@ -9,12 +10,18 @@ import java.util.*;
 /**
  * This class will apply the observer software design pattern
  * The purpose of this class is to generate observe for events that trigger a notification*/
-public class NotificationHandler{
+public class NotificationHandler extends Handler{
     private NotificationQueue notificationQueue;
-
-    public NotificationHandler() {
+    private Handler nextHandler;
+    public NotificationHandler(Database db, Handler nextHandler) {
+        super(nextHandler);
         notificationQueue = new NotificationQueue();
         notificationQueue.addObserver(new NotificationObserver());
+    }
+
+    @Override
+    protected void handleRequest(Request request, ClientHandler clientHandler) {
+
     }
 
 

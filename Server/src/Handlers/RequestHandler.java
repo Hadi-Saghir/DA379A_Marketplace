@@ -10,15 +10,22 @@ import java.util.List;
  * This class will is part of the application of the chain of responsibility software design pattern
  * The purpose of this class is to handle requests of purchase*/
 
-public class RequestHandler {
+public class RequestHandler extends Handler {
 
-    private DBHandler dbHandler;
-
-    public RequestHandler(DBHandler dbHandler){
-        this.dbHandler = dbHandler;
+    private Database database;
+    protected Handler nextHandler;
+    public RequestHandler(Database database, Handler nextHandler){
+        super(nextHandler);
+        this.database = database;
     }
 
-    public synchronized void handleRequest(Request request, ClientHandler requester) {
+    public void setNextHandler(Handler nextHandler) {
+        this.nextHandler = nextHandler;
+    }
+
+
+    @Override
+    public void handleRequest(Request request, ClientHandler requester) {
         switch (request.getType().toString()) {
             case "REGISTER":
                 registerUser(request, requester);
@@ -58,21 +65,13 @@ public class RequestHandler {
         String username = request.getUsername();
         String password = request.getPassword();
 
-        String res = dbHandler.registerUser(firstName, lastName, dob, email, username, password);
+        String res = database.registerUser(firstName, lastName, dob, email, username, password);
         if(!res.equals("userId")){
             requester.loggedIn(res);
         }
-        return res;
-    }
 
-    public String loginUser(Request request, ClientHandler requester) {
-        String username = request.getUsername();
-        String password = request.getPassword();
-        String res = dbHandler.loginUser(username, password);
-        if(!res.equals("userId")){
-            requester.loggedIn(res);
-        }
-        return res;
+
+        return null; //Fixa senare - Azam
     }
 
     public boolean addProduct(Request request, ClientHandler requester) {
@@ -82,7 +81,17 @@ public class RequestHandler {
         int year = request.getYearOfProduction();
         String color = request.getColor();
         String condition = request.getCondition();
-        return dbHandler.addProduct(seller, type, price, year, color, condition);
+        return database.addProduct(seller, type, price, year, color, condition);
+    }
+
+    public String loginUser(Request request, ClientHandler requester) {
+        String username = request.getUsername();
+        String password = request.getPassword();
+        String res = database.loginUser(username, password);
+        if(!res.equals("userId")){
+            requester.loggedIn(res);
+        }
+        return res;
     }
 
     public List<Product> searchProducts(Request request, ClientHandler requester) {
@@ -90,40 +99,43 @@ public class RequestHandler {
         double minPrice = request.getMinPrice();
         double maxPrice = request.getMaxPrice();
         String condition = request.getCondition();
-        return dbHandler.searchProducts(type, minPrice, maxPrice, condition);
+        return database.searchProducts(type, minPrice, maxPrice, condition);
     }
 
     public boolean sellProduct(Request request, ClientHandler requester) {
         int seller = request.getUserId();
         int offerId = request.getOfferId();
-        return dbHandler.sellProduct(seller, offerId);
+        return database.sellProduct(seller, offerId);
     }
 
     public boolean makeOffer(Request request, ClientHandler requester) {
         int seller = request.getUserId();
         int offer = request.getOfferId();
-        return dbHandler.makeOffer(seller, offer);
+        return database.makeOffer(seller, offer);
     }
 
     public List<Product> getPurchases(Request request, ClientHandler requester) {
         int buyer = request.getUserId();
         String startDate = request.getStartDate().toString();
         String endDate = request.getEndDate().toString();
-        return dbHandler.getPurchases(buyer, startDate, endDate);
+        return database.getPurchases(buyer, startDate, endDate);
     }
 
     public boolean registerInterest(Request request, ClientHandler requester) {
         int buyer = request.getUserId();
         String type = request.getType().toString();
-        return dbHandler.registerInterest(buyer, type);
+        return database.registerInterest(buyer, type);
     }
 
     public List<Notification> getNotifications(Request request) {
         int user = request.getUserId();
-        return dbHandler.getNotifications(user);
+        return database.getNotifications(user);
     }
 
     public synchronized boolean addNotifications(String clientId, String message) {
-        return dbHandler.addNotification(clientId, message);
+        return database.addNotification(clientId, message);
     }
+
+
+
 }

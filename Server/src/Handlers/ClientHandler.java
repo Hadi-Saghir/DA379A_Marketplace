@@ -20,10 +20,10 @@ public class ClientHandler implements Runnable {
     private RequestHandler requestHandler;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private Handler handler;
 
-    public ClientHandler(Client client, RequestHandler requestHandler) {
+    public ClientHandler(Client client) {
         this.client = client;
-        this.requestHandler = requestHandler;
         try {
             out = new ObjectOutputStream(client.getSocket().getOutputStream());
             in = new ObjectInputStream(client.getSocket().getInputStream());
@@ -40,8 +40,7 @@ public class ClientHandler implements Runnable {
             Object inputObject;
             while ((inputObject = in.readObject()) != null) {
                 if(inputObject instanceof Request){
-                     requestHandler.handleRequest((Request) inputObject, this);
-
+                    handler.handle((Request) inputObject, this);
                      //Must add a response from the requestHandler. Response will be sent to the client
                 }
                 out.writeObject(new Object());
