@@ -1,9 +1,9 @@
-import controller.Controller;
+import controller.MainController;
 
 public class StartClient {
 
     public static void main(String[] args) {
-        Controller controller = new Controller();
-        controller.launch();
+        MainController mainController = new MainController();
+        mainController.launch();
     }
 }

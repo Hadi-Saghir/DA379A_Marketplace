@@ -1,40 +1,33 @@
 package view;
 
-import controller.Controller;
 
-import java.util.Scanner;
+import controller.MainController;
 
 public class Menu {
+    private final MainController mainController;
 
-    private Controller controller;
-    private boolean exitProgram;
-    private Scanner input;
-    public Menu(Controller controller){
-        this.controller = controller;
-        exitProgram = false;
-        input = new Scanner(System.in);
-
-        String choice = "";
-
-        do{
-            choice = input.nextLine();
-
-            switch (choice){
-                case "1":
-                    searchProduct();
-                    break;
-                default:
-                    System.out.println("Enter number choice as number between 0 and 10");
-                    break;
-            }
-
-        } while(!exitProgram);
+    public Menu(MainController mainController) {
+        this.mainController = mainController;
     }
 
-    private void searchProduct() {
-        String searchTerm = "";
-        controller.searchProduct();
+    public void showLoginMenu() {
+        System.out.println("Welcome to the Warehouse Management System");
+        System.out.println("Please select an option:");
+        System.out.println("0. Exit");
+        System.out.println("1. Login");
+        System.out.println("2. Create new user");
+        System.out.print("Enter option: ");
+    }
+
+    public void showMainMenu() {
 
     }
 
+    public void showMessage(String message) {
+        System.out.println(message);
+    }
+
+    public void showError(String error) {
+        System.err.println(error);
+    }
 }
