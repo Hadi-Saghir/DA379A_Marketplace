@@ -1,6 +1,6 @@
 package Handlers;
 
-import Shared.Notification;
+import shared.Notification;
 
 import java.io.IOException;
 import java.util.*;

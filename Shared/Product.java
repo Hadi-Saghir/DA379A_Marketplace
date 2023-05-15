@@ -1,4 +1,4 @@
-package Shared;
+package shared;
 
 public class Product {
     private ProductType type;

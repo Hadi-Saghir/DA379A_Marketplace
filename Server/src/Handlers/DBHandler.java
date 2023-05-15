@@ -1,9 +1,8 @@
 package Handlers;
 
 
-import Shared.Notification;
-import Shared.Product;
-import Shared.User;
+import shared.Notification;
+import shared.Product;
 
 import java.util.List;
 

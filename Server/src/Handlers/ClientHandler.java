@@ -1,7 +1,6 @@
 package Handlers;
 
-import Shared.Notification;
-import Shared.Request;
+import shared.Request;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

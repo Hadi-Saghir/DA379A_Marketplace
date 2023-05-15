@@ -1,4 +1,4 @@
-package Shared;
+package shared;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,8 +12,7 @@ public class Request implements Serializable {
         LOGIN,
         ADD_PRODUCT,
         SEARCH_PRODUCT,
-        SELL_PRODUCT
-        ,
+        SELL_PRODUCT,
         Make_Offer,
         REGISTER_INTEREST,
         GET_PURCHASE_HISTORY

@@ -1,7 +1,6 @@
-package Shared;
+package shared;
 
 import java.time.LocalDate;
-import java.util.Collection;
 
 public class User {
     private String firstName;
