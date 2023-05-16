@@ -117,13 +117,12 @@ public class Database {
             pstmt.setDouble(2, minPrice);
             pstmt.setDouble(3, maxPrice);
             pstmt.setString(4, condition);
-
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Product product = new Product(
                         rs.getInt("productid"),
-                        ProductType.valueOf(rs.getString("type")),
                         rs.getString("username"),
+                        ProductType.valueOf(rs.getString("type")),
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
@@ -140,8 +139,7 @@ public class Database {
     }
 
 
-
-    public boolean checkLogin(String username, String password) {
+        public boolean checkLogin(String username, String password) {
         boolean isValid = false;
         String query = "SELECT COUNT(*) FROM users WHERE username = ? AND password = ?";
         try (Connection conn = getConnection();
