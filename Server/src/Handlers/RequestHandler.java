@@ -103,7 +103,7 @@ public class RequestHandler extends Handler {
         return database.searchProducts(type, minPrice, maxPrice, condition);
     }
 
-    public boolean sellProduct(Request request, ClientHandler requester) {
+    public ResponseType sellProduct(Request request, ClientHandler requester) {
         int seller = request.getUserId();
         int offerId = request.getOfferId();
         return database.sellProduct(seller, offerId);

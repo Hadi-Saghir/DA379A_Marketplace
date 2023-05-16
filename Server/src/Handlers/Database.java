@@ -159,8 +159,18 @@ public class Database {
     }
 
 
-    public boolean sellProduct(int seller, int offerId) {
-        return false;
+    public ResponseType sellProduct(int seller, int offerId) {
+        String updateStatement = "UPDATE product SET state = 'SOLD' WHERE username = ? AND offerId = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
+            pstmt.setInt(1, seller);
+            pstmt.setInt(2, offerId);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0 ? ResponseType.SUCCESS : ResponseType.FAILURE;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ResponseType.FAILURE;
+        }
     }
 
     public ResponseType makeOffer(int buyer, int productId) {
@@ -193,6 +203,7 @@ public class Database {
     public boolean addNotification(String user, String message) {
         return false;
     }
+
 
     public static void main(String[] args) {
 
