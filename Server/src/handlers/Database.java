@@ -1,10 +1,10 @@
-package Handlers;
+package handlers;
 
 
-import Shared.Notification;
-import Shared.Product;
-import Shared.Product.ProductType;
-import Shared.Product.ProductState;
+import shared.Notification;
+import shared.Product;
+import shared.Product.ProductType;
+import shared.Product.ProductState;
 
 import Shared.Response.ResponseType;
 

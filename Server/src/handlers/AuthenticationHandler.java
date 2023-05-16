@@ -1,6 +1,6 @@
-package Handlers;
+package handlers;
 
-import Shared.Request;
+import shared.Request;
 
 public class AuthenticationHandler extends Handler {
 

@@ -1,4 +1,4 @@
-package Shared;
+package shared;
 
 import java.time.LocalDate;
 
@@ -10,6 +10,8 @@ public class User {
     private String emailAddress;
     private String username;
     private String password;
+
+    public User() {}
 
     public User(String firstName, String lastName, LocalDate dateOfBirth, String emailAddress, String username, String password) {
         this.firstName = firstName;

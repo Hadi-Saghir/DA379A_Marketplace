@@ -1,7 +1,6 @@
-package Handlers;
+package handlers;
 
-import Shared.Request;
-import Shared.User;
+import shared.Request;
 
 public abstract class Handler {
     private Handler nextHandler;
