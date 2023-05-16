@@ -1,9 +1,9 @@
 package Handlers;
 
-import Shared.Request;
 import Shared.Notification;
 import Shared.Product;
 import Shared.Request;
+import Shared.Response.ResponseType;
 
 import java.util.List;
 
@@ -26,31 +26,31 @@ public class RequestHandler extends Handler {
 
 
     @Override
-    public void handleRequest(Request request, ClientHandler clientHandler) {
+    public void handleRequest(Request request, ClientHandler requester) {
         switch (request.getType().toString()) {
             case "REGISTER":
-                registerUser(request, clientHandler);
+                registerUser(request, requester);
                 break;
             case "LOGIN":
-                loginUser(request, clientHandler);
+                loginUser(request, requester);
                 break;
             case "ADD_PRODUCT":
-                addProduct(request, clientHandler);
+                addProduct(request, requester);
                 break;
             case "SEARCH_PRODUCT":
-                searchProducts(request, clientHandler);
+                searchProducts(request, requester);
                 break;
             case "SELL_PRODUCT":
-                sellProduct(request, clientHandler);
+                sellProduct(request, requester);
                 break;
             case "MAKE_OFFER":
-                makeOffer(request, clientHandler);
+                makeOffer(request, requester);
                 break;
             case "REGISTER_INTEREST":
-                registerInterest(request, clientHandler);
+                registerInterest(request, requester);
                 break;
             case "GET_PURCHASE_HISTORY":
-                getPurchases(request, clientHandler);
+                getPurchases(request, requester);
                 break;
             default:
                 break;
@@ -58,7 +58,7 @@ public class RequestHandler extends Handler {
     }
 
 
-    public String registerUser(Request request, ClientHandler requester) {
+    public ResponseType registerUser(Request request, ClientHandler requester) {
         String firstName = request.getFirstName();
         String lastName = request.getLastName();
         String dob = request.getDateOfBirth().toString();
@@ -66,16 +66,15 @@ public class RequestHandler extends Handler {
         String username = request.getUsername();
         String password = request.getPassword();
 
-        String res = database.registerUser(firstName, lastName, dob, email, username, password);
-        if(!res.equals("userId")){
-            requester.loggedIn(res);
+        ResponseType res = database.registerUser(firstName, lastName, dob, email, username, password);
+        if(!res.equals(ResponseType.SUCCESS)){
+            requester.loggedIn(username);
+            return res;
         }
-
-
-        return null; //Fixa senare - Azam
+        return res;
     }
 
-    public boolean addProduct(Request request, ClientHandler requester) {
+    public ResponseType addProduct(Request request, ClientHandler requester) {
         String seller = String.valueOf(request.getUserId());
         String type = request.getType().toString();
         double price = request.getPrice();
@@ -85,12 +84,13 @@ public class RequestHandler extends Handler {
         return database.addProduct(seller, type, price, year, color, condition);
     }
 
-    public String loginUser(Request request, ClientHandler requester) {
+    public ResponseType loginUser(Request request, ClientHandler requester) {
         String username = request.getUsername();
         String password = request.getPassword();
-        String res = database.loginUser(username, password);
+        ResponseType res = database.loginUser(username, password);
         if(!res.equals("userId")){
-            requester.loggedIn(res);
+            requester.loggedIn(username);
+            return res;
         }
         return res;
     }
@@ -109,7 +109,7 @@ public class RequestHandler extends Handler {
         return database.sellProduct(seller, offerId);
     }
 
-    public boolean makeOffer(Request request, ClientHandler requester) {
+    public ResponseType makeOffer(Request request, ClientHandler requester) {
         int seller = request.getUserId();
         int offer = request.getOfferId();
         return database.makeOffer(seller, offer);
@@ -136,6 +136,8 @@ public class RequestHandler extends Handler {
     public synchronized boolean addNotifications(String clientId, String message) {
         return database.addNotification(clientId, message);
     }
+
+
 
 
 

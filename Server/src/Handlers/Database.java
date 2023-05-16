@@ -6,6 +6,9 @@ import Shared.Product;
 import Shared.Product.ProductType;
 import Shared.Product.ProductState;
 
+import Shared.Response.ResponseType;
+
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,12 +17,12 @@ import java.util.List;
 
 /**
  * This class will is part of the application of the chain of responsibility software design pattern
- * The purpose of this class is to handle queries to the database
+ * The purpose of this class is to handles queries to the database
  */
 public class Database {
-    private static final String DB_URL = "jdbc:mysql://aws.connect.psdb.cloud/miniproject?sslMode=VERIFY_IDENTITY";
-    private static final String DB_USER = "gzc7fczvnm5de9xmp95j";
-    private static final String DB_PASSWORD = "pscale_pw_U1oLxwSlAtMhQIOYywm0M1QJrqbUOtMUfSQzqapiGMz";
+    private static final String DB_USER = "am4404";
+    private static final String DB_PASSWORD = "qvbm0y1x";
+    private static final String DB_URL = "jdbc:postgresql://pgserver.mau.se/mini";
 
     public Database() {
 
@@ -30,32 +33,32 @@ public class Database {
     }
 
 
-    public static String registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
-        String query = "INSERT INTO user (username, password, firstName, lastName, dob, email) VALUES (?, ?, ?, ?, ?, ?)";
+    public static ResponseType registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
+        String query = "INSERT INTO \"user\" (username, password, firstName, lastName, email, isloggedin, dob) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             pstmt.setString(3, firstName);
             pstmt.setString(4, lastName);
-            pstmt.setString(5, dob);
-            pstmt.setString(6, email);
+            pstmt.setString(5, email);
+            pstmt.setBoolean(6, false);
+            pstmt.setString(7, dob);
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return username;
+                return ResponseType.SUCCESS;
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return ResponseType.FAILURE;
     }
 
-    public String loginUser(String username, String password) {
-        String query = "UPDATE user SET isLoggedIn = true WHERE username = ? AND password = ?";
+    public ResponseType loginUser(String username, String password) {
+        String query = "UPDATE \"user\" SET isLoggedIn = true WHERE username = ? AND password = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -65,37 +68,41 @@ public class Database {
 
             int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated == 0) {
-                return "Incorrect username or password";
+                return ResponseType.FAILURE;
             } else {
-                return username;
+                return ResponseType.SUCCESS;
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return e.getMessage();
+            return ResponseType.FAILURE;
         }
     }
 
 
-    public boolean addProduct(String seller, String type, double price, int year, String color, String condition) {
-        String query = "INSERT INTO product (productid, seller, type, price, year, color, condition) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public ResponseType addProduct(String seller, String type, double price, int year, String color, String condition) {
+        String query = "INSERT INTO product (productid, username, type, price, year, color, condition, state) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, null);
-
+            pstmt.setInt(1, 0);
             pstmt.setString(2, seller);
             pstmt.setString(3, type);
             pstmt.setDouble(4, price);
             pstmt.setInt(5, year);
             pstmt.setString(6, color);
             pstmt.setString(7, condition);
+            pstmt.setString(8, "New");
 
-            pstmt.executeUpdate();
-            return true;
+
+            int res = pstmt.executeUpdate();
+            if(res==1){
+                return ResponseType.SUCCESS;
+            }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
+        return ResponseType.FAILURE;
     }
 
 
@@ -114,8 +121,9 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Product product = new Product(
-                        rs.getString("seller"),
+                        rs.getInt("productid"),
                         ProductType.valueOf(rs.getString("type")),
+                        rs.getString("username"),
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
@@ -130,6 +138,7 @@ public class Database {
 
         return products;
     }
+
 
 
     public boolean checkLogin(String username, String password) {
@@ -156,9 +165,20 @@ public class Database {
         return false;
     }
 
-    public boolean makeOffer(int buyer, int productId) {
-        return false;
+    public ResponseType makeOffer(int buyer, int productId) {
+        String query = "INSERT INTO offer (buyer, productid) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, buyer);
+            pstmt.setInt(2, productId);
+            pstmt.executeUpdate();
+            return ResponseType.SUCCESS;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return ResponseType.FAILURE;
     }
+
 
     public List<Product> getPurchases(int buyer, String startDate, String endDate) {
         return null;
@@ -176,24 +196,25 @@ public class Database {
         return false;
     }
 
-    public String getUsername() {
-        String username = "";
-        return username;
-    }
-
     public static void main(String[] args) {
-        //Database dbHandler = new Database(null);
-        //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");
+
         //dbHandler.registerUser("Alice123","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
-        //System.out.println(dbHandler.loginUser("Alice123","Tesst123"));
-        /*List<Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
+
+
+        Database dbHandler = new Database();
+        dbHandler.registerUser("janedoe","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
+        //System.out.println(dbHandler.loginUser("janedoe","Tesst123"));
+        List<Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
         System.out.println("size: " + results.size());
         for (Product p:
-             results) {
+                results) {
             System.out.println(p.getType());
 
         }
-         */
+
+
+        //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");
+
     }
 
 
