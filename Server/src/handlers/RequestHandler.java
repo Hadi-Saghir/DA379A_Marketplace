@@ -3,6 +3,7 @@ package handlers;
 import shared.Request;
 import shared.Notification;
 import shared.Product;
+import shared.Response;
 
 import java.util.List;
 
@@ -102,7 +103,7 @@ public class RequestHandler extends Handler {
         return database.searchProducts(type, minPrice, maxPrice, condition);
     }
 
-    public ResponseType sellProduct(Request request, ClientHandler requester) {
+    public Response.ResponseType sellProduct(Request request, ClientHandler requester) {
         int seller = request.getUserId();
         int offerId = request.getOfferId();
         return database.sellProduct(seller, offerId);
