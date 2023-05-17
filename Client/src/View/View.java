@@ -2,6 +2,8 @@ package view;
 
 import controller.Controller;
 
+import java.util.List;
+
 public interface View {
     void setController(Controller controller);
     void showMessage(String message);
@@ -12,5 +14,9 @@ public interface View {
     void showMainMenu();
     void getAccountDetails();
 
-    void showBuyMenu();
+    void showBuyMenu(List<String> productTypes, List<String> conditions);
+
+    void connectionError(String message);
+
+    void parseError(String message);
 }

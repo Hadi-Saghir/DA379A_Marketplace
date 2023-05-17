@@ -6,7 +6,7 @@ import shared.Product;
 import shared.Product.ProductType;
 import shared.Product.ProductState;
 
-import Shared.Response.ResponseType;
+import shared.Response.ResponseType;
 
 
 

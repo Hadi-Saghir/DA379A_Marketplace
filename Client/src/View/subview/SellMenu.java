@@ -1,4 +1,4 @@
-package view.menu;
+package view.subview;
 
 public class SellMenu {
 }

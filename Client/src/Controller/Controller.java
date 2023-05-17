@@ -30,4 +30,6 @@ public interface Controller {
     void viewCart();
 
     void checkout();
+
+    void searchProducts(String productType, double minPrice, double maxPrice, String searchCondition);
 }

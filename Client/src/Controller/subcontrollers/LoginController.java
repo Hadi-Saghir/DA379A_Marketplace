@@ -1,10 +1,11 @@
-package controller.controllers;
+package controller.subcontrollers;
 
 import controller.InvalidFormatException;
 import controller.MainController;
 import shared.User;
 import view.View;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -34,10 +35,16 @@ public class LoginController {
         }
 
 
-        if(mainController.doCreateNewUser(user)) {
-            view.showMessage("User created successfully");
-        } else {
-            view.showError("Failed to create user");
+        try {
+            if(mainController.doCreateNewUser(user)) {
+                view.showMessage("User created successfully");
+            } else {
+                view.showError("Failed to create user");
+            }
+        } catch(IOException ex) {
+            view.connectionError(ex.getMessage());
+        } catch(ClassNotFoundException ex) {
+            view.parseError(ex.getMessage());
         }
 
         view.showLoginMenu();
@@ -98,10 +105,16 @@ public class LoginController {
             return;
         }
 
-        if(mainController.doLogin(user.getUsername(), user.getPassword())) {
-            view.showMainMenu();
-        } else {
-            view.showError("Invalid username or password");
+        try {
+            if(mainController.doLogin(user.getUsername(), user.getPassword())) {
+                view.showMainMenu();
+            } else {
+                view.showError("Invalid username or password");
+            }
+        } catch(IOException ex) {
+            view.connectionError(ex.getMessage());
+        } catch(ClassNotFoundException ex) {
+            view.parseError(ex.getMessage());
         }
     }
 }
