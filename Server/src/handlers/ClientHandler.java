@@ -51,8 +51,6 @@ public class ClientHandler implements Runnable {
                      handler.handle((Request) inputObject, this);
                      //Must add a response from the requestHandler. Response will be sent to the client
                 }
-                //out.writeObject(response);
-                out.flush();
             }
             // Close the client socket
             client.getSocket().close();

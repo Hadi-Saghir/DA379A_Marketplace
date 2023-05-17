@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 public class Notification implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int clientId;
+    private String clientId;
     private String message;
 
-    public Notification(int clientId, String message) {
+    public Notification(String clientId, String message) {
         this.clientId = clientId;
         this.message = message;
     }
 
-    public int getClientId() {
+    public String getClientId() {
         return clientId;
     }
 

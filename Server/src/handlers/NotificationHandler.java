@@ -3,6 +3,8 @@ package handlers;
 
 import Shared.Shared.src.Notification;
 import Shared.Shared.src.Request;
+import Shared.Shared.src.Response;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -23,35 +25,32 @@ public class NotificationHandler extends Handler{
 
     @Override
     protected void handleRequest(Request request, ClientHandler clientHandler) {
-        Request.RequestType requestType = request.getType();
+        Response response = request.getResponse();
         String msg = "invalid";
-        int[] concernedUsers = null;
 
-        switch (requestType) {
+
+        switch (response.RESPONSE_TYPE()) {
             case ADD_PRODUCT:
-                concernedUsers = request.getConcernedusername();
+                List<String> concernedUsers = db.fetchInterestedUsers(request.getProductType());
+
+                for (String s: concernedUsers
+                ) {
+                    notificationQueue.addNotification(new Notification(s, msg));
+                }
                 msg = "New product you might be interested in!";
                 break;
             case SELL_PRODUCT:
-                concernedUsers = request.getConcernedusername();
+                String concernedUser = db.getBuyer(request.getOfferId());
                 msg = "Seller has accepted your offer!!";
+                notificationQueue.addNotification(new Notification(s, msg));
                 break;
             case Make_Offer:
-                concernedUsers = request.getConcernedusername();
+               String concernedUser = db.getSeller(request.getProductId());
                 msg = "New offer!!";
+                notificationQueue.addNotification(new Notification(s, msg));
                 break;
         }
 
-        /*
-        if(concernedUsers != null) {
-            for (int s: concernedUsers
-                 ) {
-                notificationQueue.addNotification(new Notification(s, msg));
-            }
-
-        }
-        
-         */
     }
 
 
@@ -75,9 +74,9 @@ public class NotificationHandler extends Handler{
             if (arg instanceof Notification) {
                 Notification notification = (Notification) arg;
                 LinkedHashMap<Client, ClientHandler> onlineClients = ClientHandler.getOnlineClients();
-                Boolean online = false;
+                boolean online = false;
                 for(Client client: onlineClients.keySet()){
-                    if(client.getCurrClientId().equals(notification.getUsername())){
+                    if(client.getCurrClientId().equals(notification.getClientId())){
                         try {
                             onlineClients.get(client).writeToClient(notification);
                             online = true;
@@ -87,7 +86,7 @@ public class NotificationHandler extends Handler{
                     }
                 }
                 if(!online){
-
+                    db.addNotification(notification.getClientId(), notification.getMessage());
                 }
             }
         }

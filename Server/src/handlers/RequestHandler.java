@@ -4,6 +4,7 @@ import Shared.Shared.src.Request;
 import Shared.Shared.src.Product;
 import Shared.Shared.src.Response;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class RequestHandler extends Handler {
 
 
     @Override
-    public Response handleRequest(Request request, ClientHandler clientHandler) {
+    public void handleRequest(Request request, ClientHandler clientHandler) {
         Response res = null;
         switch (request.getType().toString()) {
             case "REGISTER" ->  res = registerUser(request, clientHandler);
@@ -39,7 +40,12 @@ public class RequestHandler extends Handler {
             default -> {
             }
         }
-        return res;
+        try {
+            clientHandler.writeToClient(res);
+            setResponse(res);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -79,15 +85,16 @@ public class RequestHandler extends Handler {
     }
 
     public Response sellProduct(Request request, ClientHandler requester) {
-        int seller = request.getUserId();
+        String seller = request.getUsername();
         int offerId = request.getOfferId();
         return database.sellProduct(seller, offerId);
     }
 
     public Response makeOffer(Request request, ClientHandler requester) {
-        int seller = request.getUserId();
-        int offer = request.getOfferId();
-        return database.makeOffer(seller, offer);
+        String buyer = request.getUsername();
+        int productId = request.getProductId();
+        double price = request.getPrice();
+        return database.makeOffer(buyer, productId, price);
     }
 
     public Response getPurchases(Request request, ClientHandler requester) {
@@ -107,12 +114,5 @@ public class RequestHandler extends Handler {
         int user = request.getUserId();
         return database.getNotifications(user);
     }
-
-    public synchronized ResponseType addNotifications(String clientId, String message) {
-    public synchronized boolean addNotifications(String clientId, String message) {
-        return database.addNotification(clientId, message);
-    }
-
-
 
 }

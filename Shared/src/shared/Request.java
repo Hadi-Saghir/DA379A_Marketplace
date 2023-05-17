@@ -107,17 +107,17 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request sellProduct(int offerID, String sellerid) {
+    public static Request sellProduct(int offerID, String seller) {
         Request request = new Request(RequestType.SELL_PRODUCT);
         request.setOfferId(offerID);
-        request.setUsername(sellerid);
+        request.setUsername(seller);
         return request;
     }
 
-    public static Request makeOffer(int productId, String buyerId, double price) {
+    public static Request makeOffer(int productId, String buyer, double price) {
         Request request = new Request(RequestType.Make_Offer);
         request.setProductId(productId);
-        request.setUsername(buyerId);
+        request.setUsername(buyer);
         request.setPrice(price);
         return request;
     }

@@ -1,9 +1,13 @@
 package handlers;
 
 import Shared.Shared.src.Request;
+import Shared.Shared.src.Response;
 
 public abstract class Handler {
     private Handler nextHandler;
+
+    private Request request;
+    private shared.Response response;
 
     public Handler(Handler nextHandler) {
         this.nextHandler = nextHandler;
@@ -20,6 +24,7 @@ public abstract class Handler {
 
     public void handle(Request request, ClientHandler clientHandler) {
 
+        this.request = request;
         handleRequest(request, clientHandler);
 
         if (this.nextHandler != null) {
@@ -29,5 +34,11 @@ public abstract class Handler {
     }
 
     protected abstract void handleRequest(Request request, ClientHandler clientHandler);
+
+    public void setResponse(Response response){
+        request.setResponse(response);
+    }
+
+
 }
 

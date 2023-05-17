@@ -159,7 +159,7 @@ public class Database {
     }
 
 
-    public Response sellProduct(int seller, int offerId) {
+    public Response sellProduct(String seller, int offerId) {
         String updateStatement = "UPDATE product SET state = 'SOLD' WHERE username = ? AND offerId = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
@@ -177,12 +177,13 @@ public class Database {
         return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
     }
 
-    public Response makeOffer(int buyer, int productId) {
-        String query = "INSERT INTO offer (buyer, productid) VALUES (?, ?)";
+    public Response makeOffer(String buyer, int productId, double price) {
+        String query = "INSERT INTO offer (buyer, productid, price) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, buyer);
             pstmt.setInt(2, productId);
+            pstmt.setDouble(3, productId);
             int res = pstmt.executeUpdate();
             if(res==1){
                 return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
@@ -202,11 +203,78 @@ public class Database {
     public Response registerInterest(int user, String type) {
         return null;
     }
+    public List<String> fetchInterestedUsers(ProductType type) {
+        List<String> interestedUsers = new ArrayList<>();
+        String query = "SELECT username FROM interest WHERE type = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, type.toString());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                interestedUsers.add(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return interestedUsers;
+    }
 
     public Response getNotifications(int user) {
         return null;
     }
 
+    public ResponseType addNotification(String user, String message) {
+        String sql = "INSERT INTO notifications (username, message) VALUES (?, ?)";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, user);
+            pstmt.setString(2, message);
+            pstmt.executeUpdate();
+            return ResponseType.SUCCESS;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return ResponseType.FAILURE;
+    }
+
+    public String getBuyer(int offerid) {
+        String buyer = null;
+        String query = "SELECT username FROM offer WHERE offerid = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, offerid);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                buyer = rs.getString("username");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return buyer;
+    }
+
+    public String getSeller(int productid) {
+        String seller = null;
+        String query = "SELECT username FROM product WHERE productid = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, productid);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                seller = rs.getString("username");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return seller;
     }
 
 
@@ -229,6 +297,4 @@ public class Database {
         //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");*/
 
     }
-
-
 }

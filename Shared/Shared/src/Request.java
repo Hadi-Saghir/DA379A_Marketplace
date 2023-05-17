@@ -1,5 +1,7 @@
 package Shared.Shared.src;
 
+import shared.Product;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -7,6 +9,10 @@ import java.time.LocalDate;
 public class Request implements Serializable {
     @Serial
     private static final long serialVersionUID = 3L;
+
+    public Response getResponse() {
+        return this.response;
+    }
 
     // request types
     public enum RequestType {
@@ -22,6 +28,8 @@ public class Request implements Serializable {
 
     // request type and base constructor for factory method
     private RequestType type;
+
+    private Response response;
 
     public Request(RequestType type) {
         this.type = type;
@@ -40,17 +48,17 @@ public class Request implements Serializable {
     private String password;
 
     // product data
-    private String productType;
+    private Product.ProductType productType;
     private double price;
     private int yearOfProduction;
     private String color;
-    private ProductCondition condition;
+    private Product.ProductCondition condition;
 
     // search criteria
     private String searchProductType;
     private double minPrice;
     private double maxPrice;
-    private ProductCondition searchCondition;
+    private Product.ProductCondition searchCondition;
 
     // buy product data
     private int productId;
@@ -187,11 +195,11 @@ public class Request implements Serializable {
         this.password = password;
     }
 
-    public String getProductType() {
+    public Product.ProductType getProductType() {
         return productType;
     }
 
-    public void setProductType(String productType) {
+    public void setProductType(Product.ProductType productType) {
         this.productType = productType;
     }
 
@@ -329,5 +337,8 @@ public class Request implements Serializable {
 
     public RequestType getType() {
         return type;
+    }
+    public void setResponse(Response response) {
+        this.response = response;
     }
 }
