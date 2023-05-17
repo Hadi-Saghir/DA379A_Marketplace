@@ -75,7 +75,7 @@ public class RequestHandler extends Handler {
     }
 
     public Response getAllProducts(Request request, ClientHandler requester) {
-        return database.getAllProducts();
+        return database.allProducts();
     }
 
     public Response searchProducts(Request request, ClientHandler requester) {

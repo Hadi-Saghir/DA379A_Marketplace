@@ -7,11 +7,13 @@ import Shared.src.shared.User;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Scanner;
+
+
 
 /*
            case "REGISTER" ->  res = registerUser(request, clientHandler);
@@ -33,61 +35,74 @@ public class RequestHandlerTest {
 
 
     private static Database db = new Database();
+    private static RequestHandler requestHandler;
+
     @BeforeClass
     public static void setUp() throws SQLException, IOException {
         // Set up test database
         db = new Database();
-        startServer();
+         requestHandler = new RequestHandler(db,null);
+
     }
 
-    public static void startServer(){
-        ServerController serverController = null;
-        try {
-            serverController = new ServerController(8080);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Thread thread = new Thread(serverController);
-        thread.start();
-    }
-
-    public boolean connectClient(){
-
-        return false;
-    }
     @Test
-    public void testRegisterUser() throws IOException {
-        // Create a stub database object with the expected response
-        Response expectedResponse = new Response(ResponseType.REGISTER, ResponseResult.SUCCESS, null);
-        // Create a Request object with test data
+    public void testRegisterUserSuccess() {
+        // Create a new request with valid user information
         Request request = new Request(RequestType.REGISTER);
         request.setFirstName("John");
         request.setLastName("Doe");
-        request.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        request.setDateOfBirth(LocalDate.of(1990, 1, 1));
         request.setEmail("john.doe@example.com");
         request.setUsername("johndoe");
-        request.setPassword("password");
-        ClientHandler clientHandler = new ClientHandler(new Client(new Socket()));
-        Handler handler = clientHandler.getHandler();
-        ResponseType responseType = handler.handle(request,clientHandler);
+        request.setPassword("password123");
 
+        // Call the registerUser method with the request
 
+        Response response = db.registerUser(request.getUsername(),request.getPassword(),
+                request.getFirstName(), request.getLastName(), request.getDateOfBirth().toString(),
+                request.getEmail() );
 
+        // Verify that the response type is REGISTER
+        assertEquals(Response.ResponseType.REGISTER, response.RESPONSE_TYPE());
 
-        // Call the registerUser method with the test data
-
-        // Verify that the response is as expected
-        assertEquals(expectedResponse, actualResponse);
+        // Verify that the response result is SUCCESS
+        assertEquals(Response.ResponseResult.SUCCESS, response.RESPONSE_RESULT());
     }
+
+
+
+    @Test
+    public void testRegisterUserFail() {
+        // Create a new request with valid user information
+        Request request = new Request(RequestType.REGISTER);
+        request.setFirstName("Alice");
+        request.setLastName("Doe");
+        request.setDateOfBirth(LocalDate.of(1990, 1, 1));
+        request.setEmail("john.doe@example.com");
+        request.setUsername("johndoe");
+        request.setPassword("password123");
+
+        // Call the registerUser method with the request
+
+        Response response = requestHandler.registerUser(request,null);
+
+        // Verify that the response type is REGISTER
+        assertEquals(ResponseType.REGISTER, response.RESPONSE_TYPE());
+
+        // Verify that the response result is SUCCESS
+        assertEquals(ResponseResult.FAILURE, response.RESPONSE_RESULT());
+    }
+
 
 
 
 
 
     @Test
-    public void ADD_PRODUCT() {
+    public void ADD_PRODUCT() throws IOException {
 
     }
+
 
     @Test
     public void SEARCH_PRODUCT() {
