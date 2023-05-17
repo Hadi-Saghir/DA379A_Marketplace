@@ -6,8 +6,6 @@ import shared.Response;
 
 import java.io.IOException;
 import java.util.*;
-import shared.Response;
-import shared.Response.*;
 
 /**
  * This class will apply the observer software design pattern
