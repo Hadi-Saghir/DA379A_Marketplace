@@ -18,10 +18,7 @@ public class AuthenticationHandler extends Handler {
     }
 
     public boolean authenticate(String username, String password){
-        if(db.checkLogin(username,password)){
-            return true;
-        }
-        return false;
+        return db.checkLogin(username, password);
 
     }
 

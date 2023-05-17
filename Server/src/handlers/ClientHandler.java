@@ -19,7 +19,16 @@ public class ClientHandler implements Runnable {
     private RequestHandler requestHandler;
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    private Handler handler;
+    private static Handler handler;
+    private static Database db;
+
+    static {
+        db = new Database();
+        handler = new AuthenticationHandler(db,
+                    new RequestHandler(db,
+                    new NotificationHandler(db,
+                            null)));
+    }
 
     public ClientHandler(Client client) {
         this.client = client;
@@ -39,10 +48,10 @@ public class ClientHandler implements Runnable {
             Object inputObject;
             while ((inputObject = in.readObject()) != null) {
                 if(inputObject instanceof Request){
-                    handler.handle((Request) inputObject, this);
+                     handler.handle((Request) inputObject, this);
                      //Must add a response from the requestHandler. Response will be sent to the client
                 }
-                out.writeObject(new Object());
+                //out.writeObject(response);
                 out.flush();
             }
             // Close the client socket

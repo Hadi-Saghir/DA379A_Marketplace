@@ -1,10 +1,7 @@
 package controller;
 
-import controller.Controller;
-import controller.InvalidFormatException;
 import controller.subcontrollers.ConnectionController;
 import controller.subcontrollers.LoginController;
-import shared.Conditions;
 import shared.Product;
 import shared.User;
 import view.View;
@@ -125,7 +122,7 @@ public class MainController implements Controller {
     @Override
     public void buyProducts() {
         List<String> productTypes = Stream.of(Product.ProductType.values()).map(Product.ProductType::name).toList();
-        List<String> conditions = Stream.of(Conditions.values()).map(Conditions::name).toList();
+        List<String> conditions = Stream.of(Product.ProductCondition.values()).map(Product.ProductCondition::name).toList();
         view.showBuyMenu(productTypes, conditions);
     }
 

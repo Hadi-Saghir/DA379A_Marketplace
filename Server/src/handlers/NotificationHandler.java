@@ -25,7 +25,7 @@ public class NotificationHandler extends Handler{
     protected void handleRequest(Request request, ClientHandler clientHandler) {
         Request.RequestType requestType = request.getType();
         String msg = "invalid";
-        int concernedUsers[] = null;
+        int[] concernedUsers = null;
 
         switch (requestType) {
             case ADD_PRODUCT:

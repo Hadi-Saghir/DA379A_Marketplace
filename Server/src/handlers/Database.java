@@ -33,7 +33,7 @@ public class Database {
     }
 
 
-    public static Response registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
+    public synchronized Response registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
         String query = "INSERT INTO \"user\" (username, password, firstName, lastName, email, isloggedin, dob) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
@@ -48,16 +48,16 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.SUCCESS, null);
+                return new Response(ResponseType.REGISTER, Response.ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.FAILURE, null);
+        return new Response(ResponseType.REGISTER , Response.ResponseResult.SUCCESS, null);
     }
 
-    public Response loginUser(String username, String password) {
+    public synchronized Response loginUser(String username, String password) {
         String query = "UPDATE \"user\" SET isLoggedIn = true WHERE username = ? AND password = ?";
 
         try (Connection conn = getConnection();
@@ -69,17 +69,17 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.SUCCESS, null);
+                return new Response(ResponseType.LOGIN, Response.ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.FAILURE, null);
+        return new Response(ResponseType.LOGIN , Response.ResponseResult.SUCCESS, null);
     }
 
 
-    public Response addProduct(String seller, String type, double price, int year, String color, String condition) {
+    public synchronized Response addProduct(String seller, String type, double price, int year, String color, String condition) {
         String query = "INSERT INTO product (productid, username, type, price, year, color, condition, state) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
 
         try (Connection conn = getConnection();
@@ -96,18 +96,18 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.SUCCESS, null);
+                return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.FAILURE, null);
+        return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
     }
 
 
-    public List<Product> searchProducts(String type, double minPrice, double maxPrice, String condition) {
-        List<Product> products = new ArrayList<>();
+    public synchronized Response searchProducts(String type, double minPrice, double maxPrice, String condition) {
+        List<Object> products = new ArrayList<>();
         String query = "SELECT * FROM product WHERE type = ? AND price BETWEEN ? AND ? AND condition = ?";
 
         try (Connection conn = getConnection();
@@ -135,7 +135,7 @@ public class Database {
             System.out.println(e.getMessage());
         }
 
-        return products;
+        return new Response(ResponseType.LOGIN , Response.ResponseResult.SUCCESS, products);
     }
 
 
@@ -166,14 +166,15 @@ public class Database {
             pstmt.setInt(1, seller);
             pstmt.setInt(2, offerId);
             int rowsAffected = pstmt.executeUpdate();
-            if(rowsAffected>0){
-                return new Response(ResponseType.SUCCESS, null);
+            int res = pstmt.executeUpdate();
+            if(res>0){
+                return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.FAILURE, null);
+        return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
     }
 
     public Response makeOffer(int buyer, int productId) {
@@ -184,13 +185,13 @@ public class Database {
             pstmt.setInt(2, productId);
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.SUCCESS, null);
+                return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.FAILURE, null);
+        return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
     }
 
 
@@ -215,10 +216,10 @@ public class Database {
 
         //dbHandler.registerUser("Alice123","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
 
-
+/*
         Database dbHandler = new Database();
         dbHandler.registerUser("janedoe","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
-        //System.out.println(dbHandler.loginUser("janedoe","Tesst123"));
+        System.out.println(dbHandler.loginUser("janedoe","Tesst123"));
         List<Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
         System.out.println("size: " + results.size());
         for (Product p:
@@ -228,8 +229,7 @@ public class Database {
         }
 
 
-        //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");
-
+        //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");*/
     }
 
 
