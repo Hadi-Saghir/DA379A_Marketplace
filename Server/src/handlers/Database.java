@@ -1,11 +1,11 @@
 package handlers;
 
 
-import shared.Notification;
 import shared.Product;
 import shared.Product.ProductType;
 import shared.Product.ProductState;
 
+import shared.Response;
 import shared.Response.ResponseType;
 
 
@@ -33,7 +33,7 @@ public class Database {
     }
 
 
-    public static ResponseType registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
+    public static Response registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
         String query = "INSERT INTO \"user\" (username, password, firstName, lastName, email, isloggedin, dob) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
@@ -48,16 +48,16 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return ResponseType.SUCCESS;
+                return new Response(ResponseType.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return ResponseType.FAILURE;
+        return new Response(ResponseType.FAILURE, null);
     }
 
-    public ResponseType loginUser(String username, String password) {
+    public Response loginUser(String username, String password) {
         String query = "UPDATE \"user\" SET isLoggedIn = true WHERE username = ? AND password = ?";
 
         try (Connection conn = getConnection();
@@ -66,20 +66,20 @@ public class Database {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
 
-            int rowsUpdated = pstmt.executeUpdate();
-            if (rowsUpdated == 0) {
-                return ResponseType.FAILURE;
-            } else {
-                return ResponseType.SUCCESS;
+
+            int res = pstmt.executeUpdate();
+            if(res==1){
+                return new Response(ResponseType.SUCCESS, null);
             }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return ResponseType.FAILURE;
         }
+        return new Response(ResponseType.FAILURE, null);
     }
 
 
-    public ResponseType addProduct(String seller, String type, double price, int year, String color, String condition) {
+    public Response addProduct(String seller, String type, double price, int year, String color, String condition) {
         String query = "INSERT INTO product (productid, username, type, price, year, color, condition, state) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
 
         try (Connection conn = getConnection();
@@ -96,13 +96,13 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return ResponseType.SUCCESS;
+                return new Response(ResponseType.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return ResponseType.FAILURE;
+        return new Response(ResponseType.FAILURE, null);
     }
 
 
@@ -159,44 +159,50 @@ public class Database {
     }
 
 
-    public ResponseType sellProduct(int seller, int offerId) {
+    public Response sellProduct(int seller, int offerId) {
         String updateStatement = "UPDATE product SET state = 'SOLD' WHERE username = ? AND offerId = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
             pstmt.setInt(1, seller);
             pstmt.setInt(2, offerId);
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0 ? ResponseType.SUCCESS : ResponseType.FAILURE;
+            if(rowsAffected>0){
+                return new Response(ResponseType.SUCCESS, null);
+            }
+
         } catch (SQLException e) {
-            e.printStackTrace();
-            return ResponseType.FAILURE;
+            System.out.println(e.getMessage());
         }
+        return new Response(ResponseType.FAILURE, null);
     }
 
-    public ResponseType makeOffer(int buyer, int productId) {
+    public Response makeOffer(int buyer, int productId) {
         String query = "INSERT INTO offer (buyer, productid) VALUES (?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, buyer);
             pstmt.setInt(2, productId);
-            pstmt.executeUpdate();
-            return ResponseType.SUCCESS;
+            int res = pstmt.executeUpdate();
+            if(res==1){
+                return new Response(ResponseType.SUCCESS, null);
+            }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return ResponseType.FAILURE;
+        return new Response(ResponseType.FAILURE, null);
     }
 
 
-    public List<Product> getPurchases(int buyer, String startDate, String endDate) {
+    public Response getPurchases(int buyer, String startDate, String endDate) {
         return null;
     }
 
-    public boolean registerInterest(int user, String type) {
-        return false;
+    public Response registerInterest(int user, String type) {
+        return null;
     }
 
-    public List<Notification> getNotifications(int user) {
+    public Response getNotifications(int user) {
         return null;
     }
 
