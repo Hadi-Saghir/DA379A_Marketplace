@@ -1,18 +1,20 @@
-package handlers;
+package Handlers;
 
-import shared.Notification;
-import shared.Request;
-import shared.Response;
+import Shared.src.shared.Notification;
+import Shared.src.shared.Request;
+import Shared.src.shared.Response;
+import Shared.src.shared.Response;
+
+import Handlers.Handler;
+import Shared.src.shared.Request.*;
 
 import java.io.IOException;
 import java.util.*;
-import shared.Response;
-import shared.Response.*;
 
 /**
  * This class will apply the observer software design pattern
  * The purpose of this class is to generate observe for events that trigger a notification*/
-public class NotificationHandler extends Handler{
+public class NotificationHandler extends Handler {
     private final NotificationQueue notificationQueue = new NotificationQueue();;
     private Database db;
     private Handler nextHandler;

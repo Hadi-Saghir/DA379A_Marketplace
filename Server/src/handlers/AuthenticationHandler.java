@@ -1,6 +1,8 @@
-package handlers;
+package Handlers;
 
-import shared.Request;
+
+import Shared.src.shared.Request;
+
 
 public class AuthenticationHandler extends Handler {
 
