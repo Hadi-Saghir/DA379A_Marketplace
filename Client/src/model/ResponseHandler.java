@@ -23,17 +23,9 @@ public class ResponseHandler extends Thread {
         while(running.get()) {
             try {
                 Object response = in.readObject();
-                System.out.println("tog emot response");
 
                 if(response instanceof Response) {
-                    switch(((Response) response).RESPONSE_TYPE()) {
-                        case SUCCESS -> {
-                            System.out.println("success!");
-                        }
-                        case FAILURE -> {
-                            System.out.println("failure");
-                        }
-                    }
+                    mainController.handleResponse((Response) response);
                 } else {
                     throw new IOException();
                 }

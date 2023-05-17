@@ -67,7 +67,7 @@ public class Request implements Serializable {
 
     // register interest data
     private String interestedProductType;
-    private int userId;
+    private String userId;
 
     // purchase history data
     private int userIdForHistory;
@@ -120,14 +120,14 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request sellProduct(int offerID, int sellerId) {
+    public static Request sellProduct(int offerID, String sellerId) {
         Request request = new Request(RequestType.SELL_PRODUCT);
         request.setOfferId(offerID);
         request.setUserId(sellerId);
         return request;
     }
 
-    public static Request makeOffer(int productId, int buyerId, double price) {
+    public static Request makeOffer(int productId, String buyerId, double price) {
         Request request = new Request(RequestType.Make_Offer);
         request.setProductId(productId);
         request.setUserId(buyerId);
@@ -135,7 +135,7 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request registerInterest(String interestedProductType, int userId) {
+    public static Request registerInterest(String interestedProductType, String userId) {
         Request request = new Request(RequestType.REGISTER_INTEREST);
         request.setInterestedProductType(interestedProductType);
         request.setUserId(userId);
@@ -286,11 +286,11 @@ public class Request implements Serializable {
         this.interestedProductType = interestedProductType;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

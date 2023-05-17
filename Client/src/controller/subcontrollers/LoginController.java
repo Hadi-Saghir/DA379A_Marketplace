@@ -29,13 +29,7 @@ public class LoginController {
         view.getUsername();
         view.getPassword();
 
-        try {
-            mainController.doCreateNewUser(user);
-        } catch(IOException ex) {
-            view.connectionError(ex.getMessage());
-        } catch(ClassNotFoundException ex) {
-            view.parseError(ex.getMessage());
-        }
+        mainController.doCreateNewUser(user);
     }
 
     public void setFirstName(String firstName) {
@@ -96,13 +90,10 @@ public class LoginController {
             view.showLoginMenu();
             return;
         }
+        mainController.doLogin(user.getUsername(), user.getPassword());
+    }
 
-        try {
-            mainController.doLogin(user.getUsername(), user.getPassword());
-        } catch(IOException ex) {
-            view.connectionError(ex.getMessage());
-        } catch(ClassNotFoundException ex) {
-            view.parseError(ex.getMessage());
-        }
+    public String getUserId() {
+        return user.getUsername();
     }
 }

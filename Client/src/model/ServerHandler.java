@@ -2,7 +2,6 @@ package model;
 
 import controller.subcontrollers.ConnectionController;
 import shared.Request;
-import shared.Response;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,8 +15,8 @@ public class ServerHandler {
     private final int PORT;
     private final ConnectionController connectionController;
     private Socket socket;
-    private ObjectOutputStream writer;
-    private ObjectInputStream reader;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
 
     public ServerHandler(String host, int port, ConnectionController connectionController) {
         this.HOST = host;
@@ -25,40 +24,26 @@ public class ServerHandler {
         this.connectionController = connectionController;
     }
 
-    public void connectToServer() {
+    public void connectToServer() throws IOException {
         if(socket == null) {
-            try {
-                socket = new Socket(HOST, PORT);
-                reader = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-                writer = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-                System.out.println("Connected to server");
-            } catch (Exception e) {
-                System.out.println("Error connecting to server");
-                System.out.println(e.getMessage());
-            }
+            socket = new Socket(HOST, PORT);
+            in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+            out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }
     }
 
-    public void disconnectFromServer() {
+    public void disconnectFromServer() throws IOException {
         if(socket != null) {
-            try {
-                reader.close();
-                writer.close();
-                socket.close();
-                connectionController.showMessage("Disconnected from server");
-            } catch (Exception e) {
-                connectionController.showError("Error disconnecting from server");
-                connectionController.showMessage(e.getMessage());
-            }
+            out.flush();
+            socket.close();
         }
     }
 
-
-    public Response sendRequest(Request request) throws IOException, ClassNotFoundException {
-        connectToServer();
-        writer.writeObject(request);
-        return (Response) reader.readObject();
+    public ObjectOutputStream getOut() {
+        return out;
     }
 
-
+    public ObjectInputStream getIn() {
+        return in;
+    }
 }

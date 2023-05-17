@@ -22,9 +22,8 @@ public class MainMenu {
         System.out.println("|-3. View products (selling)                  -|");
         System.out.println("|-3. View products (buying)                   -|");
         System.out.println("|----------------------------------------------|");
-        mainView.promptForInput("Enter option: ");
+        String input = mainView.promptForInput("Enter option: ");
 
-        String input = mainView.promptForInput("");
         switch (input) {
             case "0" -> controller.logout();
             case "1" -> controller.buyProducts();

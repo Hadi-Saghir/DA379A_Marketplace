@@ -32,7 +32,6 @@ public class RequestHandler extends Thread {
                 try {
                     out.writeObject(requestsBuffer.pop());
                     out.flush();
-                    System.out.println("sending request");
                 } catch(IOException e) {
                     System.out.println("bla bla failed"); //FIXME
                 }

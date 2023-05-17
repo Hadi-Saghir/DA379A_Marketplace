@@ -32,4 +32,8 @@ public interface Controller {
     void checkout();
 
     void searchProducts(String productType, double minPrice, double maxPrice, String searchCondition);
+
+    void addProductToCart(int productId);
+
+    void removeProductFromCart(int cartOrderId);
 }

@@ -27,7 +27,7 @@ public class Database {
 
 
     public synchronized Response registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
-        String query = "INSERT INTO \"user\" (username, password, firstName, lastName, email, isloggedin, dob) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO \"users\" (username, password, firstName, lastName, email, isloggedin, dob) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -51,7 +51,7 @@ public class Database {
     }
 
     public synchronized Response loginUser(String username, String password) {
-        String query = "UPDATE \"user\" SET isLoggedIn = true WHERE username = ? AND password = ?";
+        String query = "UPDATE \"users\" SET isLoggedIn = true WHERE username = ? AND password = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -152,19 +152,18 @@ public class Database {
                 products.add(product);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
         }
         if(products.size()>0){
             return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, products);
 
-        }
-        else {
+        } else {
             return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
         }
     }
 
 
-        public boolean checkLogin(String username, String password) {
+    public boolean checkLogin(String username, String password) {
         boolean isValid = false;
         String query = "SELECT COUNT(*) FROM users WHERE username = ? AND password = ?";
         try (Connection conn = getConnection();
@@ -221,11 +220,11 @@ public class Database {
     }
 
 
-    public Response getPurchases(int buyer, String startDate, String endDate) {
+    public Response getPurchases(String buyer, String startDate, String endDate) {
         return null;
     }
 
-    public Response registerInterest(int user, String type) {
+    public Response registerInterest(String user, String type) {
         return null;
     }
     public List<String> fetchInterestedUsers(Product.ProductType type) {
@@ -246,7 +245,7 @@ public class Database {
         return interestedUsers;
     }
 
-    public Response getNotifications(int user) {
+    public Response getNotifications(String user) {
         return null;
     }
 
@@ -319,8 +318,4 @@ public class Database {
         //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");*/
 
     }
-
-
-
-
 }

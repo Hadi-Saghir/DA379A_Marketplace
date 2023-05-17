@@ -100,20 +100,20 @@ public class RequestHandler extends Handler {
     }
 
     public Response getPurchases(Request request, ClientHandler requester) {
-        int buyer = request.getUserId();
+        String buyer = request.getUserId();
         String startDate = request.getStartDate().toString();
         String endDate = request.getEndDate().toString();
         return database.getPurchases(buyer, startDate, endDate);
     }
 
     public Response registerInterest(Request request, ClientHandler requester) {
-        int buyer = request.getUserId();
+        String buyer = request.getUserId();
         String type = request.getType().toString();
         return database.registerInterest(buyer, type);
     }
 
     public Response getNotifications(Request request) {
-        int user = request.getUserId();
+        String user = request.getUserId();
         return database.getNotifications(user);
     }
 

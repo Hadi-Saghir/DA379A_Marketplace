@@ -2,6 +2,7 @@ package view;
 
 import controller.Controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface View {
@@ -24,5 +25,13 @@ public interface View {
     void connectionError(String message);
 
     void parseError(String message);
-    void listPurchasableProducts(List<String> products);
+    void listPurchasableProduct(HashMap<Integer, String> products);
+
+    void loginSuccess();
+
+    void productAddedToCart(boolean added);
+
+    void listCartContent(List<String> products);
+
+    void showNotification(String string);
 }

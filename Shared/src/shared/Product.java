@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Product implements Serializable {
     private static final long serialVersionUID = 2L;
+    private int productid;
     private String username;
     private ProductType type;
     private ProductState state;
@@ -49,6 +50,7 @@ public class Product implements Serializable {
     }
 
     public Product(int productid, String username, ProductType type, double price, int yearOfProduction, String color, ProductCondition condition, ProductState state) {
+        this.productid = productid;
         this.username = username;
         this.type = type;
         this.price = price;
@@ -106,5 +108,13 @@ public class Product implements Serializable {
 
     public void setState(ProductState state) {
         this.state = state;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getProductid() {
+        return productid;
     }
 }

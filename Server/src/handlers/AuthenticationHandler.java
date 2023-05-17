@@ -26,14 +26,11 @@ public class AuthenticationHandler extends Handler {
 
     @Override
     protected void handleRequest(Request request, ClientHandler clientHandler) {
-       if(request.getType() == Request.RequestType.LOGIN){
-           authenticate(request.getUsername(),request.getPassword());
-       } else if (nextHandler != null) {
-        nextHandler.handleRequest(request,clientHandler);
+        if(request.getType() == Request.RequestType.LOGIN){
+            authenticate(request.getUsername(),request.getPassword());
+        } else if (nextHandler != null) {
+            nextHandler.handleRequest(request,clientHandler);
+        }
     }
-
-    }
-
-
 }
 

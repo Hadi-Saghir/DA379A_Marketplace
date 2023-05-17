@@ -6,6 +6,7 @@ import view.subview.BuyMenu;
 import view.subview.LoginMenu;
 import view.subview.MainMenu;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -96,7 +97,27 @@ public class MainView implements View {
     }
 
     @Override
-    public void listPurchasableProducts(List<String> products) {
+    public void listPurchasableProduct(HashMap<Integer, String> products) {
         buyMenu.listPurchasableProducts(products);
+    }
+
+    @Override
+    public void loginSuccess() {
+        loginMenu.loginSuccess();
+    }
+
+    @Override
+    public void productAddedToCart(boolean added) {
+        buyMenu.productAddedToCart(added);
+    }
+
+    @Override
+    public void listCartContent(List<String> products) {
+        buyMenu.listCartContent(products);
+    }
+
+    @Override
+    public void showNotification(String message) {
+        showMessage(message);
     }
 }

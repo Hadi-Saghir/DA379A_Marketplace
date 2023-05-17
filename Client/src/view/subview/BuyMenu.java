@@ -3,6 +3,7 @@ package view.subview;
 import controller.Controller;
 import view.MainView;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class BuyMenu {
@@ -24,24 +25,28 @@ public class BuyMenu {
     }
 
     private void showBuyMenu() {
-        System.out.println("|----------------------------------------------|");
-        System.out.println("|------------------Buy Menu--------------------|");
-        System.out.println("|----------------------------------------------|");
-        System.out.println("|-0. Back                                     -|");
-        System.out.println("|-1. View products                            -|");
-        System.out.println("|-2. Search products                          -|");
-        System.out.println("|-3. View cart                                -|");
-        System.out.println("|-4. Checkout                                 -|");
-        System.out.println("|----------------------------------------------|");
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|------------------Buy Menu--------------------|");
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|-0. Back                                     -|");
+        mainView.showMessage("|-1. View products                            -|");
+        mainView.showMessage("|-2. Search products                          -|");
+        mainView.showMessage("|-3. View cart                                -|");
+        mainView.showMessage("|-4. Checkout                                 -|");
+        mainView.showMessage("|----------------------------------------------|");
 
         String input = mainView.promptForInput("Enter option: ");
         switch (input) {
             case "0" -> mainView.showMainMenu();
-            case "1" -> controller.getProductList();
+            case "1" -> {
+                mainView.showMessage("|----------------------------------------------|");
+                mainView.showMessage("|------------------Products--------------------|");
+                mainView.showMessage("|----------------------------------------------|");
+                controller.getProductList();
+            }
             case "2" -> search();
-            // case "3" -> controller.addProductToCart(); //TODO
-            case "4" -> controller.viewCart();
-            case "5" -> controller.checkout();
+            case "3" -> controller.viewCart();
+            case "4" -> controller.checkout();
             default -> {
                 mainView.showError("Invalid option");
                 showBuyMenu();
@@ -62,7 +67,7 @@ public class BuyMenu {
         String input;
         do {
             for(int i = 0; i < productTypes.size(); i++) {
-                System.out.println(i + ". " + productTypes.get(i));
+                mainView.showMessage(i + ". " + productTypes.get(i));
             }
             input = mainView.promptForInput("Enter product type: ");
 
@@ -121,8 +126,8 @@ public class BuyMenu {
     private String getSearchCondition() {
         String input;
         do {
-            for(int i = 0; i < productTypes.size(); i++) {
-                System.out.println(i + ". " + conditions.get(i));
+            for(int i = 0; i < conditions.size(); i++) {
+                mainView.showMessage(i + ". " + conditions.get(i));
             }
             input = mainView.promptForInput("Enter condition: ");
 
@@ -137,34 +142,73 @@ public class BuyMenu {
             }
         } while(input == null);
 
-        return input;
+        return conditions.get(Integer.parseInt(input));
     }
 
-    public void listPurchasableProducts(List<String> products) {
-        System.out.println("|----------------------------------------------|");
-        System.out.println("|------------------Products--------------------|");
-        System.out.println("|----------------------------------------------|");
-        System.out.println("|-0. Back                                     -|");
+    public void listPurchasableProducts(HashMap<Integer, String> products) {
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|-0. Back                                     -|");
         for(int i = 0; i < products.size(); i++) {
-            System.out.println("|-" + (i + 1) + ". " + products.get(i));
+            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
         }
-        System.out.println("|----------------------------------------------|");
 
-        String input = mainView.promptForInput("Enter option: ");
-        switch (input) {
-            case "0" -> showBuyMenu();
-            default -> {
+        String input;
+        do {
+            input = mainView.promptForInput("Enter option: ");
+            if(input.equals("0")) {
+                showBuyMenu();
+            } else {
                 try {
                     int index = Integer.parseInt(input);
                     if(index < 1 || index > products.size()) {
                         throw new NumberFormatException();
                     }
-                    // controller.addProductToCart(index - 1);
+                    controller.addProductToCart(index - 1);
                 } catch(NumberFormatException e) {
                     mainView.showError("Invalid option");
-                    listPurchasableProducts(products);
+                    input = null;
                 }
             }
+
+        } while(input == null);
+    }
+
+    public void productAddedToCart(boolean added) {
+        if(added) {
+            mainView.showMessage("Product added to cart");
+        } else {
+            mainView.showError("Product not added to cart");
         }
+        showBuyMenu();
+    }
+
+    public void listCartContent(List<String> products) {
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|------------------Cart------------------------|");
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|-0. Back                                     -|");
+        for(int i = 0; i < products.size(); i++) {
+            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
+        }
+
+        String input;
+        do {
+            input = mainView.promptForInput("Enter option: ");
+            if(input.equals("0")) {
+                showBuyMenu();
+            } else {
+                try {
+                    int index = Integer.parseInt(input);
+                    if(index < 1 || index > products.size()) {
+                        throw new NumberFormatException();
+                    }
+                    controller.removeProductFromCart(index - 1);
+                } catch(NumberFormatException e) {
+                    mainView.showError("Invalid option");
+                    input = null;
+                }
+            }
+
+        } while(input == null);
     }
 }

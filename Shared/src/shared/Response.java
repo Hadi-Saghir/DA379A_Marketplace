@@ -23,6 +23,7 @@ public record Response(ResponseType RESPONSE_TYPE,ResponseResult RESPONSE_RESULT
         SELL_PRODUCT,
         MAKE_OFFER,
         REGISTER_INTEREST,
-        GET_PURCHASE_HISTORY
+        GET_PURCHASE_HISTORY,
+        NOTIFICATION;
     }
 }

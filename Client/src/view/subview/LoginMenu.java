@@ -61,4 +61,12 @@ public class LoginMenu {
         getPassword();
         controller.login();
     }
+
+    public void loginSuccess() {
+        mainView.showMessage("");
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|---------------Login successful---------------|");
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("");
+    }
 }
