@@ -2,8 +2,8 @@ package controller;
 
 import controller.subcontrollers.ConnectionController;
 import controller.subcontrollers.LoginController;
-import Shared.Shared.src.Product;
-import Shared.Shared.src.User;
+import shared.Product;
+import shared.User;
 import view.View;
 
 import java.io.IOException;

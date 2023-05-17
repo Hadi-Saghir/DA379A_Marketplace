@@ -1,5 +1,7 @@
 package handlers;
 
+import shared.Request;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -47,7 +49,7 @@ public class ClientHandler implements Runnable {
             while ((inputObject = in.readObject()) != null) {
                 if(inputObject instanceof Request){
                      handler.handle((Request) inputObject, this);
-                     //Must add a response from the requestHandler. Response will be sent to the client
+                     //Must add a response from the requestHandler. shared.Response will be sent to the client
                 }
             }
             // Close the client socket

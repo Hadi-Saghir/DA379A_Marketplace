@@ -1,5 +1,7 @@
 package handlers;
 
+import shared.Request;
+
 public class AuthenticationHandler extends Handler {
 
     protected Handler nextHandler;

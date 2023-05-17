@@ -1,8 +1,8 @@
 package model;
 
 import controller.subcontrollers.ConnectionController;
-import Shared.Shared.src.Request;
-import Shared.Shared.src.Response;
+import shared.Request;
+import shared.Response;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -52,6 +52,7 @@ public class ServerHandler {
             }
         }
     }
+
 
     public Response sendRequest(Request request) throws IOException, ClassNotFoundException {
         connectToServer();

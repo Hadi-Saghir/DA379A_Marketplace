@@ -1,5 +1,11 @@
 package handlers;
 
+import shared.Product;
+import shared.Response;
+import shared.Response.ResponseResult;
+import shared.Response.ResponseType;
+import shared.Product.*;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +44,13 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.REGISTER, Response.ResponseResult.SUCCESS, null);
+                return new Response(ResponseType.REGISTER, ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.REGISTER , Response.ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.REGISTER , ResponseResult.SUCCESS, null);
     }
 
     public synchronized Response loginUser(String username, String password) {
@@ -59,13 +65,13 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.LOGIN, Response.ResponseResult.SUCCESS, null);
+                return new Response(ResponseType.LOGIN, ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.LOGIN , Response.ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.LOGIN , ResponseResult.SUCCESS, null);
     }
 
 
@@ -86,13 +92,13 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
+                return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
     }
 
 
@@ -116,7 +122,7 @@ public class Database {
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
-                        Product.ProductCondition.valueOf(rs.getString("condition")),
+                        ProductCondition.valueOf(rs.getString("condition")),
                         ProductState.valueOf(rs.getString("state"))
                 );
                 products.add(product);
@@ -125,7 +131,7 @@ public class Database {
             System.out.println(e.getMessage());
         }
 
-        return new Response(ResponseType.LOGIN , Response.ResponseResult.SUCCESS, products);
+        return new Response(ResponseType.LOGIN , ResponseResult.SUCCESS, products);
     }
 
 
@@ -158,13 +164,13 @@ public class Database {
             int rowsAffected = pstmt.executeUpdate();
             int res = pstmt.executeUpdate();
             if(res>0){
-                return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
+                return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
     }
 
     public Response makeOffer(String buyer, int productId, double price) {
@@ -176,13 +182,13 @@ public class Database {
             pstmt.setDouble(3, productId);
             int res = pstmt.executeUpdate();
             if(res==1){
-                return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
+                return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.ADD_PRODUCT , Response.ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
     }
 
 
@@ -193,7 +199,7 @@ public class Database {
     public Response registerInterest(int user, String type) {
         return null;
     }
-    public List<String> fetchInterestedUsers(ProductType type) {
+    public List<String> fetchInterestedUsers(Product.ProductType type) {
         List<String> interestedUsers = new ArrayList<>();
         String query = "SELECT username FROM interest WHERE type = ?";
 
@@ -215,7 +221,7 @@ public class Database {
         return null;
     }
 
-    public ResponseType addNotification(String user, String message) {
+    public void addNotification(String user, String message) {
         String sql = "INSERT INTO notifications (username, message) VALUES (?, ?)";
 
         try (Connection conn = getConnection();
@@ -223,21 +229,18 @@ public class Database {
             pstmt.setString(1, user);
             pstmt.setString(2, message);
             pstmt.executeUpdate();
-            return ResponseType.SUCCESS;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
-        return ResponseType.FAILURE;
     }
 
-    public String getBuyer(int offerid) {
+    public String getBuyer(int offerId) {
         String buyer = null;
-        String query = "SELECT username FROM offer WHERE offerid = ?";
+        String query = "SELECT username FROM offer WHERE offerId = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, offerid);
+            pstmt.setInt(1, offerId);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -249,13 +252,13 @@ public class Database {
         return buyer;
     }
 
-    public String getSeller(int productid) {
+    public String getSeller(int productId) {
         String seller = null;
-        String query = "SELECT username FROM product WHERE productid = ?";
+        String query = "SELECT username FROM product WHERE productId = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, productid);
+            pstmt.setInt(1, productId);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -276,9 +279,9 @@ public class Database {
         Database dbHandler = new Database();
         dbHandler.registerUser("janedoe","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
         System.out.println(dbHandler.loginUser("janedoe","Tesst123"));
-        List<Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
+        List<shared.Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
         System.out.println("size: " + results.size());
-        for (Product p:
+        for (shared.Product p:
                 results) {
             System.out.println(p.getType());
 

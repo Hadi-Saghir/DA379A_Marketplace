@@ -2,7 +2,7 @@ package controller.subcontrollers;
 
 import controller.InvalidFormatException;
 import controller.MainController;
-import Shared.Shared.src.User;
+import shared.User;
 import view.View;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class LoginController {
 
         try {
             if(mainController.doCreateNewUser(user)) {
-                view.showMessage("User created successfully");
+                view.showMessage("shared.User created successfully");
             } else {
                 view.showError("Failed to create user");
             }

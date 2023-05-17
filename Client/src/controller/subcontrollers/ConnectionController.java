@@ -2,9 +2,10 @@ package controller.subcontrollers;
 
 import controller.MainController;
 import model.ServerHandler;
-import Shared.Shared.src.Request;
-import Shared.Shared.src.Response;
-import Shared.Shared.src.User;
+import shared.Product;
+import shared.Request;
+import shared.Response;
+import shared.User;
 import view.View;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class ConnectionController {
 
     public boolean doLogin(String username, String password) throws IOException, ClassNotFoundException {
         Request request = Request.login(username, password);
-        return serverHandler.sendRequest(request).RESPONSE_TYPE() == Response.ResponseType.SUCCESS;
+        return serverHandler.sendRequest(request).RESPONSE_RESULT() == Response.ResponseResult.SUCCESS;
     }
 
 
@@ -47,7 +48,7 @@ public class ConnectionController {
         String username = user.getUsername();
         String password = user.getPassword();
         Request request = Request.register(firstName, lastName, dateOfBirth, email, username, password);
-        return serverHandler.sendRequest(request).RESPONSE_TYPE() == Response.ResponseType.SUCCESS;
+        return serverHandler.sendRequest(request).RESPONSE_RESULT() == Response.ResponseResult.SUCCESS;
     }
 
     public void showMessage(String message) {
@@ -59,7 +60,7 @@ public class ConnectionController {
     }
 
     public void doProductSearch(String productType, double minPrice, double maxPrice, String searchCondition) {
-        Request request = Request.searchProduct(productType, minPrice, maxPrice, searchCondition);
+        Request request = Request.searchProduct(productType, minPrice, maxPrice, Product.ProductCondition.valueOf(searchCondition));
         try {
             Response products = serverHandler.sendRequest(request);
             // products.MESSAGE() //TODO

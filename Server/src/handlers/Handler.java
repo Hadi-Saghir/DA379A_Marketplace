@@ -1,5 +1,8 @@
 package handlers;
 
+import shared.Request;
+import shared.Response;
+
 public abstract class Handler {
     private Handler nextHandler;
 

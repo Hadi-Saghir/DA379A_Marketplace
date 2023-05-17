@@ -1,5 +1,8 @@
 package handlers;
 
+import shared.Request;
+import shared.Response;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -62,7 +65,7 @@ public class RequestHandler extends Handler {
         double price = request.getPrice();
         int year = request.getYearOfProduction();
         String color = request.getColor();
-        String condition = request.getCondition();
+        String condition = String.valueOf(request.getCondition());
         return database.addProduct(seller, type, price, year, color, condition);
     }
 
@@ -76,7 +79,7 @@ public class RequestHandler extends Handler {
         String type = request.getType().toString();
         double minPrice = request.getMinPrice();
         double maxPrice = request.getMaxPrice();
-        String condition = request.getCondition();
+        String condition = String.valueOf(request.getCondition());
         return database.searchProducts(type, minPrice, maxPrice, condition);
     }
 
