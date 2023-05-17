@@ -206,22 +206,7 @@ public class Database {
         return null;
     }
 
-    public ResponseType addNotification(String user, String message) {
-        String sql = "INSERT INTO notifications (username, message) VALUES (?, ?)";
-
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user);
-            pstmt.setString(2, message);
-            pstmt.executeUpdate();
-            return ResponseType.SUCCESS;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return ResponseType.FAILURE;
     }
-
 
 
     public static void main(String[] args) {
@@ -244,9 +229,5 @@ public class Database {
 
     }
 
-/*
-    public boolean registerInterest(String buyer, String type) {
-    }
 
- */
 }
