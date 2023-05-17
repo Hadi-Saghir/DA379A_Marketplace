@@ -1,12 +1,12 @@
 package handlers;
 
 
-import shared.Product;
-import shared.Product.ProductType;
-import shared.Product.ProductState;
+import Shared.Shared.src.Product;
+import Shared.Shared.src.Product.ProductType;
+import Shared.Shared.src.Product.ProductState;
 
-import shared.Response;
-import shared.Response.ResponseType;
+import Shared.Shared.src.Response;
+import Shared.Shared.src.Response.ResponseType;
 
 
 

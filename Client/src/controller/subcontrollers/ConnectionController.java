@@ -2,9 +2,9 @@ package controller.subcontrollers;
 
 import controller.MainController;
 import model.ServerHandler;
-import shared.Request;
-import shared.Response;
-import shared.User;
+import Shared.Shared.src.Request;
+import Shared.Shared.src.Response;
+import Shared.Shared.src.User;
 import view.View;
 
 import java.io.IOException;

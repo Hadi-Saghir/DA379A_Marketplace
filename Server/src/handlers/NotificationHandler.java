@@ -1,8 +1,8 @@
 package handlers;
 
 
-import shared.Notification;
-import shared.Request;
+import Shared.Shared.src.Notification;
+import Shared.Shared.src.Request;
 import java.io.IOException;
 import java.util.*;
 

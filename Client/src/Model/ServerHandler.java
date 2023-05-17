@@ -1,8 +1,8 @@
 package model;
 
 import controller.subcontrollers.ConnectionController;
-import shared.Request;
-import shared.Response;
+import Shared.Shared.src.Request;
+import Shared.Shared.src.Response;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

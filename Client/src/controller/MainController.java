@@ -1,12 +1,9 @@
 package controller;
 
-import controller.Controller;
-import controller.InvalidFormatException;
 import controller.subcontrollers.ConnectionController;
 import controller.subcontrollers.LoginController;
-import shared.Conditions;
-import shared.Product;
-import shared.User;
+import Shared.Shared.src.Product;
+import Shared.Shared.src.User;
 import view.View;
 
 import java.io.IOException;

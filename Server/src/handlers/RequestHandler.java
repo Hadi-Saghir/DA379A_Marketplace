@@ -1,9 +1,8 @@
 package handlers;
 
-import shared.Request;
-import shared.Notification;
-import shared.Product;
-import shared.Response;
+import Shared.Shared.src.Request;
+import Shared.Shared.src.Product;
+import Shared.Shared.src.Response;
 
 import java.util.List;
 

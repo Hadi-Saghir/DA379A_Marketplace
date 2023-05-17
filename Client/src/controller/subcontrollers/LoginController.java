@@ -2,7 +2,7 @@ package controller.subcontrollers;
 
 import controller.InvalidFormatException;
 import controller.MainController;
-import shared.User;
+import Shared.Shared.src.User;
 import view.View;
 
 import java.io.IOException;
