@@ -12,11 +12,17 @@ public interface View {
     void showWelcomeMessage();
     void showLoginMenu();
     void showMainMenu();
-    void getAccountDetails();
+    void getFirstName();
+    void getLastName();
+    void getDateOfBirth();
+    void getEmailAddress();
+    void getUsername();
+    void getPassword();
 
     void showBuyMenu(List<String> productTypes, List<String> conditions);
 
     void connectionError(String message);
 
     void parseError(String message);
+    void listPurchasableProducts(List<String> products);
 }

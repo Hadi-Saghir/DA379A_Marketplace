@@ -1,6 +1,5 @@
 package view.subview;
 
-import controller.InvalidFormatException;
 import controller.Controller;
 import view.MainView;
 
@@ -22,9 +21,9 @@ public class LoginMenu {
         System.out.print("Enter option: ");
 
         String input = mainView.promptForInput("");
-        switch (input) {
+        switch(input) {
             case "0" -> controller.exit();
-            case "1" -> controller.login();
+            case "1" -> login();
             case "2" -> controller.createAccount();
             default -> {
                 mainView.showError("Invalid option");
@@ -33,60 +32,33 @@ public class LoginMenu {
         }
     }
 
-    public void getAccountDetails() {
-        String firstName = null, lastName = null, dob = null, emailAddress = null, username = null, password = null;
-        do {
-            try {
-                firstName = mainView.promptForInput("Enter first name: ");
-                controller.setFirstName(firstName);
-            } catch (InvalidFormatException e) {
-                mainView.showError(e.getMessage());
-            }
-        } while(firstName == null);
+    public void getFirstName() {
+        controller.setFirstName(mainView.promptForInput("Enter first name: "));
+    }
 
-        do {
-            try {
-                lastName = mainView.promptForInput("Enter last name: ");
-                controller.setLastName(lastName);
-            } catch (InvalidFormatException e) {
-                mainView.showError(e.getMessage());
-            }
-        } while(lastName == null);
+    public void getLastName() {
+        controller.setLastName(mainView.promptForInput("Enter last name: "));
+    }
 
-        do {
-            try {
-                dob = mainView.promptForInput("Enter date of birth (dd/mm/yyyy): ");
-                controller.setDateOfBirth(dob);
-            } catch (InvalidFormatException e) {
-                mainView.showError(e.getMessage());
-            }
-        } while(dob == null);
+    public void getDateOfBirth() {
+        controller.setDateOfBirth(mainView.promptForInput("Enter date of birth (yyyy-mm-dd): "));
+    }
 
-        do {
-            try {
-                emailAddress = mainView.promptForInput("Enter email address: ");
-                controller.setEmailAddress(emailAddress);
-            } catch (InvalidFormatException e) {
-                mainView.showError(e.getMessage());
-            }
-        } while(emailAddress == null);
+    public void getEmailAddress() {
+        controller.setEmailAddress(mainView.promptForInput("Enter email address: "));
+    }
 
-        do {
-            try {
-                username = mainView.promptForInput("Enter username: ");
-                controller.setUsername(username);
-            } catch (InvalidFormatException e) {
-                mainView.showError(e.getMessage());
-            }
-        } while(username == null);
+    public void getUsername() {
+        controller.setUsername(mainView.promptForInput("Enter username: "));
+    }
 
-        do {
-            try {
-                password = mainView.promptForInput("Enter password: ");
-                controller.setPassword(password);
-            } catch (InvalidFormatException e) {
-                mainView.showError(e.getMessage());
-            }
-        } while(password == null);
+    public void getPassword() {
+        controller.setPassword(mainView.promptForInput("Enter password: "));
+    }
+
+    private void login() {
+        getUsername();
+        getPassword();
+        controller.login();
     }
 }

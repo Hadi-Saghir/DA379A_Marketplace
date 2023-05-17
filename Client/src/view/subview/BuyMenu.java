@@ -139,4 +139,32 @@ public class BuyMenu {
 
         return input;
     }
+
+    public void listPurchasableProducts(List<String> products) {
+        System.out.println("|----------------------------------------------|");
+        System.out.println("|------------------Products--------------------|");
+        System.out.println("|----------------------------------------------|");
+        System.out.println("|-0. Back                                     -|");
+        for(int i = 0; i < products.size(); i++) {
+            System.out.println("|-" + (i + 1) + ". " + products.get(i));
+        }
+        System.out.println("|----------------------------------------------|");
+
+        String input = mainView.promptForInput("Enter option: ");
+        switch (input) {
+            case "0" -> showBuyMenu();
+            default -> {
+                try {
+                    int index = Integer.parseInt(input);
+                    if(index < 1 || index > products.size()) {
+                        throw new NumberFormatException();
+                    }
+                    // controller.addProductToCart(index - 1);
+                } catch(NumberFormatException e) {
+                    mainView.showError("Invalid option");
+                    listPurchasableProducts(products);
+                }
+            }
+        }
+    }
 }

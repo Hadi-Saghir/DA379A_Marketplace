@@ -9,12 +9,12 @@ public interface Controller {
     void login();
     void createAccount();
 
-    void setFirstName(String firstName) throws InvalidFormatException;
-    void setLastName(String lastName) throws InvalidFormatException;
-    void setEmailAddress(String emailAddress) throws InvalidFormatException;
-    void setUsername(String username) throws InvalidFormatException;
-    void setPassword(String password) throws InvalidFormatException;
-    void setDateOfBirth(String dob) throws InvalidFormatException;
+    void setFirstName(String firstName);
+    void setLastName(String lastName);
+    void setEmailAddress(String emailAddress);
+    void setUsername(String username);
+    void setPassword(String password);
+    void setDateOfBirth(String dob);
     void logout();
 
     void buyProducts();

@@ -2,7 +2,6 @@ package view;
 
 
 import controller.Controller;
-import view.View;
 import view.subview.BuyMenu;
 import view.subview.LoginMenu;
 import view.subview.MainMenu;
@@ -23,7 +22,10 @@ public class MainView implements View {
         buyMenu = new BuyMenu(this, controller);
     }
     public void showMessage(String message) {System.out.println(message);}
-    public void showError(String error) {System.err.println(error);}
+    public void showError(String error) {
+        System.err.println(error);
+        System.out.println();
+    }
 
     public String promptForInput(String prompt) {
         Scanner in = new Scanner(System.in);
@@ -47,8 +49,33 @@ public class MainView implements View {
     }
 
     @Override
-    public void getAccountDetails() {
-        loginMenu.getAccountDetails();
+    public void getFirstName() {
+        loginMenu.getFirstName();
+    }
+
+    @Override
+    public void getLastName() {
+        loginMenu.getLastName();
+    }
+
+    @Override
+    public void getDateOfBirth() {
+        loginMenu.getDateOfBirth();
+    }
+
+    @Override
+    public void getEmailAddress() {
+        loginMenu.getEmailAddress();
+    }
+
+    @Override
+    public void getUsername() {
+        loginMenu.getUsername();
+    }
+
+    @Override
+    public void getPassword() {
+        loginMenu.getPassword();
     }
 
     @Override
@@ -66,5 +93,10 @@ public class MainView implements View {
     public void parseError(String message) {
         showError("Error reading response from server. Please try again.");
         showError(message);
+    }
+
+    @Override
+    public void listPurchasableProducts(List<String> products) {
+        buyMenu.listPurchasableProducts(products);
     }
 }

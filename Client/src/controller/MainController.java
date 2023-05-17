@@ -49,32 +49,32 @@ public class MainController implements Controller {
     }
 
     @Override
-    public void setFirstName(String firstName) throws InvalidFormatException {
+    public void setFirstName(String firstName) {
         loginController.setFirstName(firstName);
     }
 
     @Override
-    public void setLastName(String lastName) throws InvalidFormatException {
+    public void setLastName(String lastName) {
         loginController.setLastName(lastName);
     }
 
     @Override
-    public void setEmailAddress(String emailAddress) throws InvalidFormatException {
+    public void setEmailAddress(String emailAddress) {
         loginController.setEmailAddress(emailAddress);
     }
 
     @Override
-    public void setUsername(String username) throws InvalidFormatException {
+    public void setUsername(String username) {
         loginController.setUsername(username);
     }
 
     @Override
-    public void setPassword(String password) throws InvalidFormatException {
+    public void setPassword(String password) {
         loginController.setPassword(password);
     }
 
     @Override
-    public void setDateOfBirth(String dob) throws InvalidFormatException {
+    public void setDateOfBirth(String dob) {
         loginController.setDateOfBirth(dob);
     }
 
@@ -131,11 +131,11 @@ public class MainController implements Controller {
         loginController.login();
     }
 
-    public boolean doCreateNewUser(User user) throws IOException, ClassNotFoundException {
-        return connectionController.doCreateNewUser(user);
+    public void doCreateNewUser(User user) throws IOException, ClassNotFoundException {
+        connectionController.doCreateNewUser(user);
     }
 
-    public boolean doLogin(String username, String password) throws IOException, ClassNotFoundException {
-        return connectionController.doLogin(username, password);
+    public void doLogin(String username, String password) throws IOException, ClassNotFoundException {
+        connectionController.doLogin(username, password);
     }
 }
