@@ -8,6 +8,7 @@ import Shared.src.shared.Product.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -46,7 +47,7 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.REGISTER , ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.REGISTER , ResponseResult.FAILURE, null);
     }
 
     public synchronized Response loginUser(String username, String password) {
@@ -318,4 +319,8 @@ public class Database {
         //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");*/
 
     }
+
+
+
+
 }
