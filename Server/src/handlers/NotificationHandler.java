@@ -25,30 +25,33 @@ public class NotificationHandler extends Handler{
     protected void handleRequest(Request request, ClientHandler clientHandler) {
         Request.RequestType requestType = request.getType();
         String msg = "invalid";
-        int concernedUsers[] = null;
+        int[] concernedUsers = null;
 
         switch (requestType) {
             case ADD_PRODUCT:
-                concernedUsers = request.getConcernedUserId();
+                concernedUsers = request.getConcernedusername();
                 msg = "New product you might be interested in!";
                 break;
             case SELL_PRODUCT:
-                concernedUsers = request.getConcernedUserId();
+                concernedUsers = request.getConcernedusername();
                 msg = "Seller has accepted your offer!!";
                 break;
             case Make_Offer:
-                concernedUsers = request.getConcernedUserId();
+                concernedUsers = request.getConcernedusername();
                 msg = "New offer!!";
                 break;
         }
 
+        /*
         if(concernedUsers != null) {
-            for (int clientId: concernedUsers
+            for (int s: concernedUsers
                  ) {
-                notificationQueue.addNotification(new Notification(clientId, msg));
+                notificationQueue.addNotification(new Notification(s, msg));
             }
 
         }
+        
+         */
     }
 
 
@@ -74,7 +77,7 @@ public class NotificationHandler extends Handler{
                 LinkedHashMap<Client, ClientHandler> onlineClients = ClientHandler.getOnlineClients();
                 Boolean online = false;
                 for(Client client: onlineClients.keySet()){
-                    if(client.getCurrClientId().equals(notification.getClientId())){
+                    if(client.getCurrClientId().equals(notification.getUsername())){
                         try {
                             onlineClients.get(client).writeToClient(notification);
                             online = true;

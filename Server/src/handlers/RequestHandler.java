@@ -25,19 +25,21 @@ public class RequestHandler extends Handler {
 
 
     @Override
-    public void handleRequest(Request request, ClientHandler clientHandler) {
+    public Response handleRequest(Request request, ClientHandler clientHandler) {
+        Response res = null;
         switch (request.getType().toString()) {
-            case "REGISTER" -> registerUser(request, clientHandler);
-            case "LOGIN" -> loginUser(request, clientHandler);
-            case "ADD_PRODUCT" -> addProduct(request, clientHandler);
-            case "SEARCH_PRODUCT" -> searchProducts(request, clientHandler);
-            case "SELL_PRODUCT" -> sellProduct(request, clientHandler);
-            case "MAKE_OFFER" -> makeOffer(request, clientHandler);
-            case "REGISTER_INTEREST" -> registerInterest(request, clientHandler);
-            case "GET_PURCHASE_HISTORY" -> getPurchases(request, clientHandler);
+            case "REGISTER" ->  res = registerUser(request, clientHandler);
+            case "LOGIN" ->  res = loginUser(request, clientHandler);
+            case "ADD_PRODUCT" -> res =addProduct(request, clientHandler);
+            case "SEARCH_PRODUCT" -> res = searchProducts(request, clientHandler);
+            case "SELL_PRODUCT" -> res = sellProduct(request, clientHandler);
+            case "MAKE_OFFER" -> res = makeOffer(request, clientHandler);
+            case "REGISTER_INTEREST" -> res =registerInterest(request, clientHandler);
+            case "GET_PURCHASE_HISTORY" -> res = getPurchases(request, clientHandler);
             default -> {
             }
         }
+        return res;
     }
 
 
@@ -68,7 +70,7 @@ public class RequestHandler extends Handler {
         return database.loginUser(username, password);
     }
 
-    public List<Product> searchProducts(Request request, ClientHandler requester) {
+    public Response searchProducts(Request request, ClientHandler requester) {
         String type = request.getType().toString();
         double minPrice = request.getMinPrice();
         double maxPrice = request.getMaxPrice();
@@ -106,6 +108,7 @@ public class RequestHandler extends Handler {
         return database.getNotifications(user);
     }
 
+    public synchronized ResponseType addNotifications(String clientId, String message) {
     public synchronized boolean addNotifications(String clientId, String message) {
         return database.addNotification(clientId, message);
     }

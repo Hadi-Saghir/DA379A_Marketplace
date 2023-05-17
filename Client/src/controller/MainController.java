@@ -122,7 +122,7 @@ public class MainController implements Controller {
     @Override
     public void buyProducts() {
         List<String> productTypes = Stream.of(Product.ProductType.values()).map(Product.ProductType::name).toList();
-        List<String> conditions = Stream.of(Conditions.values()).map(Conditions::name).toList();
+        List<String> conditions = Stream.of(Product.ProductCondition.values()).map(Product.ProductCondition::name).toList();
         view.showBuyMenu(productTypes, conditions);
     }
 

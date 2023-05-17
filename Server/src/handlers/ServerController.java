@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ServerController implements Runnable{
 
     private ServerSocket serverSocket;
-    private Database db;
     private ExecutorService executorService;
     private AtomicBoolean running;
 
@@ -41,8 +40,6 @@ public class ServerController implements Runnable{
                 Client client = new Client(socket);
                 // Submit a task to the thread pool to handle the client request
                 ClientHandler clientHandler = new ClientHandler(client);
-                RequestHandler requestHandler = new RequestHandler(db,null);
-                AuthenticationHandler authenticationHandler = new AuthenticationHandler(db,requestHandler);
                 executorService.submit(clientHandler);
             } catch (IOException e) {
                 System.out.println("Error accepting client connection: " + e.getMessage());

@@ -19,11 +19,12 @@ public abstract class Handler {
 
 
     public void handle(Request request, ClientHandler clientHandler) {
-        this.handleRequest(request, clientHandler);
+
+        handleRequest(request, clientHandler);
 
         if (this.nextHandler != null) {
 
-            this.nextHandler.handle(request, clientHandler);
+            nextHandler.handle(request, clientHandler);
         }
     }
 
