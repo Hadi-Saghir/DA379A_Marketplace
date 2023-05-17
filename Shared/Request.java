@@ -26,7 +26,7 @@ public class Request implements Serializable {
     }
 
     //Additional information
-    private int[] concernedUserId; // this id help identify which user we need to notify
+    private int[] concernedusername; // this id help identify which user we need to notify
 
 
     // user data
@@ -58,10 +58,10 @@ public class Request implements Serializable {
 
     // register interest data
     private String interestedProductType;
-    private int userId;
+    //private int username;
 
     // purchase history data
-    private int userIdForHistory;
+    private int usernameForHistory;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -107,31 +107,31 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request sellProduct(int offerID, int sellerId) {
+    public static Request sellProduct(int offerID, String sellerid) {
         Request request = new Request(RequestType.SELL_PRODUCT);
         request.setOfferId(offerID);
-        request.setUserId(sellerId);
+        request.setUsername(sellerid);
         return request;
     }
 
-    public static Request makeOffer(int productId, int buyerId, double price) {
+    public static Request makeOffer(int productId, String buyerId, double price) {
         Request request = new Request(RequestType.Make_Offer);
         request.setProductId(productId);
-        request.setUserId(buyerId);
+        request.setUsername(buyerId);
         request.setPrice(price);
         return request;
     }
 
-    public static Request registerInterest(String interestedProductType, int userId) {
+    public static Request registerInterest(String interestedProductType, String username) {
         Request request = new Request(RequestType.REGISTER_INTEREST);
         request.setInterestedProductType(interestedProductType);
-        request.setUserId(userId);
+        request.setUsername(username);
         return request;
     }
 
-    public static Request getPurchaseHistory(int userIdForHistory, LocalDate startDate, LocalDate endDate) {
+    public static Request getPurchaseHistory(int usernameForHistory, LocalDate startDate, LocalDate endDate) {
         Request request = new Request(RequestType.GET_PURCHASE_HISTORY);
-        request.setUserIdForHistory(userIdForHistory);
+        request.setUserNameForHistory(usernameForHistory);
         request.setStartDate(startDate);
         request.setEndDate(endDate);
         return request;
@@ -167,10 +167,6 @@ public class Request implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public void setUsername(String username) {
@@ -273,20 +269,17 @@ public class Request implements Serializable {
         this.interestedProductType = interestedProductType;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
+    }
+    
+
+    public int getusernameForHistory() {
+        return usernameForHistory;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getUserIdForHistory() {
-        return userIdForHistory;
-    }
-
-    public void setUserIdForHistory(int userIdForHistory) {
-        this.userIdForHistory = userIdForHistory;
+    public void setUserNameForHistory(int userNameHistory) {
+        this.usernameForHistory = usernameForHistory;
     }
 
     public LocalDate getStartDate() {
@@ -317,12 +310,12 @@ public class Request implements Serializable {
         this.type = type;
     }
 
-    public int[] getConcernedUserId() {
-        return concernedUserId;
+    public int[] getConcernedusername() {
+        return concernedusername;
     }
 
-    public void setConcernedUserId(int[] concernedUserId) {
-        this.concernedUserId = concernedUserId;
+    public void setConcernedusername(int[] concernedusername) {
+        this.concernedusername = concernedusername;
     }
 
     public RequestType getType() {

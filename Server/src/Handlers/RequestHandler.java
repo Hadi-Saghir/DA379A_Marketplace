@@ -75,7 +75,7 @@ public class RequestHandler extends Handler {
     }
 
     public ResponseType addProduct(Request request, ClientHandler requester) {
-        String seller = String.valueOf(request.getUserId());
+        String seller = String.valueOf(request.getUsername());
         String type = request.getType().toString();
         double price = request.getPrice();
         int year = request.getYearOfProduction();
@@ -104,36 +104,36 @@ public class RequestHandler extends Handler {
     }
 
     public ResponseType sellProduct(Request request, ClientHandler requester) {
-        int seller = request.getUserId();
+        String seller = request.getUsername();
         int offerId = request.getOfferId();
         return database.sellProduct(seller, offerId);
     }
 
     public ResponseType makeOffer(Request request, ClientHandler requester) {
-        int seller = request.getUserId();
+        String seller = request.getUsername();
         int offer = request.getOfferId();
         return database.makeOffer(seller, offer);
     }
 
     public List<Product> getPurchases(Request request, ClientHandler requester) {
-        int buyer = request.getUserId();
+        String buyer = request.getUsername();
         String startDate = request.getStartDate().toString();
         String endDate = request.getEndDate().toString();
         return database.getPurchases(buyer, startDate, endDate);
     }
 
     public boolean registerInterest(Request request, ClientHandler requester) {
-        int buyer = request.getUserId();
+        String buyer = request.getUsername();
         String type = request.getType().toString();
         return database.registerInterest(buyer, type);
     }
 
     public List<Notification> getNotifications(Request request) {
-        int user = request.getUserId();
+        String user = request.getUsername();
         return database.getNotifications(user);
     }
 
-    public synchronized boolean addNotifications(String clientId, String message) {
+    public synchronized ResponseType addNotifications(String clientId, String message) {
         return database.addNotification(clientId, message);
     }
 

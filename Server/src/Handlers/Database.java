@@ -159,11 +159,11 @@ public class Database {
     }
 
 
-    public ResponseType sellProduct(int seller, int offerId) {
+    public ResponseType sellProduct(String seller, int offerId) {
         String updateStatement = "UPDATE product SET state = 'SOLD' WHERE username = ? AND offerId = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
-            pstmt.setInt(1, seller);
+            pstmt.setString(1, seller);
             pstmt.setInt(2, offerId);
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0 ? ResponseType.SUCCESS : ResponseType.FAILURE;
@@ -173,11 +173,11 @@ public class Database {
         }
     }
 
-    public ResponseType makeOffer(int buyer, int productId) {
+    public ResponseType makeOffer(String buyer, int productId) {
         String query = "INSERT INTO offer (buyer, productid) VALUES (?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, buyer);
+            pstmt.setString(1, buyer);
             pstmt.setInt(2, productId);
             pstmt.executeUpdate();
             return ResponseType.SUCCESS;
@@ -188,21 +188,84 @@ public class Database {
     }
 
 
-    public List<Product> getPurchases(int buyer, String startDate, String endDate) {
-        return null;
+    public List<Product> getPurchases(String username, String startDate, String endDate) {
+        List<Product> purchases = new ArrayList<>();
+        String sql = "SELECT offerid FROM purchasehistory WHERE username = ? AND date BETWEEN ? AND ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setDate(2, Date.valueOf(startDate));
+            pstmt.setDate(3, Date.valueOf(endDate));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    int offerid = rs.getInt("offerid");
+                    String productSql = "SELECT * FROM product WHERE productid IN (SELECT productid FROM offer WHERE offerid = ?)";
+                    try (PreparedStatement productPstmt = conn.prepareStatement(productSql)) {
+                        productPstmt.setInt(1, offerid);
+                        try (ResultSet productRs = productPstmt.executeQuery()) {
+                            while (productRs.next()) {
+                                int productid = productRs.getInt("productid");
+                                ProductType type = ProductType.valueOf(productRs.getString("type"));
+                                double price = productRs.getDouble("price");
+                                int year = productRs.getInt("year");
+                                String color = productRs.getString("color");
+                                String condition = productRs.getString("condition");
+                                ProductState state = ProductState.valueOf(productRs.getString("state"));
+                                Product product = new Product(productid, username, type, price, year, color, condition, state);
+                                purchases.add(product);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return purchases;
     }
 
-    public boolean registerInterest(int user, String type) {
-        return false;
+
+
+    public List<Notification> getNotifications(String user) {
+        List<Notification> notifications = new ArrayList<>();
+        String sql = "SELECT notificationid, message, productid FROM notifications WHERE username = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, user);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    int notificationid = rs.getInt("notificationid");
+                    String message = rs.getString("message");
+                    int productid = rs.getInt("productid");
+
+                    Notification notification = new Notification(user, message);
+                    notifications.add(notification);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return notifications;
     }
 
-    public List<Notification> getNotifications(int user) {
-        return null;
+    public ResponseType addNotification(String user, String message) {
+        String sql = "INSERT INTO notifications (username, message) VALUES (?, ?)";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, user);
+            pstmt.setString(2, message);
+            pstmt.executeUpdate();
+            return ResponseType.SUCCESS;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return ResponseType.FAILURE;
     }
 
-    public boolean addNotification(String user, String message) {
-        return false;
-    }
 
 
     public static void main(String[] args) {
@@ -221,10 +284,13 @@ public class Database {
 
         }
 
-
         //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");
 
     }
 
+/*
+    public boolean registerInterest(String buyer, String type) {
+    }
 
+ */
 }
