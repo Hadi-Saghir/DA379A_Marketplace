@@ -20,7 +20,7 @@ public record Response(ResponseType RESPONSE_TYPE,ResponseResult RESPONSE_RESULT
         ADD_PRODUCT,
         SEARCH_PRODUCT,
         SELL_PRODUCT,
-        Make_Offer,
+        MAKE_OFFER,
         REGISTER_INTEREST,
         GET_PURCHASE_HISTORY
     }

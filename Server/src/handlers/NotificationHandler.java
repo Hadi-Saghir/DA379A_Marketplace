@@ -44,7 +44,7 @@ public class NotificationHandler extends Handler{
                 msg = "Seller has accepted your offer!!";
                 notificationQueue.addNotification(new Notification(concernedUser, msg));
                 break;
-            case Make_Offer:
+            case MAKE_OFFER:
                 concernedUser = db.getSeller(request.getProductId());
                 msg = "New offer!!";
                 notificationQueue.addNotification(new Notification(concernedUser, msg));
