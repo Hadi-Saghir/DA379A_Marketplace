@@ -31,6 +31,7 @@ public class RequestHandler extends Handler {
             case "REGISTER" ->  res = registerUser(request, clientHandler);
             case "LOGIN" ->  res = loginUser(request, clientHandler);
             case "ADD_PRODUCT" -> res =addProduct(request, clientHandler);
+            case "ALL_PRODUCTS" -> res = getAllProducts(request, clientHandler);
             case "SEARCH_PRODUCT" -> res = searchProducts(request, clientHandler);
             case "SELL_PRODUCT" -> res = sellProduct(request, clientHandler);
             case "MAKE_OFFER" -> res = makeOffer(request, clientHandler);
@@ -73,6 +74,10 @@ public class RequestHandler extends Handler {
         String username = request.getUsername();
         String password = request.getPassword();
         return database.loginUser(username, password);
+    }
+
+    public Response getAllProducts(Request request, ClientHandler requester) {
+        return database.getAllProducts();
     }
 
     public Response searchProducts(Request request, ClientHandler requester) {

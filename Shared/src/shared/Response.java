@@ -18,6 +18,7 @@ public record Response(ResponseType RESPONSE_TYPE,ResponseResult RESPONSE_RESULT
         REGISTER,
         LOGIN,
         ADD_PRODUCT,
+        ALL_PRODUCTS,
         SEARCH_PRODUCT,
         SELL_PRODUCT,
         MAKE_OFFER,

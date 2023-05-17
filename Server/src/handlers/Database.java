@@ -101,6 +101,33 @@ public class Database {
         return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
     }
 
+    public synchronized Response allProducts() {
+        List<Object> products = new ArrayList<>();
+        String query = "SELECT * FROM product";
+
+        try(Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getInt("productid"),
+                        rs.getString("username"),
+                        ProductType.valueOf(rs.getString("type")),
+                        rs.getDouble("price"),
+                        rs.getInt("year"),
+                        rs.getString("color"),
+                        ProductCondition.valueOf(rs.getString("condition")),
+                        ProductState.valueOf(rs.getString("state"))
+                );
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.FAILURE, null);
+        }
+
+        return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.SUCCESS, products);
+    }
 
     public synchronized Response searchProducts(String type, double minPrice, double maxPrice, String condition) {
         List<Object> products = new ArrayList<>();

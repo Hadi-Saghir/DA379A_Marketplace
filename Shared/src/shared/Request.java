@@ -17,6 +17,7 @@ public class Request implements Serializable {
         REGISTER,
         LOGIN,
         ADD_PRODUCT,
+        ALL_PRODUCTS,
         SEARCH_PRODUCT,
         SELL_PRODUCT,
         Make_Offer,
@@ -104,6 +105,10 @@ public class Request implements Serializable {
         request.setColor(color);
         request.setCondition(condition);
         return request;
+    }
+
+    public static Request allProducts() {
+        return new Request(RequestType.ALL_PRODUCTS);
     }
 
     public static Request searchProduct(String productType, double minPrice, double maxPrice, Product.ProductCondition searchCondition) {
