@@ -163,7 +163,7 @@ public class Database {
         String updateStatement = "UPDATE product SET state = 'SOLD' WHERE username = ? AND offerId = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
-            pstmt.setInt(1, seller);
+            pstmt.setString(1, seller);
             pstmt.setInt(2, offerId);
             int rowsAffected = pstmt.executeUpdate();
             int res = pstmt.executeUpdate();
@@ -181,7 +181,7 @@ public class Database {
         String query = "INSERT INTO offer (buyer, productid) VALUES (?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, buyer);
+            pstmt.setString(1, buyer);
             pstmt.setInt(2, productId);
             int res = pstmt.executeUpdate();
             if(res==1){
@@ -207,8 +207,6 @@ public class Database {
         return null;
     }
 
-    public boolean addNotification(String user, String message) {
-        return false;
     }
 
 
@@ -228,8 +226,8 @@ public class Database {
 
         }
 
-
         //dbHandler.addProduct("Johns Doe", "Electronics", 99.99, 2022, "Black", "New");*/
+
     }
 
 

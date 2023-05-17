@@ -109,6 +109,7 @@ public class RequestHandler extends Handler {
         return database.getNotifications(user);
     }
 
+    public synchronized ResponseType addNotifications(String clientId, String message) {
     public synchronized boolean addNotifications(String clientId, String message) {
         return database.addNotification(clientId, message);
     }
