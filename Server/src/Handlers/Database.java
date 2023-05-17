@@ -126,7 +126,7 @@ public class Database {
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
-                        rs.getString("condition"),
+                        Product.ProductCondition.valueOf(rs.getString("condition")),
                         ProductState.valueOf(rs.getString("state"))
                 );
                 products.add(product);

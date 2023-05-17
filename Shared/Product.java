@@ -10,7 +10,7 @@ public class Product implements Serializable {
     private double price;
     private int yearOfProduction;
     private String color;
-    private String condition;
+    private ProductCondition condition;
 
     public enum ProductType{
         BOOK,
@@ -30,8 +30,15 @@ public class Product implements Serializable {
         SOLD
     }
 
+    public enum ProductCondition {
+        New,
+        Used,
+        Refurbished,
+        Damaged
+    }
 
-    public Product(ProductType type, double price, int yearOfProduction, String color, String condition, ProductState state) {
+
+    public Product(ProductType type, double price, int yearOfProduction, String color, ProductCondition condition, ProductState state) {
         this.username = username;
         this.type = type;
         this.price = price;
@@ -41,7 +48,7 @@ public class Product implements Serializable {
         this.state = state;
     }
 
-    public Product(int productid, String username, ProductType type, double price, int yearOfProduction, String color, String condition, ProductState state) {
+    public Product(int productid, String username, ProductType type, double price, int yearOfProduction, String color, ProductCondition condition, ProductState state) {
         this.username = username;
         this.type = type;
         this.price = price;
@@ -85,11 +92,11 @@ public class Product implements Serializable {
         this.color = color;
     }
 
-    public String getCondition() {
+    public ProductCondition getCondition() {
         return condition;
     }
 
-    public void setCondition(String condition) {
+    public void setCondition(ProductCondition condition) {
         this.condition = condition;
     }
 
