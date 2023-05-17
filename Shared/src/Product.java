@@ -1,5 +1,3 @@
-package Shared.Shared.src;
-
 import java.io.Serializable;
 
 public class Product implements Serializable {

@@ -1,15 +1,5 @@
 package handlers;
 
-
-import Shared.Shared.src.Product;
-import Shared.Shared.src.Product.ProductType;
-import Shared.Shared.src.Product.ProductState;
-
-import Shared.Shared.src.Response;
-import Shared.Shared.src.Response.ResponseType;
-
-
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

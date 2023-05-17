@@ -1,5 +1,3 @@
-package Shared.Shared.src;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;

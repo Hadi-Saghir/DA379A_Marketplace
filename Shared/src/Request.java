@@ -1,10 +1,14 @@
-package shared;
-
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Request implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3L;
+
+    public Response getResponse() {
+        return this.response;
+    }
 
     // request types
     public enum RequestType {
@@ -21,12 +25,14 @@ public class Request implements Serializable {
     // request type and base constructor for factory method
     private RequestType type;
 
+    private Response response;
+
     public Request(RequestType type) {
         this.type = type;
     }
 
     //Additional information
-    private int[] concernedusername; // this id help identify which user we need to notify
+    private int[] concernedUserId; // this id help identify which user we need to notify
 
 
     // user data
@@ -38,17 +44,17 @@ public class Request implements Serializable {
     private String password;
 
     // product data
-    private String productType;
+    private Product.ProductType productType;
     private double price;
     private int yearOfProduction;
     private String color;
-    private String condition;
+    private Product.ProductCondition condition;
 
     // search criteria
     private String searchProductType;
     private double minPrice;
     private double maxPrice;
-    private String searchCondition;
+    private Product.ProductCondition searchCondition;
 
     // buy product data
     private int productId;
@@ -58,10 +64,10 @@ public class Request implements Serializable {
 
     // register interest data
     private String interestedProductType;
-    //private int username;
+    private int userId;
 
     // purchase history data
-    private int usernameForHistory;
+    private int userIdForHistory;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -87,8 +93,8 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request addProduct(String productType, double price, int yearOfProduction,
-                                     String color, String condition) {
+    public static Request addProduct(Product.ProductType productType, double price, int yearOfProduction,
+                                     String color, Product.ProductCondition condition) {
         Request request = new Request(RequestType.ADD_PRODUCT);
         request.setProductType(productType);
         request.setPrice(price);
@@ -98,7 +104,7 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request searchProduct(String productType, double minPrice, double maxPrice, String searchCondition) {
+    public static Request searchProduct(String productType, double minPrice, double maxPrice, Product.ProductCondition searchCondition) {
         Request request = new Request(RequestType.SEARCH_PRODUCT);
         request.setSearchProductType(productType);
         request.setMinPrice(minPrice);
@@ -107,31 +113,31 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request sellProduct(int offerID, String seller) {
+    public static Request sellProduct(int offerID, int sellerId) {
         Request request = new Request(RequestType.SELL_PRODUCT);
         request.setOfferId(offerID);
-        request.setUsername(seller);
+        request.setUserId(sellerId);
         return request;
     }
 
-    public static Request makeOffer(int productId, String buyer, double price) {
+    public static Request makeOffer(int productId, int buyerId, double price) {
         Request request = new Request(RequestType.Make_Offer);
         request.setProductId(productId);
-        request.setUsername(buyer);
+        request.setUserId(buyerId);
         request.setPrice(price);
         return request;
     }
 
-    public static Request registerInterest(String interestedProductType, String username) {
+    public static Request registerInterest(String interestedProductType, int userId) {
         Request request = new Request(RequestType.REGISTER_INTEREST);
         request.setInterestedProductType(interestedProductType);
-        request.setUsername(username);
+        request.setUserId(userId);
         return request;
     }
 
-    public static Request getPurchaseHistory(int usernameForHistory, LocalDate startDate, LocalDate endDate) {
+    public static Request getPurchaseHistory(int userIdForHistory, LocalDate startDate, LocalDate endDate) {
         Request request = new Request(RequestType.GET_PURCHASE_HISTORY);
-        request.setUserNameForHistory(usernameForHistory);
+        request.setUserIdForHistory(userIdForHistory);
         request.setStartDate(startDate);
         request.setEndDate(endDate);
         return request;
@@ -169,6 +175,10 @@ public class Request implements Serializable {
         this.email = email;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -181,11 +191,11 @@ public class Request implements Serializable {
         this.password = password;
     }
 
-    public String getProductType() {
+    public Product.ProductType getProductType() {
         return productType;
     }
 
-    public void setProductType(String productType) {
+    public void setProductType(Product.ProductType productType) {
         this.productType = productType;
     }
 
@@ -213,11 +223,11 @@ public class Request implements Serializable {
         this.color = color;
     }
 
-    public String getCondition() {
+    public Product.ProductCondition getCondition() {
         return condition;
     }
 
-    public void setCondition(String condition) {
+    public void setCondition(Product.ProductCondition condition) {
         this.condition = condition;
     }
 
@@ -245,11 +255,11 @@ public class Request implements Serializable {
         this.maxPrice = maxPrice;
     }
 
-    public String getSearchCondition() {
+    public Product.ProductCondition getSearchCondition() {
         return searchCondition;
     }
 
-    public void setSearchCondition(String searchCondition) {
+    public void setSearchCondition(Product.ProductCondition searchCondition) {
         this.searchCondition = searchCondition;
     }
 
@@ -269,17 +279,20 @@ public class Request implements Serializable {
         this.interestedProductType = interestedProductType;
     }
 
-    public String getUsername() {
-        return username;
-    }
-    
-
-    public int getusernameForHistory() {
-        return usernameForHistory;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserNameForHistory(int userNameHistory) {
-        this.usernameForHistory = usernameForHistory;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getUserIdForHistory() {
+        return userIdForHistory;
+    }
+
+    public void setUserIdForHistory(int userIdForHistory) {
+        this.userIdForHistory = userIdForHistory;
     }
 
     public LocalDate getStartDate() {
@@ -310,15 +323,19 @@ public class Request implements Serializable {
         this.type = type;
     }
 
-    public int[] getConcernedusername() {
-        return concernedusername;
+    public int[] getConcernedUserId() {
+        return concernedUserId;
     }
 
-    public void setConcernedusername(int[] concernedusername) {
-        this.concernedusername = concernedusername;
+    public void setConcernedUserId(int[] concernedUserId) {
+        this.concernedUserId = concernedUserId;
     }
 
     public RequestType getType() {
         return type;
     }
+    public void setResponse(Response response) {
+        this.response = response;
+    }
+
 }

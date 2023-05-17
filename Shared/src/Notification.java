@@ -1,19 +1,17 @@
-package shared;
-
 import java.io.Serializable;
 
 public class Notification implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String username;
+    private String clientId;
     private String message;
 
-    public Notification(String username, String message) {
-        this.username = username;
+    public Notification(String clientId, String message) {
+        this.clientId = clientId;
         this.message = message;
     }
 
-    public String getUsername() {
-        return username;
+    public String getClientId() {
+        return clientId;
     }
 
     public String getMessage() {
