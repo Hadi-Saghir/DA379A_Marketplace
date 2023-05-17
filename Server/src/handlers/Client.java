@@ -1,4 +1,4 @@
-package handlers;
+package Handlers;
 
 import java.net.Socket;
 

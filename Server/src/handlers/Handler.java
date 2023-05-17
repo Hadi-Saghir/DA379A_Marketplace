@@ -1,13 +1,13 @@
-package handlers;
+package Handlers;
 
-import shared.Request;
-import shared.Response;
+import Shared.src.shared.Request;
+import Shared.src.shared.Response;
 
 public abstract class Handler {
     private Handler nextHandler;
 
     private Request request;
-    private shared.Response response;
+    private Shared.src.shared.Response response;
 
     public Handler(Handler nextHandler) {
         this.nextHandler = nextHandler;

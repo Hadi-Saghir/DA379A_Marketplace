@@ -1,10 +1,10 @@
-package handlers;
+package Handlers;
 
-import shared.Product;
-import shared.Response;
-import shared.Response.ResponseResult;
-import shared.Response.ResponseType;
-import shared.Product.*;
+import Shared.src.shared.Product;
+import Shared.src.shared.Response;
+import Shared.src.shared.Response.ResponseResult;
+import Shared.src.shared.Response.ResponseType;
+import Shared.src.shared.Product.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,10 +19,6 @@ public class Database {
     private static final String DB_USER = "am4404";
     private static final String DB_PASSWORD = "qvbm0y1x";
     private static final String DB_URL = "jdbc:postgresql://pgserver.mau.se/mini";
-
-    public Database() {
-
-    }
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -98,7 +94,7 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.ADD_PRODUCT , ResponseResult.FAILURE, null);
     }
 
     public synchronized Response allProducts() {
@@ -157,8 +153,13 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        if(products.size()>0){
+            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, products);
 
-        return new Response(ResponseType.LOGIN , ResponseResult.SUCCESS, products);
+        }
+        else {
+            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
+        }
     }
 
 

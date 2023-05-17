@@ -1,6 +1,8 @@
-package handlers;
+package Handlers;
 
-import shared.Request;
+
+import Shared.src.shared.Request;
+
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -101,6 +103,10 @@ public class ClientHandler implements Runnable {
 
     public synchronized static LinkedHashMap<Client, ClientHandler> getOnlineClients(){
         return onlineClients;
+    }
+
+    public Handler getHandler(){
+        return handler;
     }
 
 
