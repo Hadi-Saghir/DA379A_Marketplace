@@ -1,20 +1,19 @@
-package Handlers;
+package handlers;
 
 
-import shared.Request;
+import Shared.src.shared.Request;
+import Shared.src.shared.Response;
+
+import java.io.IOException;
 
 
 public class AuthenticationHandler extends Handler {
 
-    protected Handler nextHandler;
     private Database db;
-
-    public void setNextHandler(Handler nextHandler) {
-        this.nextHandler = nextHandler;
-    }
 
     public AuthenticationHandler(Database db, Handler nextHandler) {
         super(nextHandler);
+        System.out.println("Next Handler form Auth " + nextHandler );
         this.db = db;
 
     }
@@ -26,10 +25,15 @@ public class AuthenticationHandler extends Handler {
 
     @Override
     protected void handleRequest(Request request, ClientHandler clientHandler) {
-        if(request.getType() == Request.RequestType.LOGIN){
-            authenticate(request.getUsername(),request.getPassword());
-        } else if (nextHandler != null) {
-            nextHandler.handleRequest(request,clientHandler);
+
+        if(request.getType() == Request.RequestType.LOGIN) {
+            if (!authenticate(request.getUsername(), request.getPassword())) {
+                try {
+                    clientHandler.writeToClient(new Response(Response.ResponseType.LOGIN , Response.ResponseResult.FAILURE, null));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

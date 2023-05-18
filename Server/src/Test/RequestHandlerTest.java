@@ -1,7 +1,7 @@
 package Test;
 /*
 
-import Handlers.*;
+import handlers.*;
 import Shared.src.shared.Request;
 import Shared.src.shared.Request.*;
 import Shared.src.shared.User;

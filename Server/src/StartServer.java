@@ -1,4 +1,4 @@
-import Handlers.ServerController;
+import handlers.ServerController;
 
 import java.io.IOException;
 import java.util.Scanner;

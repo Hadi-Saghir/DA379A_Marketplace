@@ -1,6 +1,6 @@
-package Handlers;
-import shared.Request;
-import shared.Response;
+package handlers;
+import Shared.src.shared.Request;
+import Shared.src.shared.Response;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,6 +25,7 @@ public class RequestHandler extends Handler {
     @Override
     public void handleRequest(Request request, ClientHandler clientHandler) {
         Response res = null;
+        System.out.println("in RH");
         switch (request.getType().toString()) {
             case "REGISTER" ->  res = registerUser(request, clientHandler);
             case "LOGIN" ->  res = loginUser(request, clientHandler);
@@ -79,10 +80,15 @@ public class RequestHandler extends Handler {
     }
 
     public Response searchProducts(Request request, ClientHandler requester) {
-        String type = request.getProductType().toString();
+        System.out.println("RH: Searching for " + request.getSearchProductType());
+        String type = request.getSearchProductType().toString();
+        System.out.println("Type: " + type);
         double minPrice = request.getMinPrice();
+        System.out.println("Type: " + request.getMinPrice());
         double maxPrice = request.getMaxPrice();
-        String condition = String.valueOf(request.getCondition());
+        System.out.println("Type: " + request.getMaxPrice());
+        String condition = String.valueOf(request.getSearchCondition());
+        System.out.println("Sending to DB from RH");
         return database.searchProducts(type, minPrice, maxPrice, condition);
     }
 
@@ -93,10 +99,12 @@ public class RequestHandler extends Handler {
     }
 
     public Response makeOffer(Request request, ClientHandler requester) {
+        System.out.println("RH: in makeOffer");
         String buyer = request.getUsername();
         int productId = request.getProductId();
         double price = request.getPrice();
-        return database.makeOffer(buyer, productId, price);
+        System.out.println("Sending to DB");
+        return database.makeOffer(productId,buyer, price);
     }
 
     public Response getPurchases(Request request, ClientHandler requester) {

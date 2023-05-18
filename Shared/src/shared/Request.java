@@ -1,11 +1,11 @@
-package shared;
+package Shared.src.shared;
 
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import shared.Product.*;
+import Shared.src.shared.Product.*;
 
 public class Request implements Serializable {
     @Serial
@@ -23,7 +23,7 @@ public class Request implements Serializable {
         ALL_PRODUCTS,
         SEARCH_PRODUCT,
         SELL_PRODUCT,
-        Make_Offer,
+        MAKE_OFFER,
         REGISTER_INTEREST,
         GET_PURCHASE_HISTORY
     }
@@ -131,7 +131,7 @@ public class Request implements Serializable {
     }
 
     public static Request makeOffer(int productId, String buyer, double price) {
-        Request request = new Request(RequestType.Make_Offer);
+        Request request = new Request(RequestType.MAKE_OFFER);
         request.setProductId(productId);
         request.setUsername(buyer);
         request.setPrice(price);

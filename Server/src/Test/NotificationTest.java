@@ -1,8 +1,8 @@
 package Test;
 
-import shared.Request;
-import shared.Response;
-import shared.Product.*;
+import Shared.src.shared.Request;
+import Shared.src.shared.Response;
+import Shared.src.shared.Product.*;
 
 import java.io.*;
 import java.net.Socket;

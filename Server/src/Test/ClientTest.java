@@ -4,9 +4,9 @@ import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 
-import shared.Response;
-import shared.Request;
-import shared.Product.*;
+import Shared.src.shared.Response;
+import Shared.src.shared.Request;
+import Shared.src.shared.Product.*;
 
 
 public class ClientTest {
@@ -16,14 +16,17 @@ public class ClientTest {
     public static void main(String[] args) {
         try {
             // Connect to the server
+            Thread.sleep(2000);
             Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
             System.out.println("Connected to the server.");
+
 
             // Create input and output streams for communication
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
 
             // Handle each request and response
+            /*
             handleRegisterRequest(outputStream, inputStream);
             handleLoginRequest(outputStream, inputStream);
             handleAddProductRequest(outputStream, inputStream);
@@ -34,12 +37,17 @@ public class ClientTest {
             handleRegisterInterestRequest(outputStream, inputStream);
             handleGetPurchaseHistoryRequest(outputStream, inputStream);
 
+
+             */
+            handleMakeOfferRequest(outputStream, inputStream);
+
+
             // Close the connections
             inputStream.close();
             outputStream.close();
             socket.close();
             System.out.println("Connection closed.");
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -55,7 +63,7 @@ public class ClientTest {
 
     private static void handleLoginRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.login("HD", "password1");
+        Request request = Request.login("Azam", "Suleiman");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for LOGIN request: " + response);
@@ -96,10 +104,10 @@ public class ClientTest {
 
     private static void handleMakeOfferRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.makeOffer(1, "AZ", 200.00);
+        Request request = Request.makeOffer(1, "Alice123", 200.00);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
-        System.out.println("Received response for Make_Offer request: " + response);
+        System.out.println("Received response for MAKE_OFFER request: " + response);
     }
 
     private static void handleRegisterInterestRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)

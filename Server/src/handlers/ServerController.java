@@ -1,4 +1,4 @@
-package Handlers;
+package handlers;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -38,6 +38,7 @@ public class ServerController implements Runnable{
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected.");
                 Client client = new Client(socket);
+
                 // Submit a task to the thread pool to handle the client request
                 ClientHandler clientHandler = new ClientHandler(client);
                 executorService.submit(clientHandler);
