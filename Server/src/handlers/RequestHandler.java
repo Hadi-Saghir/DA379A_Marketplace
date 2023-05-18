@@ -1,6 +1,6 @@
 package Handlers;
-import Shared.src.shared.Request;
-import Shared.src.shared.Response;
+import shared.Request;
+import shared.Response;
 import java.io.IOException;
 import java.util.List;
 

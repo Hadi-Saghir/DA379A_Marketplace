@@ -1,12 +1,9 @@
 package Handlers;
 
-import Shared.src.shared.Notification;
-import Shared.src.shared.Request;
-import Shared.src.shared.Response;
-import Shared.src.shared.Response;
+import shared.Notification;
+import shared.Request;
+import shared.Response;
 
-import Handlers.Handler;
-import Shared.src.shared.Request.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,24 +30,24 @@ public class NotificationHandler extends Handler {
 
 
         switch (response.RESPONSE_TYPE()) {
-            case ADD_PRODUCT:
-                List<String> concernedUsers = db.fetchInterestedUsers(request.getProductType());
+            case ADD_PRODUCT -> {
+                List<String> concernedUsers = db.fetchInterestedUsers(String.valueOf(request.getProductType()));
                 msg = "New product you might be interested in!";
-                for (String s: concernedUsers
+                for (String s : concernedUsers
                 ) {
                     notificationQueue.addNotification(new Notification(s, msg));
                 }
-                break;
-            case SELL_PRODUCT:
+            }
+            case SELL_PRODUCT -> {
                 concernedUser = db.getBuyer(request.getOfferId());
                 msg = "Seller has accepted your offer!!";
                 notificationQueue.addNotification(new Notification(concernedUser, msg));
-                break;
-            case MAKE_OFFER:
+            }
+            case MAKE_OFFER -> {
                 concernedUser = db.getSeller(request.getProductId());
                 msg = "New offer!!";
                 notificationQueue.addNotification(new Notification(concernedUser, msg));
-                break;
+            }
         }
 
     }
@@ -58,20 +55,24 @@ public class NotificationHandler extends Handler {
 
     private class NotificationQueue {
         private LinkedList<Notification> queue;
+        private boolean newNotification;
 
         public NotificationQueue() {
             queue = new LinkedList<>();
+            newNotification = false;
         }
 
-        public void addNotification(Notification notification) {
+        public synchronized void addNotification(Notification notification) {
             queue.addLast(notification);
+            newNotification = true;
             notifyAll();
         }
 
-        public Notification getNotification() throws InterruptedException {
-            if(queue.isEmpty()){
+        public synchronized Notification getNotification() throws InterruptedException {
+            while (!newNotification) {
                 wait();
             }
+            newNotification = false;
             return queue.getFirst();
         }
     }

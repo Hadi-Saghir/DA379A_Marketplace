@@ -1,10 +1,11 @@
 package shared;
 
-import Product.ProductCondition;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import shared.Product.*;
 
 public class Request implements Serializable {
     @Serial
@@ -200,7 +201,7 @@ public class Request implements Serializable {
         this.password = password;
     }
 
-    public Shared.src.shared.Product.ProductType getProductType() {
+    public ProductType getProductType() {
         return productType;
     }
 

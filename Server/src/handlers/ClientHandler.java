@@ -1,7 +1,7 @@
 package Handlers;
 
 
-import Shared.src.shared.Request;
+import shared.Request;
 
 
 import java.io.IOException;

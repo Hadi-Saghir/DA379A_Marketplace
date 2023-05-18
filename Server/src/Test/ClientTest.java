@@ -4,8 +4,10 @@ import java.io.*;
 import java.net.Socket;
 import java.time.LocalDate;
 
-import Shared.src.shared.Response;
-import S
+import shared.Response;
+import shared.Request;
+import shared.Product.*;
+
 
 public class ClientTest {
     private static final String SERVER_HOST = "localhost";
@@ -61,8 +63,8 @@ public class ClientTest {
 
     private static void handleAddProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.addProduct(Product.ProductType.ELECTRONICS, 499.99, 2022,
-                "Black", Product.ProductCondition.NEW);
+        Request request = Request.addProduct(ProductType.ELECTRONICS, 499.99, 2022,
+                "Black", ProductCondition.New);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for ADD_PRODUCT request: " + response);
@@ -78,7 +80,7 @@ public class ClientTest {
 
     private static void handleSearchProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.searchProduct("Electronics", 100, 1000, Product.ProductCondition.USED);
+        Request request = Request.searchProduct("Electronics", 100, 1000, ProductCondition.Used);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for SEARCH_PRODUCT request: " + response);

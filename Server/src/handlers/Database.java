@@ -1,14 +1,12 @@
 package Handlers;
 
-import Shared.src.shared.Product;
-import Shared.src.shared.Response;
-import Shared.src.shared.Response.ResponseResult;
-import Shared.src.shared.Response.ResponseType;
-import Shared.src.shared.Product.*;
+import shared.Product;
+import shared.Product.*;
+import shared.Response;
+import shared.Response.*;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -89,6 +87,7 @@ public class Database {
 
             int res = pstmt.executeUpdate();
             if(res==1){
+                fetchInterestedUsers(type);
                 return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
             }
 
@@ -227,7 +226,7 @@ public class Database {
     public Response registerInterest(String user, String type) {
         return null;
     }
-    public List<String> fetchInterestedUsers(Product.ProductType type) {
+    public List<String> fetchInterestedUsers(String type) {
         List<String> interestedUsers = new ArrayList<>();
         String query = "SELECT username FROM interest WHERE type = ?";
 
