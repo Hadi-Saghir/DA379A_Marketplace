@@ -1,4 +1,5 @@
 package handlers;
+import Shared.src.shared.Product;
 import Shared.src.shared.Request;
 import Shared.src.shared.Response;
 import java.io.IOException;
@@ -116,9 +117,12 @@ public class RequestHandler extends Handler {
 
     public Response registerInterest(Request request, ClientHandler requester) {
         String buyer = request.getUsername();
-        String type = request.getType().toString();
-        return database.registerInterest(buyer, type);
+        String type = request.getInterestedProductType();
+        Double price = request.getPrice();
+        return database.registerInterest(buyer, type,price);
+
     }
+
 
     public Response getNotifications(Request request) {
         String user = request.getUsername();

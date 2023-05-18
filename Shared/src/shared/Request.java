@@ -72,7 +72,7 @@ public class Request implements Serializable {
     private String interestedProductType;
 
     // purchase history data
-    private int userIdForHistory;
+    private String userIdForHistory;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -145,7 +145,7 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request getPurchaseHistory(int userIdForHistory, LocalDate startDate, LocalDate endDate) {
+    public static Request getPurchaseHistory(String userIdForHistory, LocalDate startDate, LocalDate endDate) {
         Request request = new Request(RequestType.GET_PURCHASE_HISTORY);
         request.setUserIdForHistory(userIdForHistory);
         request.setStartDate(startDate);
@@ -289,11 +289,11 @@ public class Request implements Serializable {
         this.interestedProductType = interestedProductType;
     }
 
-    public int getUserIdForHistory() {
+    public String getUserIdForHistory() {
         return userIdForHistory;
     }
 
-    public void setUserIdForHistory(int userIdForHistory) {
+    public void setUserIdForHistory(String userIdForHistory) {
         this.userIdForHistory = userIdForHistory;
     }
 

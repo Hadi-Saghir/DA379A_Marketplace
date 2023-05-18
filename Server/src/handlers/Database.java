@@ -8,6 +8,7 @@ import Shared.src.shared.Response.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -82,7 +83,7 @@ public class Database {
             pstmt.setInt(4, year);
             pstmt.setString(5, color);
             pstmt.setString(6, condition);
-            pstmt.setString(7, "New");
+            pstmt.setString(7, "AVAILABLE");
 
 
             int res = pstmt.executeUpdate();
@@ -231,13 +232,71 @@ public class Database {
     }
 
 
-    public Response getPurchases(String buyer, String startDate, String endDate) {
-        return null;
+    public Response getPurchases(String username, String startDate, String endDate) {
+        System.out.println("Searching " + endDate);
+        List<Product> purchases = new ArrayList<>();
+        String sql = "SELECT offerid FROM purchasehistory WHERE username = ? AND date BETWEEN ? AND ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setDate(2, Date.valueOf(startDate));
+            pstmt.setDate(3, Date.valueOf(endDate));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                System.out.println("Got offer " + rs.getFetchSize());
+                while (rs.next()) {
+                    int offerid = rs.getInt("offerid");
+                    String productSql = "SELECT * FROM product WHERE productid IN (SELECT productid FROM offer WHERE offerid = ?)";
+                    try (PreparedStatement productPstmt = conn.prepareStatement(productSql)) {
+                        productPstmt.setInt(1, offerid);
+
+                        try (ResultSet productRs = productPstmt.executeQuery()) {
+                            System.out.println("Size: " + productRs);
+                            while (productRs.next()) {
+
+                                int productid = productRs.getInt("productid");
+                                ProductType type = ProductType.valueOf(productRs.getString("type"));
+                                double price = productRs.getDouble("price");
+                                int year = productRs.getInt("year");
+                                String color = productRs.getString("color");
+                                String condition = productRs.getString("condition");
+                                ProductState state = ProductState.valueOf(productRs.getString("state"));
+                                Product product = new Product(productid, username, type, price, year, color, ProductCondition.valueOf(condition), state);
+                                purchases.add(product);
+                                System.out.println("Created");
+                            }
+                            if (purchases.size() > 0) {
+                                return new Response(ResponseType.GET_PURCHASE_HISTORY, ResponseResult.SUCCESS, null);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return new Response(ResponseType.GET_PURCHASE_HISTORY, ResponseResult.FAILURE, Collections.singletonList(purchases));
     }
 
-    public Response registerInterest(String user, String type) {
-        return null;
+
+    public Response registerInterest(String username, String productType, Double state) {
+        String sql = "INSERT INTO interest (username, productType, state) VALUES (?, ?, ?)";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, productType);
+            pstmt.setDouble(3, state);
+            int res = pstmt.executeUpdate();
+            if (res > 0) {
+                return new Response(ResponseType.REGISTER_INTEREST, ResponseResult.SUCCESS, null);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new Response(ResponseType.REGISTER_INTEREST, ResponseResult.FAILURE, null);
     }
+
     public List<String> fetchInterestedUsers(String type) {
         List<String> interestedUsers = new ArrayList<>();
         String query = "SELECT username FROM interest WHERE type = ?";
