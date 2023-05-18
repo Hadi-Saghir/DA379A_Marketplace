@@ -46,8 +46,8 @@ public class ClientTest {
 
     private static void handleRegisterRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.register("John", "Doe", LocalDate.of(1990, 5, 10),
-                "john.doe@example.com", "johndoe", "password");
+        Request request = Request.register("Hadi", "Saghir", LocalDate.of(1995, 5, 10),
+                "hadisaghir@mau.com", "HD", "password1");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for REGISTER request: " + response);
@@ -55,7 +55,7 @@ public class ClientTest {
 
     private static void handleLoginRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.login("johndoe", "password");
+        Request request = Request.login("HD", "password1");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for LOGIN request: " + response);
@@ -63,7 +63,7 @@ public class ClientTest {
 
     private static void handleAddProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.addProduct(ProductType.ELECTRONICS, 499.99, 2022,
+        Request request = Request.addProduct(ProductType.ELECTRONICS, "HD", 499.99, 2022,
                 "Black", ProductCondition.New);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
@@ -88,7 +88,7 @@ public class ClientTest {
 
     private static void handleSellProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.sellProduct(123, "seller123");
+        Request request = Request.sellProduct(1, "HD");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for SELL_PRODUCT request: " + response);
@@ -96,7 +96,7 @@ public class ClientTest {
 
     private static void handleMakeOfferRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.makeOffer(456, "buyer456", 200.00);
+        Request request = Request.makeOffer(1, "AZ", 200.00);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for Make_Offer request: " + response);
@@ -104,7 +104,7 @@ public class ClientTest {
 
     private static void handleRegisterInterestRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.registerInterest("Electronics", "user123");
+        Request request = Request.registerInterest("Electronics", "HD");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for REGISTER_INTEREST request: " + response);
@@ -125,7 +125,6 @@ public class ClientTest {
 
     private static Response receiveResponse(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         Response response = (Response) inputStream.readObject();
-        System.out.println(response.toString());
         return response;
     }
 }

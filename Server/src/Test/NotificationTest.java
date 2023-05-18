@@ -79,8 +79,7 @@ public class NotificationTest {
                                                 ProductType productType, double price, int yearOfProduction,
                                                 String color, ProductCondition condition, String sellerId)
             throws IOException, ClassNotFoundException {
-        Request request = Request.addProduct(productType, price, yearOfProduction, color, condition);
-        request.setUserId(sellerId);
+        Request request = Request.addProduct(productType,sellerId, price, yearOfProduction, color, condition);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for ADD_PRODUCT request: " + response);

@@ -70,7 +70,6 @@ public class Request implements Serializable {
 
     // register interest data
     private String interestedProductType;
-    private String userId;
 
     // purchase history data
     private int userIdForHistory;
@@ -99,9 +98,10 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request addProduct(Product.ProductType productType, double price, int yearOfProduction,
+    public static Request addProduct(Product.ProductType productType, String seller, double price, int yearOfProduction,
                                      String color, ProductCondition condition) {
         Request request = new Request(RequestType.ADD_PRODUCT);
+        request.username = seller;
         request.setProductType(productType);
         request.setPrice(price);
         request.setYearOfProduction(yearOfProduction);
@@ -123,25 +123,25 @@ public class Request implements Serializable {
         return request;
     }
 
-    public static Request sellProduct(int offerID, String sellerId) {
+    public static Request sellProduct(int offerID, String seller) {
         Request request = new Request(RequestType.SELL_PRODUCT);
         request.setOfferId(offerID);
-        request.setUserId(sellerId);
+        request.setUsername(seller);
         return request;
     }
 
-    public static Request makeOffer(int productId, String buyerId, double price) {
+    public static Request makeOffer(int productId, String buyer, double price) {
         Request request = new Request(RequestType.Make_Offer);
         request.setProductId(productId);
-        request.setUserId(buyerId);
+        request.setUsername(buyer);
         request.setPrice(price);
         return request;
     }
 
-    public static Request registerInterest(String interestedProductType, String userId) {
+    public static Request registerInterest(String interestedProductType, String username) {
         Request request = new Request(RequestType.REGISTER_INTEREST);
         request.setInterestedProductType(interestedProductType);
-        request.setUserId(userId);
+        request.setUsername(username);
         return request;
     }
 
@@ -287,14 +287,6 @@ public class Request implements Serializable {
 
     public void setInterestedProductType(String interestedProductType) {
         this.interestedProductType = interestedProductType;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public int getUserIdForHistory() {

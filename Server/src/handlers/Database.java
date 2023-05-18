@@ -71,18 +71,17 @@ public class Database {
 
 
     public synchronized Response addProduct(String seller, String type, double price, int year, String color, String condition) {
-        String query = "INSERT INTO product (productid, username, type, price, year, color, condition, state) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+        String query = "INSERT INTO product (username, type, price, year, color, condition, state) VALUES (?, ?, ?, ?, ?, ?,?)";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, 0);
-            pstmt.setString(2, seller);
-            pstmt.setString(3, type);
-            pstmt.setDouble(4, price);
-            pstmt.setInt(5, year);
-            pstmt.setString(6, color);
-            pstmt.setString(7, condition);
-            pstmt.setString(8, "New");
+            pstmt.setString(1, seller);
+            pstmt.setString(2, type);
+            pstmt.setDouble(3, price);
+            pstmt.setInt(4, year);
+            pstmt.setString(5, color);
+            pstmt.setString(6, condition);
+            pstmt.setString(7, "New");
 
 
             int res = pstmt.executeUpdate();
@@ -94,6 +93,7 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println("im here");
         return new Response(ResponseType.ADD_PRODUCT , ResponseResult.FAILURE, null);
     }
 

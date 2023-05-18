@@ -59,8 +59,8 @@ public class RequestHandler extends Handler {
     }
 
     public Response addProduct(Request request, ClientHandler requester) {
-        String seller = String.valueOf(request.getUserId());
-        String type = request.getType().toString();
+        String seller = request.getUsername();
+        String type = request.getProductType().toString();
         double price = request.getPrice();
         int year = request.getYearOfProduction();
         String color = request.getColor();
@@ -79,7 +79,7 @@ public class RequestHandler extends Handler {
     }
 
     public Response searchProducts(Request request, ClientHandler requester) {
-        String type = request.getType().toString();
+        String type = request.getProductType().toString();
         double minPrice = request.getMinPrice();
         double maxPrice = request.getMaxPrice();
         String condition = String.valueOf(request.getCondition());
@@ -100,20 +100,20 @@ public class RequestHandler extends Handler {
     }
 
     public Response getPurchases(Request request, ClientHandler requester) {
-        String buyer = request.getUserId();
+        String buyer = request.getUsername();
         String startDate = request.getStartDate().toString();
         String endDate = request.getEndDate().toString();
         return database.getPurchases(buyer, startDate, endDate);
     }
 
     public Response registerInterest(Request request, ClientHandler requester) {
-        String buyer = request.getUserId();
+        String buyer = request.getUsername();
         String type = request.getType().toString();
         return database.registerInterest(buyer, type);
     }
 
     public Response getNotifications(Request request) {
-        String user = request.getUserId();
+        String user = request.getUsername();
         return database.getNotifications(user);
     }
 
