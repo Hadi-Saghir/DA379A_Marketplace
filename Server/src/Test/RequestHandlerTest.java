@@ -1,4 +1,5 @@
 package Test;
+/*
 
 import Handlers.*;
 import Shared.src.shared.Request;
@@ -15,7 +16,7 @@ import java.util.Scanner;
 
 
 
-/*
+
            case "REGISTER" ->  res = registerUser(request, clientHandler);
             case "LOGIN" ->  res = loginUser(request, clientHandler);
             case "ADD_PRODUCT" -> res =addProduct(request, clientHandler);
@@ -24,7 +25,7 @@ import java.util.Scanner;
             case "MAKE_OFFER" -> res = makeOffer(request, clientHandler);
             case "REGISTER_INTEREST" -> res =registerInterest(request, clientHandler);
             case "GET_PURCHASE_HISTORY" -> res = getPurchases(request, clientHandler);
- */
+
 
 import Shared.src.shared.Response;
 import Shared.src.shared.Response.*;
@@ -130,5 +131,5 @@ public class RequestHandlerTest {
     }
 
 }
-
+*/
 

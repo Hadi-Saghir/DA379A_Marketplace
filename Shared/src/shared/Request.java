@@ -1,4 +1,6 @@
-package Shared.src.shared;
+package shared;
+
+import Product.ProductCondition;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -97,7 +99,7 @@ public class Request implements Serializable {
     }
 
     public static Request addProduct(Product.ProductType productType, double price, int yearOfProduction,
-                                     String color, Product.ProductCondition condition) {
+                                     String color, ProductCondition condition) {
         Request request = new Request(RequestType.ADD_PRODUCT);
         request.setProductType(productType);
         request.setPrice(price);
@@ -198,7 +200,7 @@ public class Request implements Serializable {
         this.password = password;
     }
 
-    public Product.ProductType getProductType() {
+    public Shared.src.shared.Product.ProductType getProductType() {
         return productType;
     }
 
@@ -230,11 +232,11 @@ public class Request implements Serializable {
         this.color = color;
     }
 
-    public Product.ProductCondition getCondition() {
+    public ProductCondition getCondition() {
         return condition;
     }
 
-    public void setCondition(Product.ProductCondition condition) {
+    public void setCondition(ProductCondition condition) {
         this.condition = condition;
     }
 

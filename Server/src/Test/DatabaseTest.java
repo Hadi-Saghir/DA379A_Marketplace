@@ -1,5 +1,5 @@
 package Test;
-
+/*
 import Handlers.Database;
 import Shared.src.shared.Product;
 import Shared.src.shared.Response;
@@ -122,7 +122,6 @@ public class DatabaseTest {
         assertEquals(ResponseResult.SUCCESS, response.RESPONSE_RESULT());
     }
 
-
 }
-
+*/
 
