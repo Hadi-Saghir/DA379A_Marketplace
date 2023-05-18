@@ -26,3 +26,6 @@ replay_pid*
 .idea/modules.xml
 .idea/misc.xml
 .idea/vcs.xml
+.idea/libraries/postgresql_42_6_0.xml
+.idea/runConfigurations.xml
+*.xml
