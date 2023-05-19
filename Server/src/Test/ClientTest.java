@@ -27,19 +27,17 @@ public class ClientTest {
 
             // Handle each request and response
 
+
             handleRegisterRequest(outputStream, inputStream);
             handleLoginRequest(outputStream, inputStream);
             handleAddProductRequest(outputStream, inputStream);
             handleAllProductsRequest(outputStream, inputStream);
             handleSearchProductRequest(outputStream, inputStream);
-            handleSellProductRequest(outputStream, inputStream);
             handleMakeOfferRequest(outputStream, inputStream);
+            handleSellProductRequest(outputStream, inputStream);
             handleRegisterInterestRequest(outputStream, inputStream);
             handleGetPurchaseHistoryRequest(outputStream, inputStream);
 
-
-
-           // handleGetPurchaseHistoryRequest(outputStream, inputStream);
 
 
             // Close the connections
@@ -54,8 +52,8 @@ public class ClientTest {
 
     private static void handleRegisterRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.register("Kanye", "West", LocalDate.of(1969, 5, 10),
-                "Kanye@mau.com", "Yeeze", "password1");
+        Request request = Request.register("Bruce", "Wayne", LocalDate.of(1990, 5, 10),
+                "snow@mau.com", "Batman", "password1");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for REGISTER request: " + response);
@@ -63,7 +61,7 @@ public class ClientTest {
 
     private static void handleLoginRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.login("Yeeze", "password1");
+        Request request = Request.login("Batman", "password1");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for LOGIN request: " + response);
@@ -71,8 +69,8 @@ public class ClientTest {
 
     private static void handleAddProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.addProduct(ProductType.ELECTRONICS, "Yeeze", 222, 2021,
-                "Black", ProductCondition.New);
+        Request request = Request.addProduct(ProductType.BEAUTY, "Batman", 300, 2021,
+                "Blue", ProductCondition.Used);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for ADD_PRODUCT request: " + response);
@@ -96,7 +94,7 @@ public class ClientTest {
 
     private static void handleSellProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.sellProduct(1, "Yeeze");
+        Request request = Request.sellProduct(14, "username");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for SELL_PRODUCT request: " + response);
@@ -104,7 +102,7 @@ public class ClientTest {
 
     private static void handleMakeOfferRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.makeOffer(1, "Alice123", 200.00);
+        Request request = Request.makeOffer(56, "Alice123", 200.00);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for MAKE_OFFER request: " + response);
@@ -112,7 +110,7 @@ public class ClientTest {
 
     private static void handleRegisterInterestRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.registerInterest("Books", "Yeeze");
+        Request request = Request.registerInterest("Books", "Batman");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for REGISTER_INTEREST request: " + response);

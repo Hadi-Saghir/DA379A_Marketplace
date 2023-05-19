@@ -57,7 +57,7 @@ public class RequestHandler extends Handler {
         String username = request.getUsername();
         String password = request.getPassword();
 
-        return database.registerUser(firstName, lastName, dob, email, username, password);
+        return database.registerUser(username, password, firstName, lastName, email, dob );
     }
 
     public Response addProduct(Request request, ClientHandler requester) {
@@ -109,7 +109,7 @@ public class RequestHandler extends Handler {
     }
 
     public Response getPurchases(Request request, ClientHandler requester) {
-        String buyer = request.getUsername();
+        String buyer = request.getUserIdForHistory();
         String startDate = request.getStartDate().toString();
         String endDate = request.getEndDate().toString();
         return database.getPurchases(buyer, startDate, endDate);

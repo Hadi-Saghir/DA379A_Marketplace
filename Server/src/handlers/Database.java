@@ -26,7 +26,7 @@ public class Database {
     }
 
 
-    public synchronized Response registerUser(String username, String password, String firstName, String lastName, String dob, String email) {
+    public synchronized Response registerUser(String username, String password, String firstName, String lastName, String email, String dob) {
         String query = "INSERT INTO \"users\" (username, password, firstName, lastName, email, isloggedin, dob) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
@@ -87,7 +87,6 @@ public class Database {
 
 
             int res = pstmt.executeUpdate();
-            System.out.println("Database returned " + res);
             if(res==1){
                 fetchInterestedUsers(type);
                 return new Response(ResponseType.ADD_PRODUCT , ResponseResult.SUCCESS, null);
@@ -96,18 +95,18 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("im here");
         return new Response(ResponseType.ADD_PRODUCT , ResponseResult.FAILURE, null);
     }
 
     public synchronized Response allProducts() {
         List<Object> products = new ArrayList<>();
-        String query = "SELECT * FROM product";
+        String query = "SELECT * FROM product WHERE state != 'SOLD'";
 
         try(Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(query)) {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
+                System.out.println("Creating prod" +  rs.getInt("productid"));
                 Product product = new Product(
                         rs.getInt("productid"),
                         rs.getString("username"),
@@ -125,19 +124,12 @@ public class Database {
             return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.FAILURE, null);
         }
 
-        return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.FAILURE, products);
+        return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.SUCCESS, products);
     }
 
     public synchronized Response searchProducts(String type, double minPrice, double maxPrice, String condition) {
-        System.out.println("DB: Searching");
-        System.out.println("Type: " + type);
-        System.out.println("minPrice: " + minPrice);
-        System.out.println("maxPrice: " + maxPrice);
-        System.out.println("condition: " + condition);
-
         List<Object> products = new ArrayList<>();
-        String query = "SELECT * FROM product WHERE type ILIKE ? AND price BETWEEN ? AND ? AND condition ILIKE ?";
-        System.out.println("Built query: " + query);
+        String query = "SELECT * FROM product WHERE type ILIKE ? AND price BETWEEN ? AND ? AND condition ILIKE ? AND state != 'SOLD'";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
@@ -163,12 +155,8 @@ public class Database {
             System.out.println(e);
             return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
         }
-        if(products.size()>0){
-            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, products);
+        return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, products);
 
-        } else {
-            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
-        }
     }
 
 
@@ -193,12 +181,19 @@ public class Database {
 
 
     public Response sellProduct(String seller, int offerId) {
-        String updateStatement = "UPDATE product SET state = 'SOLD' WHERE username = ? AND offerId = ?";
+        String updateStatement = "WITH offer_product AS (\n" +
+                "  SELECT productId FROM offer WHERE offerId = ?\n" +
+                "),\n" +
+                "update_product AS (\n" +
+                "  UPDATE product SET state = 'SOLD' WHERE productId = (SELECT productId FROM offer_product)\n" +
+                ")\n" +
+                "UPDATE offer SET approved = true WHERE offerId = ?;\n";
+        ;
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
-            pstmt.setString(1, seller);
+            System.out.println("Statement: " + updateStatement);
+            pstmt.setInt(1, offerId);
             pstmt.setInt(2, offerId);
-            int rowsAffected = pstmt.executeUpdate();
             int res = pstmt.executeUpdate();
             if(res>0){
                 return new Response(ResponseType.SELL_PRODUCT , ResponseResult.SUCCESS, null);
@@ -207,7 +202,7 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return new Response(ResponseType.SELL_PRODUCT , ResponseResult.SUCCESS, null);
+        return new Response(ResponseType.SELL_PRODUCT , ResponseResult.FAILURE, null);
     }
 
     public Response makeOffer(int productId,String buyer, double price) {
@@ -235,6 +230,9 @@ public class Database {
     public Response getPurchases(String username, String startDate, String endDate) {
         System.out.println("Searching " + endDate);
         List<Product> purchases = new ArrayList<>();
+        String testquery1 ="SELECT offerid FROM purchasehistory WHERE username = "+username+" AND date BETWEEN " +
+                ""+Date.valueOf(startDate)+" AND "+Date.valueOf(endDate);
+        System.out.println(testquery1);
         String sql = "SELECT offerid FROM purchasehistory WHERE username = ? AND date BETWEEN ? AND ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -265,7 +263,7 @@ public class Database {
                                 System.out.println("Created");
                             }
                             if (purchases.size() > 0) {
-                                return new Response(ResponseType.GET_PURCHASE_HISTORY, ResponseResult.SUCCESS, null);
+                                return new Response(ResponseType.GET_PURCHASE_HISTORY, ResponseResult.SUCCESS, Collections.singletonList(purchases));
                             }
                         }
                     }
@@ -299,7 +297,7 @@ public class Database {
 
     public List<String> fetchInterestedUsers(String type) {
         List<String> interestedUsers = new ArrayList<>();
-        String query = "SELECT username FROM interest WHERE type = ?";
+        String query = "SELECT username FROM interest WHERE producttype = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
