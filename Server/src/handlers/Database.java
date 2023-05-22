@@ -6,6 +6,7 @@ import Shared.src.shared.Request;
 import Shared.src.shared.Response;
 import Shared.src.shared.Response.*;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,13 +128,72 @@ public class Database {
         return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.SUCCESS, products);
     }
 
+    public synchronized Response searchProducts(String type) {
+        List<Object> products = new ArrayList<>();
+        String query = "SELECT * FROM product WHERE type ILIKE ? AND state != 'SOLD'";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, type+"%");
+            System.out.println(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getInt("productid"),
+                        rs.getString("username"),
+                        ProductType.valueOf(rs.getString("type")),
+                        rs.getDouble("price"),
+                        rs.getInt("year"),
+                        rs.getString("color"),
+                        ProductCondition.valueOf(rs.getString("condition")),
+                        ProductState.valueOf(rs.getString("state"))
+                );
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
+        }
+        return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, products);
+
+    }
+    public synchronized Response searchProducts(String type, double minPrice, double maxPrice) {
+        List<Object> products = new ArrayList<>();
+        String query = "SELECT * FROM product WHERE type ILIKE ? AND price BETWEEN ? AND ? AND state != 'SOLD'";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, type+"%");
+            pstmt.setDouble(2, minPrice);
+            pstmt.setDouble(3, maxPrice);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getInt("productid"),
+                        rs.getString("username"),
+                        ProductType.valueOf(rs.getString("type")),
+                        rs.getDouble("price"),
+                        rs.getInt("year"),
+                        rs.getString("color"),
+                        ProductCondition.valueOf(rs.getString("condition")),
+                        ProductState.valueOf(rs.getString("state"))
+                );
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
+        }
+        return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, products);
+    }
+
     public synchronized Response searchProducts(String type, double minPrice, double maxPrice, String condition) {
         List<Object> products = new ArrayList<>();
         String query = "SELECT * FROM product WHERE type ILIKE ? AND price BETWEEN ? AND ? AND condition ILIKE ? AND state != 'SOLD'";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setString(1, type);
+            pstmt.setString(1, type+"%");
             pstmt.setDouble(2, minPrice);
             pstmt.setDouble(3, maxPrice);
             pstmt.setString(4, condition);
@@ -369,10 +429,12 @@ public class Database {
 
     public static void main(String[] args) {
 
+
         //dbHandler.registerUser("Alice123","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
 
 /*
-
+ Database db = new Database();
+        System.out.println(db.searchProducts("spor",100,1000));
         dbHandler.registerUser("janedoe","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
         System.out.println(dbHandler.loginUser("janedoe","Tesst123"));
         List<shared.Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
@@ -385,6 +447,9 @@ public class Database {
 
 
         */
+
+
+
 
     }
 }

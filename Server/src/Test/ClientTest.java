@@ -16,7 +16,7 @@ public class ClientTest {
     public static void main(String[] args) {
         try {
             // Connect to the server
-            Thread.sleep(2000);
+            Thread.sleep(4000);
             Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
             System.out.println("Connected to the server.");
 
