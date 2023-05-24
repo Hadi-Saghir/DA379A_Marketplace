@@ -122,7 +122,7 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.FAILURE, null);
+            return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.FAILURE, products);
         }
 
         return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.SUCCESS, products);
