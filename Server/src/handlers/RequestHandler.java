@@ -26,7 +26,6 @@ public class RequestHandler extends Handler {
     @Override
     public void handleRequest(Request request, ClientHandler clientHandler) {
         Response res = null;
-        System.out.println("in RH");
         switch (request.getType().toString()) {
             case "REGISTER" ->  res = registerUser(request, clientHandler);
             case "LOGIN" ->  res = loginUser(request, clientHandler);
@@ -66,7 +65,7 @@ public class RequestHandler extends Handler {
         double price = request.getPrice();
         int year = request.getYearOfProduction();
         String color = request.getColor();
-        String condition = String.valueOf(request.getCondition());
+        String condition = String.valueOf(request.getCondition().getValue());
         return database.addProduct(seller, type, price, year, color, condition);
     }
 
@@ -88,7 +87,7 @@ public class RequestHandler extends Handler {
         System.out.println("Type: " + request.getMinPrice());
         double maxPrice = request.getMaxPrice();
         System.out.println("Type: " + request.getMaxPrice());
-        String condition = String.valueOf(request.getSearchCondition());
+        String condition = String.valueOf(request.getSearchCondition().getValue());
         System.out.println("Sending to DB from RH");
         return database.searchProducts(type, minPrice, maxPrice, condition);
     }
@@ -96,7 +95,8 @@ public class RequestHandler extends Handler {
     public Response sellProduct(Request request, ClientHandler requester) {
         String seller = request.getUsername();
         int offerId = request.getOfferId();
-        return database.sellProduct(seller, offerId);
+        int productid = request.getProductId();
+        return database.sellProduct(seller, offerId,productid);
     }
 
     public Response makeOffer(Request request, ClientHandler requester) {

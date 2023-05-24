@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -115,7 +116,7 @@ public class Database {
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
-                        ProductCondition.valueOf(rs.getString("condition")),
+                        ProductCondition.fromValue(rs.getString("condition")),
                         ProductState.valueOf(rs.getString("state"))
                 );
                 products.add(product);
@@ -145,7 +146,7 @@ public class Database {
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
-                        ProductCondition.valueOf(rs.getString("condition")),
+                        ProductCondition.fromValue(rs.getString("condition")),
                         ProductState.valueOf(rs.getString("state"))
                 );
                 products.add(product);
@@ -175,7 +176,7 @@ public class Database {
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
-                        ProductCondition.valueOf(rs.getString("condition")),
+                        ProductCondition.fromValue(rs.getString("condition")),
                         ProductState.valueOf(rs.getString("state"))
                 );
                 products.add(product);
@@ -206,7 +207,7 @@ public class Database {
                         rs.getDouble("price"),
                         rs.getInt("year"),
                         rs.getString("color"),
-                        ProductCondition.valueOf(rs.getString("condition")),
+                        ProductCondition.fromValue(rs.getString("condition")),
                         ProductState.valueOf(rs.getString("state"))
                 );
                 products.add(product);
@@ -240,7 +241,7 @@ public class Database {
     }
 
 
-    public Response sellProduct(String seller, int offerId) {
+    public Response sellProduct(String seller, int offerId, int productid) {
         String updateStatement = "WITH offer_product AS (\n" +
                 "  SELECT productId FROM offer WHERE offerId = ?\n" +
                 "),\n" +
@@ -251,12 +252,20 @@ public class Database {
         ;
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
-            System.out.println("Statement: " + updateStatement);
+            //System.out.println("Statement: " + updateStatement);
             pstmt.setInt(1, offerId);
             pstmt.setInt(2, offerId);
             int res = pstmt.executeUpdate();
             if(res>0){
-                return new Response(ResponseType.SELL_PRODUCT , ResponseResult.SUCCESS, null);
+                System.out.println("in if where offerid: " + offerId);
+                if(addToPurchaseHistory(productid,offerId)){
+                    System.out.println("Added to history");
+                    return new Response(ResponseType.SELL_PRODUCT , ResponseResult.SUCCESS, null);
+                }
+                return new Response(ResponseType.SELL_PRODUCT , ResponseResult.FAILURE, null);
+            }
+            else {
+                System.out.println("Not in if");
             }
 
         } catch (SQLException e) {
@@ -264,6 +273,23 @@ public class Database {
         }
         return new Response(ResponseType.SELL_PRODUCT , ResponseResult.FAILURE, null);
     }
+
+    public boolean addToPurchaseHistory(int productId,int offerId) {
+        String username = getBuyer(offerId);
+        String insertSql = "INSERT INTO purchasehistory (productId, username, offerId) VALUES (?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
+            insertPstmt.setInt(1, productId);
+            insertPstmt.setString(2, username);
+            insertPstmt.setInt(3, offerId);
+            insertPstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+
 
     public Response makeOffer(int productId,String buyer, double price) {
         String query = "INSERT INTO offer (productid, username, approved, price) VALUES (?, ?, ?, ?)";
@@ -275,7 +301,6 @@ public class Database {
             pstmt.setDouble(4, price);
             int res = pstmt.executeUpdate();
             if(res==1){
-                System.out.println("Ending in succ");
                 return new Response(ResponseType.MAKE_OFFER , ResponseResult.SUCCESS, null);
             }
 
@@ -293,32 +318,32 @@ public class Database {
         String testquery1 ="SELECT offerid FROM purchasehistory WHERE username = "+username+" AND date BETWEEN " +
                 ""+Date.valueOf(startDate)+" AND "+Date.valueOf(endDate);
         System.out.println(testquery1);
-        String sql = "SELECT offerid FROM purchasehistory WHERE username = ? AND date BETWEEN ? AND ?";
+        String sql = "SELECT productid FROM purchasehistory WHERE username = ? AND date BETWEEN ? AND ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setDate(2, Date.valueOf(startDate));
             pstmt.setDate(3, Date.valueOf(endDate));
             try (ResultSet rs = pstmt.executeQuery()) {
-                System.out.println("Got offer " + rs.getFetchSize());
+
                 while (rs.next()) {
-                    int offerid = rs.getInt("offerid");
-                    String productSql = "SELECT * FROM product WHERE productid IN (SELECT productid FROM offer WHERE offerid = ?)";
+                    int productid = rs.getInt("productid");
+                    System.out.println("Got offer " + productid);
+                    String productSql = "SELECT * FROM product WHERE productid = ? ;";
                     try (PreparedStatement productPstmt = conn.prepareStatement(productSql)) {
-                        productPstmt.setInt(1, offerid);
+                        productPstmt.setInt(1, productid);
 
                         try (ResultSet productRs = productPstmt.executeQuery()) {
-                            System.out.println("Size: " + productRs);
+                            System.out.println("Size: " + productRs.getFetchSize());
                             while (productRs.next()) {
 
-                                int productid = productRs.getInt("productid");
+                                productid = productRs.getInt("productid");
                                 ProductType type = ProductType.valueOf(productRs.getString("type"));
                                 double price = productRs.getDouble("price");
                                 int year = productRs.getInt("year");
                                 String color = productRs.getString("color");
-                                String condition = productRs.getString("condition");
                                 ProductState state = ProductState.valueOf(productRs.getString("state"));
-                                Product product = new Product(productid, username, type, price, year, color, ProductCondition.valueOf(condition), state);
+                                Product product = new Product(productid, username, type, price, year, color, ProductCondition.fromValue(productRs.getString("condition")), state);
                                 purchases.add(product);
                                 System.out.println("Created");
                             }
@@ -397,11 +422,12 @@ public class Database {
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, offerId);
-
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 buyer = rs.getString("username");
             }
+            return buyer;
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -433,8 +459,8 @@ public class Database {
         //dbHandler.registerUser("Alice123","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
 
 /*
- Database db = new Database();
-        System.out.println(db.searchProducts("spor",100,1000));
+ ;
+
         dbHandler.registerUser("janedoe","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
         System.out.println(dbHandler.loginUser("janedoe","Tesst123"));
         List<shared.Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
@@ -447,8 +473,15 @@ public class Database {
 
 
         */
+        Database db = new Database();
+        //System.out.println(db.searchProducts("spor",100,1000));
+        List<?> s = db.getPurchases("Alice123","2023-01-01","2023-05-27").MESSAGE();
+        System.out.println(s);
 
-
+        //db.addToPurchaseHistory(62,26);
+        //db.sellProduct("JohnnyBoy",28,57);
+        //System.out.println("Res: " + db.getBuyer(27));
+        //db.makeOffer(57,"Batman",900);
 
 
     }

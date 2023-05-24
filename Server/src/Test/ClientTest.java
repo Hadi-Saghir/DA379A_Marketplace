@@ -26,19 +26,22 @@ public class ClientTest {
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
 
             // Handle each request and response
-
+            /*
 
             handleRegisterRequest(outputStream, inputStream);
             handleLoginRequest(outputStream, inputStream);
-            handleAddProductRequest(outputStream, inputStream);
-            handleAllProductsRequest(outputStream, inputStream);
             handleSearchProductRequest(outputStream, inputStream);
             handleMakeOfferRequest(outputStream, inputStream);
+
+
+            handleAddProductRequest(outputStream, inputStream);
+            handleAllProductsRequest(outputStream, inputStream);
+     handleRegisterInterestRequest(outputStream, inputStream);
+
+             */
+
             handleSellProductRequest(outputStream, inputStream);
-            handleRegisterInterestRequest(outputStream, inputStream);
-            handleGetPurchaseHistoryRequest(outputStream, inputStream);
-
-
+            //handleGetPurchaseHistoryRequest(outputStream, inputStream);
 
             // Close the connections
             inputStream.close();
@@ -52,8 +55,8 @@ public class ClientTest {
 
     private static void handleRegisterRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.register("Bruce", "Wayne", LocalDate.of(1990, 5, 10),
-                "snow@mau.com", "Batman", "password1");
+        Request request = Request.register("Eobard", "Thawne", LocalDate.of(1990, 5, 10),
+                "snow@mau.com", "Rflash", "password1");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for REGISTER request: " + response);
@@ -61,7 +64,7 @@ public class ClientTest {
 
     private static void handleLoginRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.login("Batman", "password1");
+        Request request = Request.login("Rflash", "password1");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for LOGIN request: " + response);
@@ -69,8 +72,8 @@ public class ClientTest {
 
     private static void handleAddProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.addProduct(ProductType.BEAUTY, "Batman", 300, 2021,
-                "Blue", ProductCondition.Used);
+        Request request = Request.addProduct(ProductType.BEAUTY, "Rflash", 300, 2021,
+                "Blue", ProductCondition.GOOD);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for ADD_PRODUCT request: " + response);
@@ -86,31 +89,33 @@ public class ClientTest {
 
     private static void handleSearchProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.searchProduct("ELECTRONICS", 100, 1000, ProductCondition.New);
+        Request request = Request.searchProduct("ELECTRONICS", 100, 1000, ProductCondition.NEW);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for SEARCH_PRODUCT request: " + response);
     }
 
-    private static void handleSellProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
-            throws IOException, ClassNotFoundException {
-        Request request = Request.sellProduct(14, "username");
-        sendRequest(outputStream, request);
-        Response response = receiveResponse(inputStream);
-        System.out.println("Received response for SELL_PRODUCT request: " + response);
-    }
-
     private static void handleMakeOfferRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.makeOffer(56, "Alice123", 200.00);
+        Request request = Request.makeOffer(62, "Rflash", 200.00);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for MAKE_OFFER request: " + response);
     }
 
+
+    private static void handleSellProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
+            throws IOException, ClassNotFoundException {
+        Request request = Request.sellProduct(24, "JohnnyBoy");
+        sendRequest(outputStream, request);
+        Response response = receiveResponse(inputStream);
+        System.out.println("Received response for SELL_PRODUCT request: " + response);
+    }
+
+
     private static void handleRegisterInterestRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.registerInterest("Books", "Batman");
+        Request request = Request.registerInterest("Books", "Rflash");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for REGISTER_INTEREST request: " + response);
@@ -118,7 +123,7 @@ public class ClientTest {
 
     private static void handleGetPurchaseHistoryRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.getPurchaseHistory("Alice123", LocalDate.of(2023, 05, 10), LocalDate.of(2023, 05, 19));
+        Request request = Request.getPurchaseHistory("Alice123", LocalDate.of(2023, 05, 10), LocalDate.of(2023, 05, 25));
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for GET_PURCHASE_HISTORY request: " + response);

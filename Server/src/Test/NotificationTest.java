@@ -41,7 +41,7 @@ public class NotificationTest {
 
             // Add a book by User 2
             handleAddProductRequest(outputStream, inputStream, ProductType.BOOK, 19.99, 2023,
-                    "Red", ProductCondition.New, "AZ");
+                    "Red", ProductCondition.NEW, "AZ");
 
             // Wait for a notification for added product by User 1
             waitForNotification(inputStream);

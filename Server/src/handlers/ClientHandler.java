@@ -52,9 +52,6 @@ public class ClientHandler implements Runnable {
             Object inputObject;
             while ((inputObject = in.readObject()) != null) {
                 if(inputObject instanceof Request){
-                    System.out.println("CH: Recieved: " + ((Request) inputObject).getType());
-                    System.out.println("CH: Recieved: " + ((Request) inputObject).getSearchProductType());
-                    System.out.println("CH: Recieved: " + ((Request) inputObject).getSearchProductType());
                      handler.handle((Request) inputObject, this);
                      //Must add a response from the requestHandler. shared.Response will be sent to the client
                 }

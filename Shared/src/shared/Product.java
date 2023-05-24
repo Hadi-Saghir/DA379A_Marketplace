@@ -32,11 +32,31 @@ public class Product implements Serializable {
     }
 
     public enum ProductCondition {
-        New,
-        Used,
-        Refurbished,
-        Damaged
+        NEW("New"),
+        VERY_GOOD("Very Good"),
+        GOOD("Good"),
+        NotWorkingProperly("Not working properly");
+
+        private final String value;
+
+        ProductCondition(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+        public static ProductCondition fromValue(String value) {
+            for (ProductCondition condition : values()) {
+                if (condition.getValue().equals(value)) {
+                    return condition;
+                }
+            }
+            throw new IllegalArgumentException("Invalid value: " + value);
+        }
     }
+
+
 
 
     public Product(ProductType type, double price, int yearOfProduction, String color, ProductCondition condition, ProductState state) {
