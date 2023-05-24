@@ -35,7 +35,10 @@ public class Product implements Serializable {
         New,
         Used,
         Refurbished,
-        Damaged
+        Damaged,
+        Very_Good,
+        Not_working_properly,
+        Good;
     }
 
 

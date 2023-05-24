@@ -123,8 +123,9 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.FAILURE, products);
+        } catch(Exception e) {
+            e.printStackTrace();
         }
-
         return new Response(ResponseType.ALL_PRODUCTS , ResponseResult.SUCCESS, products);
     }
 

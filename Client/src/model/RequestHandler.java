@@ -1,6 +1,5 @@
 package model;
 
-import controller.MainController;
 import shared.Request;
 
 import java.io.IOException;

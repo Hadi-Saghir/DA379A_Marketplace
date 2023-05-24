@@ -214,7 +214,8 @@ public class MainController implements Controller {
 
     @Override
     public void addProduct(String type, Double price, Integer yearOfProduction, String colour, String condition) {
-        connectionController.doAddProduct(type, price, yearOfProduction, colour, condition);
+        String username = loginController.getUser().getUsername();
+        connectionController.doAddProduct(type, username, price, yearOfProduction, colour, condition);
     }
 
     @Override

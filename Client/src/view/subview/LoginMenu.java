@@ -63,12 +63,18 @@ public class LoginMenu {
     }
 
     public void loginSuccess() {
+        mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|---------------Login successful---------------|");
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("");
         mainView.showMainMenu();
     }
 
     public void loginFailure() {
+        mainView.showError("|----------------------------------------------|");
         mainView.showError("|----------------Login failure-----------------|");
+        mainView.showError("|----------------------------------------------|");
+        mainView.showError("");
         mainView.showLoginMenu();
     }
 

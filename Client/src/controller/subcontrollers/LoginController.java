@@ -21,10 +21,8 @@ public class LoginController {
     }
 
     public void login(String username, String password) {
-        if(user.getUsername() == null || user.getPassword() == null) {
-            view.showLoginMenu();
-            return;
-        }
+        setUsername(username);
+        setPassword(password);
         mainController.doLogin(user.getUsername(), user.getPassword());
     }
 

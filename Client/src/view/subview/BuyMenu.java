@@ -70,7 +70,7 @@ public class BuyMenu {
         mainView.showMessage("|------------------Products--------------------|");
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|-0. Back                                     -|");
-        for(int i = 0; i < products.size(); i++) {
+        for(int i: products.keySet()) {
             mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
         }
 
@@ -82,7 +82,7 @@ public class BuyMenu {
             } else {
                 try {
                     int index = Integer.parseInt(input);
-                    if(index < 1 || index > products.size()) {
+                    if(!products.containsKey(index)) {
                         throw new NumberFormatException();
                     }
 
