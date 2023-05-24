@@ -4,7 +4,6 @@ import controller.MainController;
 import shared.User;
 import view.View;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -21,71 +20,7 @@ public class LoginController {
         this.view = view;
     }
 
-    public void createAccount() {
-        view.getFirstName();
-        view.getLastName();
-        view.getDateOfBirth();
-        view.getEmailAddress();
-        view.getUsername();
-        view.getPassword();
-
-        mainController.doCreateNewUser(user);
-    }
-
-    public void setFirstName(String firstName) {
-        if(firstName.isBlank()) {
-            view.showError("First name cannot be blank");
-            view.getFirstName();
-        }
-        user.setFirstName(firstName);
-    }
-
-    public void setLastName(String lastName) {
-        if(lastName.isBlank()) {
-            view.showError("Last name cannot be blank");
-            view.getLastName();
-        }
-        user.setLastName(lastName);
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        if(!emailAddress.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            view.showError("Please enter a valid email address");
-            view.getEmailAddress();
-        }
-        user.setEmailAddress(emailAddress);
-    }
-
-    public void setUsername(String username) {
-        if(username.isBlank()) {
-            view.showError("User name cannot be blank");
-            view.getUsername();
-        } else if(username.contains(" ")) {
-            view.showError("Username cannot contain spaces");
-            view.getUsername();
-        }
-        user.setUsername(username);
-    }
-
-    public void setPassword(String password) {
-        if(password.isBlank()) {
-            view.showError("Password cannot be blank");
-            view.getPassword();
-        }
-        user.setPassword(password);
-    }
-
-    public void setDateOfBirth(String dob) {
-        try {
-            LocalDate date = LocalDate.parse(dob);
-            user.setDateOfBirth(date);
-        } catch (DateTimeParseException e) {
-            view.showError("Please enter a valid date of birth");
-            view.getDateOfBirth();
-        }
-    }
-
-    public void login() {
+    public void login(String username, String password) {
         if(user.getUsername() == null || user.getPassword() == null) {
             view.showLoginMenu();
             return;
@@ -93,7 +28,76 @@ public class LoginController {
         mainController.doLogin(user.getUsername(), user.getPassword());
     }
 
+    public boolean setFirstName(String firstName) {
+        if(firstName.isBlank()) {
+            mainController.setLatestError("First name cannot be blank");
+            return false;
+        } else {
+            user.setFirstName(firstName);
+            return true;
+        }
+    }
+
+    public boolean setLastName(String lastName) {
+        if(lastName.isBlank()) {
+            mainController.setLatestError("Last name cannot be blank");
+            return false;
+        } else {
+            user.setLastName(lastName);
+            return true;
+        }
+    }
+
+    public boolean setEmailAddress(String emailAddress) {
+        if(!emailAddress.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            mainController.setLatestError("Not a valid email address");
+            return false;
+        } else {
+            user.setEmailAddress(emailAddress);
+            return true;
+        }
+    }
+
+    public boolean setUsername(String username) {
+        if(username.isBlank()) {
+            mainController.setLatestError("User name cannot be blank");
+            return false;
+        } else if(username.contains(" ")) {
+            mainController.setLatestError("Username cannot contain spaces");
+            return false;
+        } else {
+            user.setUsername(username);
+            return true;
+        }
+    }
+
+    public boolean setPassword(String password) {
+        if(password.isBlank()) {
+            mainController.setLatestError("Password cannot be blank");
+            return false;
+        } else {
+            user.setPassword(password);
+            return true;
+        }
+    }
+
+    public boolean setDateOfBirth(String dob) {
+        try {
+            LocalDate date = LocalDate.parse(dob);
+            user.setDateOfBirth(date);
+            return true;
+        } catch (DateTimeParseException e) {
+            mainController.setLatestError("Please enter a valid date of birth");
+            return false;
+        }
+    }
+
+    public User getUser() {
+        return user;
+    }
+
     public String getUserId() {
         return user.getUsername();
     }
+
 }

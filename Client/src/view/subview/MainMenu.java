@@ -26,10 +26,10 @@ public class MainMenu {
 
         switch (input) {
             case "0" -> controller.logout();
-            case "1" -> controller.buyProducts();
-            case "2" -> controller.sellProducts();
-            case "3" -> controller.viewProductsBuying();
-            case "4" -> controller.viewProductsSelling();
+            case "1" -> mainView.showBuyMenu();
+            case "2" -> mainView.showSellMenu();
+//            case "3" -> controller.viewProductsBuying();
+//            case "4" -> controller.viewProductsSelling();
             default -> {
                 mainView.showError("Invalid option");
                 showMainMenu();

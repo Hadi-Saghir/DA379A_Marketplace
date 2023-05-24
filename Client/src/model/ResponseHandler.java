@@ -5,6 +5,7 @@ import shared.Response;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ResponseHandler extends Thread {

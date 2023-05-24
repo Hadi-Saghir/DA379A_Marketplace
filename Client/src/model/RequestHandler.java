@@ -9,13 +9,11 @@ import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RequestHandler extends Thread {
-    private final MainController mainController;
     private final ObjectOutputStream out;
     private AtomicBoolean running = new AtomicBoolean(true);
     private final LinkedList<Request> requestsBuffer = new LinkedList<>();
 
-    public RequestHandler(MainController mainController, ObjectOutputStream out) {
-        this.mainController  = mainController;
+    public RequestHandler(ObjectOutputStream out) {
         this.out = out;
     }
 
