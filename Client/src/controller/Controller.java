@@ -2,38 +2,58 @@ package controller;
 
 import view.View;
 
+import java.util.HashMap;
+import java.util.List;
+
 public interface Controller {
-    void exit();
-    void setView(View view);
+    String getLatestError();
+    void setView(View menu);
+
     void launch();
-    void login();
+    void exit();
+
+    void login(String username, String password);
+
+    boolean setFirstName(String firstName);
+
+    boolean setLastName(String lastName);
+
+    boolean setDateOfBirth(String dateOfBirth);
+
+    boolean setEmailAddress(String emailAddress);
+
+    boolean setUsername(String username);
+
+    boolean setPassword(String password);
+
     void createAccount();
 
-    void setFirstName(String firstName);
-    void setLastName(String lastName);
-    void setEmailAddress(String emailAddress);
-    void setUsername(String username);
-    void setPassword(String password);
-    void setDateOfBirth(String dob);
     void logout();
 
-    void buyProducts();
+    List<String> getProductType();
 
-    void sellProducts();
+    List<String> getConditions();
 
-    void viewProductsBuying();
+    HashMap<Integer, String> getProductList();
 
-    void viewProductsSelling();
+    boolean addProductToCart(int productId);
 
-    void getProductList();
+    HashMap<Integer, String> searchProducts(String productType, double minPrice, double maxPrice, String searchCondition);
 
-    void viewCart();
+    boolean removeProductFromCart(int productId);
+
+    List<String> getCartForView();
 
     void checkout();
 
-    void searchProducts(String productType, double minPrice, double maxPrice, String searchCondition);
+    List<String> getAllowedTypes();
 
-    void addProductToCart(int productId);
+    List<String> getAllowedConditions();
 
-    void removeProductFromCart(int cartOrderId);
+
+    void addProduct(String type, Double price, Integer yearOfProduction, String colour, String condition);
+
+    HashMap<Integer, String> getMyProducts();
+
+    HashMap<String, String> getMyProductDetails(int index);
 }

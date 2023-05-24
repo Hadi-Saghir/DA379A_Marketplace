@@ -11,6 +11,7 @@ public class Cart {
     private MainController mainController;
     private List<Product> products;
     private final HashMap<Integer, Product> cart = new HashMap<>();
+    private final Lock lock = new Lock();
 
     public Cart(MainController mainController) {
         this.mainController = mainController;
@@ -84,12 +85,23 @@ public class Cart {
         return p;
     }
 
-    public void removeProductFromCart(int cartOrderId) {
-        cart.remove(cartOrderId);
-        mainController.viewCart();
+    public boolean removeProductFromCart(int cartOrderId) {
+        return cart.remove(cartOrderId) != null;
     }
 
     public List<Product> getProductsFromCart() {
         return cart.values().stream().toList();
+    }
+
+    public void unlock() {
+        lock.unlock();
+    }
+
+    public void lock() {
+        lock.lock();
+    }
+
+    public void waitUntilUnlocked() {
+        lock.waitUntilUnlocked();
     }
 }

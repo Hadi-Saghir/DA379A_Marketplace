@@ -38,20 +38,66 @@ public class BuyMenu {
         String input = mainView.promptForInput("Enter option: ");
         switch (input) {
             case "0" -> mainView.showMainMenu();
-            case "1" -> {
-                mainView.showMessage("|----------------------------------------------|");
-                mainView.showMessage("|------------------Products--------------------|");
-                mainView.showMessage("|----------------------------------------------|");
-                controller.getProductList();
-            }
+            case "1" -> listPurchasableProducts();
             case "2" -> search();
-            case "3" -> controller.viewCart();
-            case "4" -> controller.checkout();
+            case "3" -> viewCart();
+            case "4" -> checkout();
             default -> {
                 mainView.showError("Invalid option");
                 showBuyMenu();
             }
         }
+    }
+
+    private void checkout() {
+        mainView.showMessage("Checking out items in cart");
+        controller.checkout();
+        showBuyMenu();
+    }
+
+    private void viewCart() {
+        List<String> products = controller.getCartForView();
+        listCartContent(products);
+    }
+
+    private void listPurchasableProducts() {
+        HashMap<Integer, String> products = controller.getProductList();
+        listPurchasableProducts(products);
+    }
+
+    private void listPurchasableProducts(HashMap<Integer, String> products) {
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|------------------Products--------------------|");
+        mainView.showMessage("|----------------------------------------------|");
+        mainView.showMessage("|-0. Back                                     -|");
+        for(int i: products.keySet()) {
+            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
+        }
+
+        String input;
+        do {
+            input = mainView.promptForInput("Enter option: ");
+            if(input.equals("0")) {
+                showBuyMenu();
+            } else {
+                try {
+                    int index = Integer.parseInt(input);
+                    if(!products.containsKey(index)) {
+                        throw new NumberFormatException();
+                    }
+
+                    boolean added = controller.addProductToCart(index - 1);
+                    if(!added) throw new RuntimeException();
+                } catch(NumberFormatException e) {
+                    mainView.showError("Invalid option");
+                    input = null;
+                } catch(RuntimeException e) {
+                    mainView.showError("Failed to add product to cart");
+                    input = null;
+                }
+            }
+
+        } while(input == null);
     }
 
     private void search() {
@@ -60,7 +106,8 @@ public class BuyMenu {
         double maxPrice = getMaxPrice();
         String searchCondition = getSearchCondition();
 
-        controller.searchProducts(productType, minPrice, maxPrice, searchCondition);
+        HashMap<Integer, String> products = controller.searchProducts(productType, minPrice, maxPrice, searchCondition);
+        listPurchasableProducts(products);
     }
 
     private String getProductType() {
@@ -145,33 +192,7 @@ public class BuyMenu {
         return conditions.get(Integer.parseInt(input));
     }
 
-    public void listPurchasableProducts(HashMap<Integer, String> products) {
-        mainView.showMessage("|----------------------------------------------|");
-        mainView.showMessage("|-0. Back                                     -|");
-        for(int i = 0; i < products.size(); i++) {
-            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
-        }
 
-        String input;
-        do {
-            input = mainView.promptForInput("Enter option: ");
-            if(input.equals("0")) {
-                showBuyMenu();
-            } else {
-                try {
-                    int index = Integer.parseInt(input);
-                    if(index < 1 || index > products.size()) {
-                        throw new NumberFormatException();
-                    }
-                    controller.addProductToCart(index - 1);
-                } catch(NumberFormatException e) {
-                    mainView.showError("Invalid option");
-                    input = null;
-                }
-            }
-
-        } while(input == null);
-    }
 
     public void productAddedToCart(boolean added) {
         if(added) {
@@ -202,9 +223,13 @@ public class BuyMenu {
                     if(index < 1 || index > products.size()) {
                         throw new NumberFormatException();
                     }
-                    controller.removeProductFromCart(index - 1);
+                    boolean success = controller.removeProductFromCart(index - 1);
+                    if(!success) throw new RuntimeException();
                 } catch(NumberFormatException e) {
                     mainView.showError("Invalid option");
+                    input = null;
+                } catch(RuntimeException e) {
+                    mainView.showError("Failed to remove product from cart");
                     input = null;
                 }
             }

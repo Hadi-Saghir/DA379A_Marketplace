@@ -4,7 +4,6 @@ import controller.MainController;
 import shared.User;
 import view.View;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -21,79 +20,82 @@ public class LoginController {
         this.view = view;
     }
 
-    public void createAccount() {
-        view.getFirstName();
-        view.getLastName();
-        view.getDateOfBirth();
-        view.getEmailAddress();
-        view.getUsername();
-        view.getPassword();
-
-        mainController.doCreateNewUser(user);
+    public void login(String username, String password) {
+        setUsername(username);
+        setPassword(password);
+        mainController.doLogin(user.getUsername(), user.getPassword());
     }
 
-    public void setFirstName(String firstName) {
+    public boolean setFirstName(String firstName) {
         if(firstName.isBlank()) {
-            view.showError("First name cannot be blank");
-            view.getFirstName();
+            mainController.setLatestError("First name cannot be blank");
+            return false;
+        } else {
+            user.setFirstName(firstName);
+            return true;
         }
-        user.setFirstName(firstName);
     }
 
-    public void setLastName(String lastName) {
+    public boolean setLastName(String lastName) {
         if(lastName.isBlank()) {
-            view.showError("Last name cannot be blank");
-            view.getLastName();
+            mainController.setLatestError("Last name cannot be blank");
+            return false;
+        } else {
+            user.setLastName(lastName);
+            return true;
         }
-        user.setLastName(lastName);
     }
 
-    public void setEmailAddress(String emailAddress) {
+    public boolean setEmailAddress(String emailAddress) {
         if(!emailAddress.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            view.showError("Please enter a valid email address");
-            view.getEmailAddress();
+            mainController.setLatestError("Not a valid email address");
+            return false;
+        } else {
+            user.setEmailAddress(emailAddress);
+            return true;
         }
-        user.setEmailAddress(emailAddress);
     }
 
-    public void setUsername(String username) {
+    public boolean setUsername(String username) {
         if(username.isBlank()) {
-            view.showError("User name cannot be blank");
-            view.getUsername();
+            mainController.setLatestError("User name cannot be blank");
+            return false;
         } else if(username.contains(" ")) {
-            view.showError("Username cannot contain spaces");
-            view.getUsername();
+            mainController.setLatestError("Username cannot contain spaces");
+            return false;
+        } else {
+            user.setUsername(username);
+            return true;
         }
-        user.setUsername(username);
     }
 
-    public void setPassword(String password) {
+    public boolean setPassword(String password) {
         if(password.isBlank()) {
-            view.showError("Password cannot be blank");
-            view.getPassword();
+            mainController.setLatestError("Password cannot be blank");
+            return false;
+        } else {
+            user.setPassword(password);
+            return true;
         }
-        user.setPassword(password);
     }
 
-    public void setDateOfBirth(String dob) {
+    public boolean setDateOfBirth(String dob) {
         try {
             LocalDate date = LocalDate.parse(dob);
             user.setDateOfBirth(date);
+            return true;
         } catch (DateTimeParseException e) {
-            view.showError("Please enter a valid date of birth");
-            view.getDateOfBirth();
+            mainController.setLatestError("Please enter a valid date of birth");
+            return false;
         }
     }
 
-    public void login() {
-        if(user.getUsername() == null || user.getPassword() == null) {
-            view.showLoginMenu();
-            return;
-        }
-        mainController.doLogin(user.getUsername(), user.getPassword());
+    public User getUser() {
+        return user;
     }
 
     public String getUserId() {
         return user.getUsername();
     }
+
 }

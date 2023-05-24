@@ -12,6 +12,7 @@ import view.View;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.LinkedList;
 
 public class ConnectionController {
     private final MainController mainController;
@@ -19,11 +20,13 @@ public class ConnectionController {
     private final ServerHandler serverHandler;
     private ResponseHandler responseHandler;
     private RequestHandler requestHandler;
+    private final ShoppingController shoppingController;
 
 
-    public ConnectionController(MainController mainController, String host, int port) {
+    public ConnectionController(MainController mainController, ShoppingController shoppingController, String host, int port) {
         this.mainController = mainController;
         this.serverHandler = new ServerHandler(host, port, this);
+        this.shoppingController = shoppingController;
     }
 
     public void setView(View view) {
@@ -34,8 +37,8 @@ public class ConnectionController {
         serverHandler.connectToServer();
         view.showMessage("Connected to server");
 
-        requestHandler = new RequestHandler(mainController, serverHandler.getOut());
-        responseHandler = new ResponseHandler(mainController, serverHandler.getIn());
+        requestHandler = new RequestHandler(serverHandler.getOut());
+        responseHandler = new ResponseHandler(serverHandler.getIn());
 
         requestHandler.start();
         responseHandler.start();
@@ -53,9 +56,8 @@ public class ConnectionController {
 
     public void doLogin(String username, String password) {
         Request request = Request.login(username, password);
-        requestHandler.sendRequest(request);
+        sendRequest(request);
     }
-
 
     public void doCreateNewUser(User user) {
         String firstName = user.getFirstName();
@@ -66,21 +68,45 @@ public class ConnectionController {
         String password = user.getPassword();
         Request request = Request.register(firstName, lastName, dateOfBirth, email, username, password);
 
-        requestHandler.sendRequest(request);
+        sendRequest(request);
     }
 
     public void doProductSearch(String productType, double minPrice, double maxPrice, String searchCondition) {
+        shoppingController.lockCart();
         Request request = Request.searchProduct(productType, minPrice, maxPrice, Product.ProductCondition.valueOf(searchCondition));
-        requestHandler.sendRequest(request);
+        sendRequest(request);
     }
 
     public void doAllProducts() {
+        shoppingController.lockCart();
         Request request = Request.allProducts();
-        requestHandler.sendRequest(request);
+        sendRequest(request);
     }
 
     public void makeOffer(Product product) {
         Request request = Request.makeOffer(product.getProductid(), mainController.getUserId(), product.getPrice());
+        sendRequest(request);
+    }
+
+    public void doAddProduct(String type, String username, Double price, Integer yearOfProduction, String colour, String condition) {
+        Product.ProductType productType = Product.ProductType.valueOf(type);
+        Product.ProductCondition productCondition = Product.ProductCondition.valueOf(condition);
+
+        Request request = Request.addProduct(productType, username, price, yearOfProduction, colour, productCondition);
+        sendRequest(request);
+    }
+
+    public void getMyProducts() {
+        shoppingController.lockSellingCart();
+        //TODO Skicka en fråga som ger vad jag säljer just nu
+    }
+
+    public void requestMyProductDetails(Product product) {
+        //TODO Skicka en fråga med productid som ger detaljer om produkten
+    }
+
+    private void sendRequest(Request request) {
         requestHandler.sendRequest(request);
+        mainController.handleResponse(responseHandler.getResponse());
     }
 }

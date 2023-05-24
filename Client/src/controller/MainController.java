@@ -4,13 +4,11 @@ import controller.subcontrollers.ConnectionController;
 import controller.subcontrollers.LoginController;
 import controller.subcontrollers.ShoppingController;
 import shared.Product;
-import shared.Request;
 import shared.Response;
 import shared.User;
 import view.View;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
@@ -22,11 +20,74 @@ public class MainController implements Controller {
     private View view;
     private static final String HOST = "localhost";
     private static final int PORT = 8080;
+    private String latestError = null;
 
     public MainController(){
-        connectionController = new ConnectionController(this, HOST, PORT);
-        loginController = new LoginController(this);
         shoppingController = new ShoppingController(this);
+        connectionController = new ConnectionController(this, shoppingController, HOST, PORT);
+        loginController = new LoginController(this);
+    }
+
+    public String getLatestError() {
+        return this.latestError;
+    }
+
+    public void setLatestError(String error) {
+        this.latestError = error;
+    }
+
+    public void handleResponse(Response response) {
+        switch(response.RESPONSE_TYPE()) {
+            case REGISTER -> {
+                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
+                    view.userCreation(true);
+                } else {
+                    setLatestError("User creation failed");
+                    view.userCreation(false);
+                }
+            }
+            case LOGIN -> {
+                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
+                    view.loginSuccess();
+                } else {
+                    view.loginFailure();
+                }
+            }
+            case ALL_PRODUCTS, SEARCH_PRODUCT -> {
+                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
+                    shoppingController.handleProducts(response);
+                } else {
+                    view.showError("Error getting product list");
+                    view.showMainMenu();
+                }
+            }
+            case ADD_PRODUCT -> {
+                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
+                    shoppingController.handleMyProducts(response);
+                } else {
+                    view.showError("Error getting my product list");
+                    view.showMainMenu();
+                }
+            }
+            case SELL_PRODUCT -> {}
+            case MAKE_OFFER -> {
+                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
+                    view.showNotification("Offer made successfully");
+                } else {
+                    view.showError("Error making offer");
+                }
+            }
+            case GET_PURCHASE_HISTORY -> {}
+            case REGISTER_INTEREST -> {}
+            case NOTIFICATION -> {
+                view.showNotification(response.MESSAGE().get(0).toString());
+            }
+            default -> {
+                view.showError("Unknown response type");
+                view.showError(response.RESPONSE_TYPE().name());
+                view.showMainMenu();
+            }
+        }
     }
 
     @Override
@@ -42,12 +103,11 @@ public class MainController implements Controller {
             connectionController.connectToServer();
         } catch (IOException e) {
             view.showError("Error connecting to server");
-            view.showMessage(e.getMessage());
+            view.showError(e.getMessage());
             exit(1);
         }
 
-        view.showWelcomeMessage();
-        view.showLoginMenu();
+        view.launch();
     }
 
     public void exit(int statusCode) {
@@ -63,83 +123,48 @@ public class MainController implements Controller {
     }
 
     @Override
+    public void login(String username, String password) {
+        loginController.login(username, password);
+    }
+
+    public void doLogin(String username, String password) {
+        connectionController.doLogin(username, password);
+    }
+
+    @Override
+    public boolean setFirstName(String firstName) {
+        return loginController.setFirstName(firstName);
+    }
+
+    @Override
+    public boolean setLastName(String lastName) {
+        return loginController.setLastName(lastName);
+    }
+
+    @Override
+    public boolean setDateOfBirth(String dateOfBirth) {
+        return loginController.setDateOfBirth(dateOfBirth);
+    }
+
+    @Override
+    public boolean setEmailAddress(String emailAddress) {
+        return loginController.setEmailAddress(emailAddress);
+    }
+
+    @Override
+    public boolean setUsername(String username) {
+        return loginController.setUsername(username);
+    }
+
+    @Override
+    public boolean setPassword(String password) {
+        return loginController.setPassword(password);
+    }
+
+    @Override
     public void createAccount() {
-        loginController.createAccount();
-    }
-
-    @Override
-    public void setFirstName(String firstName) {
-        loginController.setFirstName(firstName);
-    }
-
-    @Override
-    public void setLastName(String lastName) {
-        loginController.setLastName(lastName);
-    }
-
-    @Override
-    public void setEmailAddress(String emailAddress) {
-        loginController.setEmailAddress(emailAddress);
-    }
-
-    @Override
-    public void setUsername(String username) {
-        loginController.setUsername(username);
-    }
-
-    @Override
-    public void setPassword(String password) {
-        loginController.setPassword(password);
-    }
-
-    @Override
-    public void setDateOfBirth(String dob) {
-        loginController.setDateOfBirth(dob);
-    }
-
-    @Override
-    public void sellProducts() {
-
-    }
-
-    @Override
-    public void viewProductsBuying() {
-
-    }
-
-    @Override
-    public void viewProductsSelling() {
-
-    }
-
-    @Override
-    public void getProductList() {
-        connectionController.doAllProducts();
-    }
-
-    @Override
-    public void viewCart() {
-        shoppingController.viewCart();
-    }
-
-    @Override
-    public void checkout() {
-        shoppingController.checkout();
-    }
-
-    @Override
-    public void searchProducts(String productType, double minPrice, double maxPrice, String searchCondition) {
-        connectionController.doProductSearch(productType, minPrice, maxPrice, searchCondition);
-    }
-
-    @Override
-    public void addProductToCart(int productId) {
-        shoppingController.addProductToCart(productId);
-    }
-
-    @Override
-    public void removeProductFromCart(int cartOrderId) {
-        shoppingController.removeProductFromCart(cartOrderId);
+        User user = loginController.getUser();
+        connectionController.doCreateNewUser(user);
     }
 
     @Override
@@ -149,89 +174,76 @@ public class MainController implements Controller {
     }
 
     @Override
-    public void buyProducts() {
-        List<String> productTypes = Stream.of(Product.ProductType.values()).map(Product.ProductType::name).toList();
-        List<String> conditions = Stream.of(Product.ProductCondition.values()).map(Product.ProductCondition::name).toList();
-        view.showBuyMenu(productTypes, conditions);
+    public List<String> getProductType() {
+        return Stream.of(Product.ProductType.values()).map(Product.ProductType::name).toList();
     }
 
     @Override
-    public void login() {
-        loginController.login();
+    public List<String> getConditions() {
+        return Stream.of(Product.ProductCondition.values()).map(Product.ProductCondition::name).toList();
     }
 
-    public void doCreateNewUser(User user) {
-        connectionController.doCreateNewUser(user);
+    @Override
+    public HashMap<Integer, String> getProductList() {
+        connectionController.doAllProducts();
+        shoppingController.waitForCartToUpdate();
+        return shoppingController.getProductsForView();
     }
 
-    public void doLogin(String username, String password) {
-        connectionController.doLogin(username, password);
+    @Override
+    public HashMap<Integer, String> searchProducts(String productType, double minPrice, double maxPrice, String searchCondition) {
+        connectionController.doProductSearch(productType, minPrice, maxPrice, searchCondition);
+        shoppingController.waitForCartToUpdate();
+        return shoppingController.getProductsForView();
     }
 
-    public void handleResponse(Response response) {
-        switch(response.RESPONSE_TYPE()) {
-            case REGISTER -> {
-                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
-                    view.showMessage("User created successfully");
-                } else {
-                    view.showError("User creation failed");
-                }
-
-                view.showLoginMenu();
-            }
-            case LOGIN -> {
-                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
-                    view.loginSuccess();
-                    view.showMainMenu();
-                } else {
-                    view.showError("Login failed");
-                    view.showLoginMenu();
-                }
-            }
-            case ALL_PRODUCTS, SEARCH_PRODUCT -> {
-                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
-                    List<Object> objects = response.MESSAGE();
-                    List<Product> products = new ArrayList<>();
-
-                    for(Object object : objects) {
-                        products.add((Product) object);
-                    }
-
-                    shoppingController.provideStoreItems(products);
-                } else {
-                    view.showError("Error getting product list");
-                    view.showMainMenu();
-                }
-            }
-
-            case ADD_PRODUCT -> {
-
-            }
-            case SELL_PRODUCT -> {}
-            case MAKE_OFFER -> {}
-            case GET_PURCHASE_HISTORY -> {}
-            case REGISTER_INTEREST -> {}
-            case NOTIFICATION -> {
-                view.showNotification(response.MESSAGE().get(0).toString());
-            }
-            default -> {
-                view.showError("Unknown response type");
-                view.showError(response.RESPONSE_TYPE().name());
-                view.showMainMenu();
-            }
-        }
+    @Override
+    public void checkout() {
+        shoppingController.checkout();
     }
 
-    public void listPurchasableProduct(HashMap<Integer, String> products) {
-        view.listPurchasableProduct(products);
+    @Override
+    public List<String> getAllowedTypes() {
+        return getProductType();
     }
 
-    public void listCartContent(List<String> products) {
-        view.listCartContent(products);
+    @Override
+    public List<String> getAllowedConditions() {
+        return getConditions();
     }
 
-    public void productAddedToCart(boolean added) {
-        view.productAddedToCart(added);
+    @Override
+    public void addProduct(String type, Double price, Integer yearOfProduction, String colour, String condition) {
+        String username = loginController.getUser().getUsername();
+        connectionController.doAddProduct(type, username, price, yearOfProduction, colour, condition);
+    }
+
+    @Override
+    public HashMap<Integer, String> getMyProducts() {
+        connectionController.getMyProducts();
+        shoppingController.waitForSellingCartToUpdate();
+        return shoppingController.getMyProductsForView();
+    }
+
+    @Override
+    public HashMap<String, String> getMyProductDetails(int index) {
+        return shoppingController.getMyProductDetails(index);
+    }
+
+
+    @Override
+    public boolean addProductToCart(int productId) {
+        return shoppingController.addProductToCart(productId);
+    }
+
+    @Override
+    public boolean removeProductFromCart(int cartOrderId) {
+        return shoppingController.removeProductFromCart(cartOrderId);
+    }
+
+    @Override
+    public List<String> getCartForView() {
+        return shoppingController.getCartForView();
     }
 
     public String getUserId() {
@@ -240,5 +252,10 @@ public class MainController implements Controller {
 
     public void makeOffer(Product product) {
         connectionController.makeOffer(product);
+    }
+
+    public void requestMyProductDetails(Product product) {
+        connectionController.requestMyProductDetails(product);
+        shoppingController.waitForSellingCartToUpdate();
     }
 }

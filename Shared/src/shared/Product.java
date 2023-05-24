@@ -32,6 +32,7 @@ public class Product implements Serializable {
     }
 
     public enum ProductCondition {
+
         NEW("New"),
         VERY_GOOD("Very Good"),
         GOOD("Good"),
@@ -46,6 +47,7 @@ public class Product implements Serializable {
         public String getValue() {
             return value;
         }
+
         public static ProductCondition fromValue(String value) {
             for (ProductCondition condition : values()) {
                 if (condition.getValue().equals(value)) {
@@ -54,8 +56,8 @@ public class Product implements Serializable {
             }
             throw new IllegalArgumentException("Invalid value: " + value);
         }
-    }
 
+    }
 
 
 
