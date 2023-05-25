@@ -24,6 +24,7 @@ public record Response(ResponseType RESPONSE_TYPE,ResponseResult RESPONSE_RESULT
         MAKE_OFFER,
         REGISTER_INTEREST,
         GET_PURCHASE_HISTORY,
-        NOTIFICATION;
+        NOTIFICATION,
+        GET_CURRENT_OFFERS
     }
 }

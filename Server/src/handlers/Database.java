@@ -480,14 +480,13 @@ public class Database {
                         ProductState.valueOf(rs.getString("state"))
                 );
                 result.put(offerid,product);
-
-
             }
         } catch (SQLException e) {
             System.out.println(e);
-            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
+            return new Response(ResponseType.GET_CURRENT_OFFERS , ResponseResult.FAILURE, Collections.singletonList(result));
         }
-        return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, Collections.singletonList(result));
+        System.out.println("Done");
+        return new Response(ResponseType.GET_CURRENT_OFFERS , ResponseResult.SUCCESS, Collections.singletonList(result));
 
     }
 
@@ -517,7 +516,7 @@ public class Database {
         //System.out.println(db.searchProducts("spor",100,1000));
         //List<?> s = db.getPurchases("Alice123","2023-01-01","2023-05-27").MESSAGE();
 
-        System.out.println(db.getCurrentOffers("Batman"));
+        System.out.println("Res" + db.getCurrentOffers("Batman"));
 
         //db.addToPurchaseHistory(62,26);
         //db.sellProduct("JohnnyBoy",28,57);
