@@ -106,7 +106,6 @@ public class Database {
             PreparedStatement pstmt = conn.prepareStatement(query)) {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                System.out.println("Creating prod" +  rs.getInt("productid"));
                 Product product = new Product(
                         rs.getInt("productid"),
                         rs.getString("username"),
@@ -135,7 +134,6 @@ public class Database {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, type+"%");
-            System.out.println(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Product product = new Product(
@@ -251,21 +249,16 @@ public class Database {
         ;
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateStatement)) {
-            //System.out.println("Statement: " + updateStatement);
             pstmt.setInt(1, offerId);
             pstmt.setInt(2, offerId);
             int res = pstmt.executeUpdate();
             if(res>0){
-                System.out.println("in if where offerid: " + offerId);
                 if(addToPurchaseHistory(productid,offerId)){
-                    System.out.println("Added to history");
                     return new Response(ResponseType.SELL_PRODUCT , ResponseResult.SUCCESS, null);
                 }
                 return new Response(ResponseType.SELL_PRODUCT , ResponseResult.FAILURE, null);
             }
-            else {
-                System.out.println("Not in if");
-            }
+
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -276,7 +269,6 @@ public class Database {
     public boolean addToPurchaseHistory(int productId,int offerId) {
         String username = getBuyer(offerId);
         String insertSql = "INSERT INTO purchasehistory (productId, username, offerId) VALUES (?, ?, ?)";
-        System.out.println("TEst: " + insertSql);
         try (Connection conn = getConnection();
              PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
             insertPstmt.setInt(1, productId);
@@ -307,17 +299,12 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Ending in fail");
         return new Response(ResponseType.MAKE_OFFER , ResponseResult.FAILURE, null);
     }
 
 
     public Response getPurchases(String username, String startDate, String endDate) {
-        System.out.println("Searching " + endDate);
         List<Product> purchases = new ArrayList<>();
-        String testquery1 ="SELECT offerid FROM purchasehistory WHERE username = "+username+" AND date BETWEEN " +
-                ""+Date.valueOf(startDate)+" AND "+Date.valueOf(endDate);
-        System.out.println(testquery1);
         String sql = "SELECT productid FROM purchasehistory WHERE username = ? AND date BETWEEN ? AND ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -328,13 +315,11 @@ public class Database {
 
                 while (rs.next()) {
                     int productid = rs.getInt("productid");
-                    System.out.println("Got offer " + productid);
                     String productSql = "SELECT * FROM product WHERE productid = ? ;";
                     try (PreparedStatement productPstmt = conn.prepareStatement(productSql)) {
                         productPstmt.setInt(1, productid);
 
                         try (ResultSet productRs = productPstmt.executeQuery()) {
-                            System.out.println("Size: " + productRs.getFetchSize());
                             while (productRs.next()) {
 
                                 productid = productRs.getInt("productid");
@@ -345,7 +330,6 @@ public class Database {
                                 ProductState state = ProductState.valueOf(productRs.getString("state"));
                                 Product product = new Product(productid, username, type, price, year, color, ProductCondition.fromValue(productRs.getString("condition")), state);
                                 purchases.add(product);
-                                System.out.println("Created");
                             }
                             if (purchases.size() > 0) {
                                 return new Response(ResponseType.GET_PURCHASE_HISTORY, ResponseResult.SUCCESS, Collections.singletonList(purchases));
@@ -466,7 +450,6 @@ public class Database {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, username);
-            System.out.println(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 int offerid = rs.getInt("offerid");
@@ -486,44 +469,8 @@ public class Database {
             System.out.println(e);
             return new Response(ResponseType.GET_CURRENT_OFFERS , ResponseResult.FAILURE, Collections.singletonList(result));
         }
-        System.out.println("Done");
         return new Response(ResponseType.GET_CURRENT_OFFERS , ResponseResult.SUCCESS, Collections.singletonList(result));
 
     }
 
-
-
-    public static void main(String[] args) {
-
-
-        //dbHandler.registerUser("Alice123","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
-
-/*
- ;
-
-        dbHandler.registerUser("janedoe","Carrier123","Alice","Wattson","2001-12-21","test@testsson.gmail.com");
-        System.out.println(dbHandler.loginUser("janedoe","Tesst123"));
-        List<shared.Product> results = dbHandler.searchProducts("ELECTRONICS", 300.00, 800.00, "New");
-        System.out.println("size: " + results.size());
-        for (shared.Product p:
-                results) {
-            System.out.println(p.getType());
-
-        }
-
-
-        */
-        Database db = new Database();
-        //System.out.println(db.searchProducts("spor",100,1000));
-        //List<?> s = db.getPurchases("Alice123","2023-01-01","2023-05-27").MESSAGE();
-
-        //System.out.println("Res" + db.getCurrentOffers("Alice123"));
-
-        db.addToPurchaseHistory(62,26);
-        //db.sellProduct("JohnnyBoy",28,57);
-        //System.out.println("Res: " + db.getBuyer(27));
-        //db.makeOffer(57,"Batman",900);
-
-
-    }
 }

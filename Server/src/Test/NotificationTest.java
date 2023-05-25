@@ -63,7 +63,6 @@ public class NotificationTest {
         Request request = Request.register(firstName, lastName, dateOfBirth, email, username, password);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
-        System.out.println("Received response for REGISTER request: " + response);
     }
 
     private static void handleLoginRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream,
@@ -72,7 +71,6 @@ public class NotificationTest {
         Request request = Request.login(username, password);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
-        System.out.println("Received response for LOGIN request: " + response);
     }
 
     private static void handleAddProductRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream,
@@ -82,7 +80,6 @@ public class NotificationTest {
         Request request = Request.addProduct(productType,sellerId, price, yearOfProduction, color, condition);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
-        System.out.println("Received response for ADD_PRODUCT request: " + response);
     }
 
     private static void handleRegisterInterestRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream,
@@ -91,12 +88,10 @@ public class NotificationTest {
         Request request = Request.registerInterest(interestedProductType, userId);
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
-        System.out.println("Received response for REGISTER_INTEREST request: " + response);
     }
 
     private static void sendRequest(ObjectOutputStream outputStream, Request request) throws IOException {
         outputStream.writeObject(request);
-        System.out.println("Request sent to the server: " + request.getType());
     }
 
     private static Response receiveResponse(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
@@ -109,7 +104,6 @@ public class NotificationTest {
         while (true) {
             Response response = receiveResponse(inputStream);
             if (response.RESPONSE_TYPE() == Response.ResponseType.NOTIFICATION) {
-                System.out.println("Received notification for added product: " + response.MESSAGE());
                 break;
             }
         }

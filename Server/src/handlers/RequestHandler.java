@@ -81,15 +81,10 @@ public class RequestHandler extends Handler {
     }
 
     public Response searchProducts(Request request, ClientHandler requester) {
-        System.out.println("RH: Searching for " + request.getSearchProductType());
         String type = request.getSearchProductType().toString();
-        System.out.println("Type: " + type);
         double minPrice = request.getMinPrice();
-        System.out.println("Type: " + request.getMinPrice());
         double maxPrice = request.getMaxPrice();
-        System.out.println("Type: " + request.getMaxPrice());
         String condition = String.valueOf(request.getSearchCondition().getValue());
-        System.out.println("Sending to DB from RH");
         return database.searchProducts(type, minPrice, maxPrice, condition);
     }
 
@@ -101,11 +96,9 @@ public class RequestHandler extends Handler {
     }
 
     public Response makeOffer(Request request, ClientHandler requester) {
-        System.out.println("RH: in makeOffer");
         String buyer = request.getUsername();
         int productId = request.getProductId();
         double price = request.getPrice();
-        System.out.println("Sending to DB");
         return database.makeOffer(productId,buyer, price);
     }
 

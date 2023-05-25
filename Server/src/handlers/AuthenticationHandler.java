@@ -13,7 +13,6 @@ public class AuthenticationHandler extends Handler {
 
     public AuthenticationHandler(Database db, Handler nextHandler) {
         super(nextHandler);
-        System.out.println("Next Handler form Auth " + nextHandler );
         this.db = db;
 
     }
