@@ -25,7 +25,9 @@ public class Request implements Serializable {
         SELL_PRODUCT,
         MAKE_OFFER,
         REGISTER_INTEREST,
-        GET_PURCHASE_HISTORY
+        GET_PURCHASE_HISTORY,
+        Get_Current_Offers
+
     }
 
     // request type and base constructor for factory method

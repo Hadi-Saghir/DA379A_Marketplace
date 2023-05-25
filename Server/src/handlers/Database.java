@@ -8,10 +8,8 @@ import Shared.src.shared.Response.*;
 
 import javax.xml.crypto.Data;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.sql.Date;
+import java.util.*;
 
 
 /**
@@ -453,6 +451,47 @@ public class Database {
         return seller;
     }
 
+    public synchronized Response getCurrentOffers(String username) {
+        List<Object> products = new ArrayList<>();
+        HashMap<Integer, Product> result = new HashMap<Integer, Product>();
+        String query = " SELECT Offer.offerid,Product.productid,Product.type, Product.condition, Offer.username,Offer.price\n" +
+                "        FROM Offer\n" +
+                "        JOIN Product\n" +
+                "        ON Offer.productid = Product.productid\n" +
+                "        WHERE Offer.username = ? \n" +
+                "\t\tAND Product.state != 'Sold'\n" +
+                "\t\tAND Offer.approved = false";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            System.out.println(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int offerid = rs.getInt("offerid");
+                Product product = new Product(
+                        rs.getInt("productid"),
+                        rs.getString("username"),
+                        ProductType.valueOf(rs.getString("type")),
+                        rs.getDouble("price"),
+                        rs.getInt("year"),
+                        rs.getString("color"),
+                        ProductCondition.fromValue(rs.getString("condition")),
+                        ProductState.valueOf(rs.getString("state"))
+                );
+                result.put(offerid,product);
+
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.FAILURE, products);
+        }
+        return new Response(ResponseType.SEARCH_PRODUCT , ResponseResult.SUCCESS, Collections.singletonList(result));
+
+    }
+
+
 
     public static void main(String[] args) {
 
@@ -476,8 +515,9 @@ public class Database {
         */
         Database db = new Database();
         //System.out.println(db.searchProducts("spor",100,1000));
-        List<?> s = db.getPurchases("Alice123","2023-01-01","2023-05-27").MESSAGE();
-        System.out.println(s);
+        //List<?> s = db.getPurchases("Alice123","2023-01-01","2023-05-27").MESSAGE();
+
+        System.out.println(db.getCurrentOffers("Batman"));
 
         //db.addToPurchaseHistory(62,26);
         //db.sellProduct("JohnnyBoy",28,57);

@@ -36,6 +36,7 @@ public class RequestHandler extends Handler {
             case "MAKE_OFFER" -> res = makeOffer(request, clientHandler);
             case "REGISTER_INTEREST" -> res =registerInterest(request, clientHandler);
             case "GET_PURCHASE_HISTORY" -> res = getPurchases(request, clientHandler);
+            case "Get_Current_Offers" -> res = getCurrentOffers(request,clientHandler);
             default -> {
             }
         }
@@ -121,6 +122,10 @@ public class RequestHandler extends Handler {
         Double price = request.getPrice();
         return database.registerInterest(buyer, type,price);
 
+    }
+
+    public Response getCurrentOffers(Request request, ClientHandler clientHandler){
+        return database.getCurrentOffers(request.getUsername());
     }
 
 
