@@ -1,13 +1,16 @@
-package model;
+package controller.subcontrollers;
 
 import model.ResponseHandler;
 import view.View;
 
-public class NotificationHandler extends Thread {
+/**
+ * This class is responsible for passing notifications from the server to the view.
+ */
+public class NotificationController extends Thread {
     private final View view;
     private final ResponseHandler responseHandler;
 
-    public NotificationHandler(View view, ResponseHandler responseHandler) {
+    public NotificationController(View view, ResponseHandler responseHandler) {
         this.view = view;
         this.responseHandler = responseHandler;
     }

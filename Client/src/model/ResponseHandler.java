@@ -8,6 +8,14 @@ import java.io.ObjectInputStream;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * This class is responsible for handling responses and notifications from the server.
+ * It is a thread that runs in the background and waits for responses.
+ * <p>
+ * When a response is received, it is added to a queue, acting as a producer.
+ * <p>
+ * It has two queues, one for responses and one for notifications.
+ */
 public class ResponseHandler extends Thread {
     private final ObjectInputStream in;
     private AtomicBoolean running = new AtomicBoolean(true);
@@ -41,6 +49,10 @@ public class ResponseHandler extends Thread {
         }
     }
 
+    /**
+     * Adds a notification to the queue.
+     * @param response The notification from the server.
+     */
     private void addNotification(Notification response) {
         synchronized(notifications) {
             notifications.addLast(response);
@@ -48,6 +60,11 @@ public class ResponseHandler extends Thread {
         }
     }
 
+    /**
+     * Returns the next notification in the queue.
+     * If the queue is empty, the thread will wait until a notification is added.
+     * @return The next notification in the queue.
+     */
     public Notification getNotification() {
         synchronized(notifications) {
             while(notifications.isEmpty()) {
@@ -65,6 +82,11 @@ public class ResponseHandler extends Thread {
         running.set(false);
     }
 
+    /**
+     * Returns the next response in the queue.
+     * If the queue is empty, the thread will wait until a response is added.
+     * @return The next response in the queue.
+     */
     public Response getResponse() {
         synchronized(responses) {
             while(responses.isEmpty()) {
@@ -78,6 +100,10 @@ public class ResponseHandler extends Thread {
         }
     }
 
+    /**
+     * Adds a response to the queue.
+     * @param response The response from the server.
+     */
     public synchronized void addResponse(Response response) {
         synchronized(responses) {
             responses.addLast(response);

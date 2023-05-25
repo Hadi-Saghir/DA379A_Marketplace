@@ -10,6 +10,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * ServerHandler is a class that handles the connection to the server.
+ */
 public class ServerHandler {
     private final String HOST;
     private final int PORT;
@@ -18,12 +21,23 @@ public class ServerHandler {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+    /**
+     * Constructor for ServerHandler.
+     * @param host The host to connect to.
+     * @param port The port to connect to.
+     * @param connectionController The connectionController of the client.
+     */
     public ServerHandler(String host, int port, ConnectionController connectionController) {
         this.HOST = host;
         this.PORT = port;
         this.connectionController = connectionController;
     }
 
+    /**
+     * Connects to the server if there is no connection.
+     * Saves the input and output streams.
+     * @throws IOException If the connection fails.
+     */
     public void connectToServer() throws IOException {
         if(socket == null) {
             socket = new Socket(HOST, PORT);
@@ -32,6 +46,10 @@ public class ServerHandler {
         }
     }
 
+    /**
+     * Disconnects from the server if there is a connection.
+     * @throws IOException If the disconnection fails.
+     */
     public void disconnectFromServer() throws IOException {
         if(socket != null) {
             out.flush();

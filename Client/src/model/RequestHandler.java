@@ -7,6 +7,12 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * This class is responsible for sending requests to the server.
+ *
+ * It acts a consumer, waiting for requests to be added to the buffer and then
+ * sending them to the server.
+ */
 public class RequestHandler extends Thread {
     private final ObjectOutputStream out;
     private AtomicBoolean running = new AtomicBoolean(true);

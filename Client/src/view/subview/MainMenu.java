@@ -3,6 +3,9 @@ package view.subview;
 import controller.Controller;
 import view.MainView;
 
+/**
+ * A view to handle the main menu after the user has logged in.
+ */
 public class MainMenu {
     private final MainView mainView;
     private final Controller controller;
@@ -12,6 +15,9 @@ public class MainMenu {
         this.controller = controller;
     }
 
+    /**
+     * Displays the main menu and prompts the user for input.
+     */
     public void showMainMenu() {
         System.out.println("|----------------------------------------------|");
         System.out.println("|------------------Main Menu-------------------|");

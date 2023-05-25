@@ -6,6 +6,9 @@ import view.MainView;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A view the handle the sell menu.
+ */
 public class SellMenu {
     private final MainView mainView;
     private final Controller controller;
@@ -14,6 +17,9 @@ public class SellMenu {
         this.controller = controller;
     }
 
+    /**
+     * Shows the sell menu. The user can offer a product or accept offers.
+     */
     public void showSellMenu() {
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|------------------Sell Menu-------------------|");
@@ -35,6 +41,9 @@ public class SellMenu {
         }
     }
 
+    /**
+     * Offers a product. The user can choose the type, price, year of production, color and condition.
+     */
     private void offerProduct() {
         List<String> types = controller.getAllowedTypes();
         List<String> conditions = controller.getAllowedConditions();
@@ -112,6 +121,9 @@ public class SellMenu {
         showSellMenu();
     }
 
+    /**
+     * Shows the offers the user has received. The user can accept an offer.
+     */
     private void acceptOffers() {
         HashMap<Integer, String> products = controller.getProductsWithOffer();
 
@@ -140,6 +152,10 @@ public class SellMenu {
         }
     }
 
+    /**
+     * Accepts an offer.
+     * @param id The id of the offer to accept.
+     */
     private void acceptOffer(int id) {
         controller.acceptOffer(id);
         showSellMenu();

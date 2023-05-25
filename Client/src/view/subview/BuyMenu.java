@@ -6,24 +6,39 @@ import view.MainView;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class handles the buy menu and all input and output related to it.
+ */
 public class BuyMenu {
     private final MainView mainView;
     private final Controller controller;
     private List<String> productTypes;
     private List<String> conditions;
 
-
+    /**
+     * Constructs a buy menu with the specified main view and controller.
+     * @param mainView The main view.
+     * @param controller The controller.
+     */
     public BuyMenu(MainView mainView, Controller controller) {
         this.mainView = mainView;
         this.controller = controller;
     }
 
+    /**
+     * Shows the buy menu and sets the product types and conditions allowed.
+     * @param productTypes Allowed product types.
+     * @param conditions Allowed conditions.
+     */
     public void showBuyMenu(List<String> productTypes, List<String> conditions) {
         this.productTypes = productTypes;
         this.conditions = conditions;
         showBuyMenu();
     }
 
+    /**
+     * Shows the buy menu asks the user for input.
+     */
     private void showBuyMenu() {
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|------------------Buy Menu--------------------|");
@@ -51,22 +66,36 @@ public class BuyMenu {
         }
     }
 
+    /**
+     * Calls the controller to check out all items in the cart.
+     */
     private void checkout() {
         mainView.showMessage("Checking out items in cart");
         controller.checkout();
         showBuyMenu();
     }
 
+    /**
+     * Shows all the items in the cart.
+     */
     private void viewCart() {
         List<String> products = controller.getCartForView();
         listCartContent(products);
     }
 
+    /**
+     * Calls the controller to get an updated list of purchasable products,
+     * then shows the list.
+     */
     private void listPurchasableProducts() {
         HashMap<Integer, String> products = controller.getProductList();
         listPurchasableProducts(products);
     }
 
+    /**
+     * Lists all purchasable products and asks the user which one to add to the cart.
+     * @param products The purchasable products.
+     */
     private void listPurchasableProducts(HashMap<Integer, String> products) {
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|------------------Products--------------------|");
@@ -102,6 +131,10 @@ public class BuyMenu {
         showBuyMenu();
     }
 
+    /**
+     * Reads input to do a search, calls the controller to do the search and shows the results.
+     * Then asks the user which product to add to the cart.
+     */
     private void search() {
         String productType = getProductType();
         double minPrice = getMinPrice();
@@ -112,6 +145,10 @@ public class BuyMenu {
         listPurchasableProducts(products);
     }
 
+    /**
+     * Asks the user which product type they want.
+     * @return The product type chosen by the user.
+     */
     private String getProductType() {
         String input;
         do {
@@ -134,6 +171,10 @@ public class BuyMenu {
         return productTypes.get(Integer.parseInt(input));
     }
 
+    /**
+     * Asks the user for a minimum price.
+     * @return The minimum price chosen by the user.
+     */
     private double getMinPrice() {
         String input;
         do {
@@ -153,6 +194,10 @@ public class BuyMenu {
         return Double.parseDouble(input);
     }
 
+    /**
+     * Asks the user for a maximum price.
+     * @return The maximum price chosen by the user.
+     */
     private double getMaxPrice() {
         String input;
         do {
@@ -172,6 +217,10 @@ public class BuyMenu {
         return Double.parseDouble(input);
     }
 
+    /**
+     * Asks the user for a search condition.
+     * @return The search condition chosen by the user.
+     */
     private String getSearchCondition() {
         String input;
         do {
@@ -194,17 +243,9 @@ public class BuyMenu {
         return conditions.get(Integer.parseInt(input));
     }
 
-
-
-    public void productAddedToCart(boolean added) {
-        if(added) {
-            mainView.showMessage("Product added to cart");
-        } else {
-            mainView.showError("Product not added to cart");
-        }
-        showBuyMenu();
-    }
-
+    /**
+     * Lists all the items in the cart and asks the user which one to remove.
+     */
     public void listCartContent(List<String> products) {
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|------------------Cart------------------------|");
@@ -239,6 +280,9 @@ public class BuyMenu {
         } while(input == null);
     }
 
+    /**
+     * Asks the user for a product type and calls the controller to register interest in that product type.
+     */
     private void registerInterest() {
         String productType = getProductType();
         controller.registerInterest(productType);

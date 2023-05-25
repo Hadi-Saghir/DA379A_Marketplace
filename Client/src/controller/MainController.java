@@ -2,7 +2,7 @@ package controller;
 
 import controller.subcontrollers.ConnectionController;
 import controller.subcontrollers.LoginController;
-import model.NotificationHandler;
+import controller.subcontrollers.NotificationController;
 import controller.subcontrollers.ShoppingController;
 import shared.Product;
 import shared.Response;
@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Implementation of the main controller.
+ */
 public class MainController implements Controller {
     private final ConnectionController connectionController;
     private final LoginController loginController;
@@ -121,7 +124,7 @@ public class MainController implements Controller {
     public void launch() {
         try {
             connectionController.connectToServer();
-            new NotificationHandler(view, connectionController.getResponseHandler()).start();
+            new NotificationController(view, connectionController.getResponseHandler()).start();
         } catch (IOException e) {
             view.showError("Error connecting to server");
             view.showError(e.getMessage());
@@ -249,11 +252,6 @@ public class MainController implements Controller {
     }
 
     @Override
-    public HashMap<String, String> getMyProductDetails(int index) {
-        return shoppingController.getMyProductDetails(index);
-    }
-
-    @Override
     public void registerInterest(String productType) {
         String username = loginController.getUser().getUsername();
         connectionController.registerInterest(productType, username);
@@ -294,10 +292,5 @@ public class MainController implements Controller {
 
     public void makeOffer(Product product) {
         connectionController.makeOffer(product);
-    }
-
-    public void requestMyProductDetails(Product product) {
-        connectionController.requestMyProductDetails(product);
-        shoppingController.waitForSellingCartToUpdate();
     }
 }
