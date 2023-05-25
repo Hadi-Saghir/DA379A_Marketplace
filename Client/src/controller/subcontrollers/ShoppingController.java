@@ -2,41 +2,39 @@ package controller.subcontrollers;
 
 import controller.MainController;
 import model.Cart;
-import model.Lock;
 import shared.Product;
 import shared.Response;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShoppingController {
     private final MainController mainController;
-    private final Cart cart;
+    private final Cart shoppingCart;
     private final Cart sellingCart;
 
 
     public ShoppingController(MainController mainController) {
         this.mainController = mainController;
-        this.cart = new Cart(mainController);
+        this.shoppingCart = new Cart(mainController);
         this.sellingCart = new Cart(mainController);
     }
 
     public void handleProducts(Response response) {
         List<Product> products = response.MESSAGE().stream().map(o -> (Product) o).collect(Collectors.toList());
-        cart.updateCatalog(products);
-        cart.unlock();
+        shoppingCart.updateCatalog(products);
+        shoppingCart.unlock();
     }
 
     public void handleMyProducts(Response response) {
-        List<Product> products = response.MESSAGE().stream().map(o -> (Product) o).collect(Collectors.toList());
-        sellingCart.updateCatalog(products);
+//        List<Product> products = response.MESSAGE().stream().map(o -> (Product) o).collect(Collectors.toList());
+//        sellingCart.updateCatalog(products);
         sellingCart.unlock();
     }
 
     public void lockCart() {
-        cart.lock();
+        shoppingCart.lock();
     }
 
     public void lockSellingCart() {
@@ -44,7 +42,7 @@ public class ShoppingController {
     }
 
     public void waitForCartToUpdate() {
-        cart.waitUntilUnlocked();
+        shoppingCart.waitUntilUnlocked();
     }
 
     public void waitForSellingCartToUpdate() {
@@ -52,34 +50,35 @@ public class ShoppingController {
     }
 
     public List<String> getCartForView() {
-        return cart.getCartForView();
+        return shoppingCart.getCartForView();
     }
 
     public void updateCatalog(List<Product> products) {
-        cart.updateCatalog(products);
+        shoppingCart.updateCatalog(products);
     }
 
     public HashMap<Integer, String> getProductsForView() {
-        return cart.getProductsForView();
+        return shoppingCart.getProductsForView();
     }
 
     public boolean addProductToCart(int productId) {
-        Product product = cart.addProductToCart(productId);
+        Product product = shoppingCart.addProductToCart(productId);
         return product != null;
     }
 
 
     public boolean removeProductFromCart(int cartOrderId) {
-        return cart.removeProductFromCart(cartOrderId);
+        return shoppingCart.removeProductFromCart(cartOrderId);
     }
 
     public void checkout() {
-        for(Product product: cart.getProductsFromCart()) {
+        for(Product product: shoppingCart.getProductsFromCart()) {
             mainController.makeOffer(product);
         }
+        shoppingCart.clear();
     }
 
-    public HashMap<Integer, String> getMyProductsForView() {
+    public HashMap<Integer, String> getProductsWithOfferForView() {
         return sellingCart.getProductsForView();
     }
 

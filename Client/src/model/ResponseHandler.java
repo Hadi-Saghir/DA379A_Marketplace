@@ -31,6 +31,7 @@ public class ResponseHandler extends Thread {
                 }
             } catch(IOException | ClassNotFoundException e) {
                 System.out.println("bla bla"); //FIXME
+                running.set(false);
             } catch(Exception e) {
                 System.err.println("Annat fel?");
             }

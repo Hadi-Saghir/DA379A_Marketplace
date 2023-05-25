@@ -33,6 +33,7 @@ public class BuyMenu {
         mainView.showMessage("|-2. Search products                          -|");
         mainView.showMessage("|-3. View cart                                -|");
         mainView.showMessage("|-4. Checkout                                 -|");
+        mainView.showMessage("|-5. Register interest                        -|");
         mainView.showMessage("|----------------------------------------------|");
 
         String input = mainView.promptForInput("Enter option: ");
@@ -42,6 +43,7 @@ public class BuyMenu {
             case "2" -> search();
             case "3" -> viewCart();
             case "4" -> checkout();
+            case "5" -> registerInterest();
             default -> {
                 mainView.showError("Invalid option");
                 showBuyMenu();
@@ -96,8 +98,8 @@ public class BuyMenu {
                     input = null;
                 }
             }
-
         } while(input == null);
+        showBuyMenu();
     }
 
     private void search() {
@@ -129,7 +131,7 @@ public class BuyMenu {
             }
         } while(input == null);
 
-        return input;
+        return productTypes.get(Integer.parseInt(input));
     }
 
     private double getMinPrice() {
@@ -235,5 +237,10 @@ public class BuyMenu {
             }
 
         } while(input == null);
+    }
+
+    private void registerInterest() {
+        String productType = getProductType();
+        controller.registerInterest(productType);
     }
 }

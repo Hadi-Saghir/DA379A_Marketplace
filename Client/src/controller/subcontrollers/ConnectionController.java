@@ -6,13 +6,11 @@ import model.ResponseHandler;
 import model.ServerHandler;
 import shared.Product;
 import shared.Request;
-import shared.Response;
 import shared.User;
 import view.View;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.LinkedList;
 
 public class ConnectionController {
     private final MainController mainController;
@@ -96,7 +94,7 @@ public class ConnectionController {
         sendRequest(request);
     }
 
-    public void getMyProducts() {
+    public void getProductsWithOffer() {
         shoppingController.lockSellingCart();
         //TODO Skicka en fråga som ger vad jag säljer just nu
     }
@@ -108,5 +106,10 @@ public class ConnectionController {
     private void sendRequest(Request request) {
         requestHandler.sendRequest(request);
         mainController.handleResponse(responseHandler.getResponse());
+    }
+
+    public void registerInterest(String productType, String username) {
+        Request request = Request.registerInterest(productType, username);
+        sendRequest(request);
     }
 }

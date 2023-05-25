@@ -104,4 +104,8 @@ public class Cart {
     public void waitUntilUnlocked() {
         lock.waitUntilUnlocked();
     }
+
+    public void clear() {
+        cart.clear();
+    }
 }

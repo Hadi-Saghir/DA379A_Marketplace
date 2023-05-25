@@ -69,7 +69,6 @@ public class MainController implements Controller {
                     view.showMainMenu();
                 }
             }
-            case SELL_PRODUCT -> {}
             case MAKE_OFFER -> {
                 if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
                     view.showNotification("Offer made successfully");
@@ -77,11 +76,20 @@ public class MainController implements Controller {
                     view.showError("Error making offer");
                 }
             }
-            case GET_PURCHASE_HISTORY -> {}
-            case REGISTER_INTEREST -> {}
+            case REGISTER_INTEREST -> {
+                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
+                    view.showNotification("Interest registered successfully");
+                } else {
+                    view.showError("Error registering interest");
+                }
+            }
             case NOTIFICATION -> {
                 view.showNotification(response.MESSAGE().get(0).toString());
             }
+
+            case SELL_PRODUCT -> {}
+            case GET_PURCHASE_HISTORY -> {}
+
             default -> {
                 view.showError("Unknown response type");
                 view.showError(response.RESPONSE_TYPE().name());
@@ -219,15 +227,21 @@ public class MainController implements Controller {
     }
 
     @Override
-    public HashMap<Integer, String> getMyProducts() {
-        connectionController.getMyProducts();
+    public HashMap<Integer, String> getProductsWithOffer() {
+        connectionController.getProductsWithOffer();
         shoppingController.waitForSellingCartToUpdate();
-        return shoppingController.getMyProductsForView();
+        return shoppingController.getProductsWithOfferForView();
     }
 
     @Override
     public HashMap<String, String> getMyProductDetails(int index) {
         return shoppingController.getMyProductDetails(index);
+    }
+
+    @Override
+    public void registerInterest(String productType) {
+        String username = loginController.getUser().getUsername();
+        connectionController.registerInterest(productType, username);
     }
 
 

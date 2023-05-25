@@ -53,7 +53,9 @@ public interface Controller {
 
     void addProduct(String type, Double price, Integer yearOfProduction, String colour, String condition);
 
-    HashMap<Integer, String> getMyProducts();
+    HashMap<Integer, String> getProductsWithOffer();
 
     HashMap<String, String> getMyProductDetails(int index);
+
+    void registerInterest(String productType);
 }
