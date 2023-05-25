@@ -155,6 +155,12 @@ public class Request implements Serializable {
         return request;
     }
 
+    public static Request getCurrentOffers(String username) {
+        Request request = new Request(RequestType.Get_Current_Offers);
+        request.setUsername(username);
+        return request;
+    }
+
     public String getFirstName() {
         return firstName;
     }

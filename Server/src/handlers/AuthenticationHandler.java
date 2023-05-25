@@ -23,23 +23,23 @@ public class AuthenticationHandler extends Handler {
 
     }
 
-    //Is user already logged?
-        //Yes: Do nothing
-        //No: Is  username and password correct?
-            //Yes: set isLogged to true [clientHandler.isLoggedIn()]
-            //No: Write Response.ResponseResult.FAILURE to stream and stop handling
+
     @Override
     protected void handleRequest(Request request, ClientHandler clientHandler) {
 
         if(request.getType() == Request.RequestType.LOGIN) {
             if (!authenticate(request.getUsername(), request.getPassword())) {
+                // enter here if cannot authenticate
                 try {
+
                     stopHandling();
+
                     clientHandler.writeToClient(new Response(Response.ResponseType.LOGIN , Response.ResponseResult.FAILURE, null));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+
             else {
                 clientHandler.loggedIn(request.getUsername());
             }
@@ -50,6 +50,9 @@ public class AuthenticationHandler extends Handler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            clientHandler.loggedIn(request.getUsername());
+
         }
 
 }

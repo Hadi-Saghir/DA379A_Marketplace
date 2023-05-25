@@ -459,7 +459,7 @@ public class Database {
                 "        FROM Offer\n" +
                 "        JOIN Product\n" +
                 "        ON Offer.productid = Product.productid\n" +
-                "        WHERE Offer.username = ? \n" +
+                "        WHERE Product.username = ? \n" +
                 "\t\tAND Product.state != 'Sold'\n" +
                 "\t\tAND Offer.approved = false";
         try (Connection conn = getConnection();
