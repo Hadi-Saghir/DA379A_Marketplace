@@ -31,7 +31,6 @@ public class AuthenticationHandler extends Handler {
             if (!authenticate(request.getUsername(), request.getPassword())) {
                 // enter here if cannot authenticate
                 try {
-
                     stopHandling();
 
                     clientHandler.writeToClient(new Response(Response.ResponseType.LOGIN , Response.ResponseResult.FAILURE, null));

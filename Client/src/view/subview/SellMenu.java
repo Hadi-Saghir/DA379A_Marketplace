@@ -19,17 +19,15 @@ public class SellMenu {
         mainView.showMessage("|------------------Sell Menu-------------------|");
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|-0. Back                                     -|");
-        mainView.showMessage("|-1. Sell product                             -|");
-        mainView.showMessage("|-2. Show my listed products                  -|");
+        mainView.showMessage("|-1. Offer product                            -|");
+        mainView.showMessage("|-2. Accept offers                            -|");
         mainView.showMessage("|----------------------------------------------|");
 
         String input = mainView.promptForInput("Enter option: ");
         switch (input) {
             case "0" -> mainView.showMainMenu();
-//            case "1" -> sellProduct();
-            case "1" -> System.out.println("TODO");
-//            case "2" -> showMyProducts();
-            case "2" -> System.out.println("TODO");
+            case "1" -> offerProduct();
+            case "2" -> acceptOffers();
             default -> {
                 mainView.showError("Invalid option");
                 showSellMenu();
@@ -37,20 +35,20 @@ public class SellMenu {
         }
     }
 
-    private void sellProduct() {
+    private void offerProduct() {
         List<String> types = controller.getAllowedTypes();
         List<String> conditions = controller.getAllowedConditions();
 
         String type;
         do {
-            for(int i= 0; i < types.size(); i++){
+            for(int i = 0; i < types.size(); i++){
                 mainView.showMessage(i + ". " + types.get(i));
             }
 
             type = mainView.promptForInput("Choose type: ");
             try {
                 int index = Integer.parseInt(type);
-                if(index < 1 || index > types.size()) {
+                if(index < 0 || index > types.size()) {
                     throw new NumberFormatException();
                 }
             } catch(NumberFormatException e) {
@@ -88,7 +86,7 @@ public class SellMenu {
             }
         } while(input == null);
 
-        String colour = mainView.promptForInput("Enter description: ");
+        String color = mainView.promptForInput("Enter color: ");
 
         String condition;
         do {
@@ -99,7 +97,7 @@ public class SellMenu {
             condition = mainView.promptForInput("Choose condition: ");
             try {
                 int index = Integer.parseInt(condition);
-                if(index < 1 || index > conditions.size()) {
+                if(index < 0 || index > conditions.size()) {
                     throw new NumberFormatException();
                 }
             } catch(NumberFormatException e) {
@@ -110,54 +108,40 @@ public class SellMenu {
 
 
 
-        controller.addProduct(type, price, yearOfProduction, colour, condition);
+        controller.addProduct(types.get(Integer.parseInt(type)), price, yearOfProduction, color, conditions.get(Integer.parseInt(condition)));
         showSellMenu();
     }
 
-    private void showMyProducts() {
-        HashMap<Integer, String> products = controller.getMyProducts();
+    private void acceptOffers() {
+        HashMap<Integer, String> products = controller.getProductsWithOffer();
+
         mainView.showMessage("|----------------------------------------------|");
-        mainView.showMessage("|------------------My Products-----------------|");
+        mainView.showMessage("|------------------My Offers-------------------|");
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|-0. Back                                     -|");
-        for(int i = 0; i < products.size(); i++) {
-            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
+        for(int i: products.keySet()) {
+            mainView.showMessage("|-" + (i) + ". " + products.get(i));
         }
         mainView.showMessage("|----------------------------------------------|");
 
-        String input = mainView.promptForInput("Enter option: ");
+        String input = mainView.promptForInput("Enter offer to accept: ");
         try {
             int index = Integer.parseInt(input);
-            if(index < 0 || index > products.size()) {
+            if(index < 0 || !products.containsKey(index)) {
                 throw new NumberFormatException();
             } else if(index == 0) {
                 showSellMenu();
             } else {
-                showProductDetails(index - 1);
+                acceptOffer(index);
             }
         } catch(NumberFormatException e) {
             mainView.showError("Invalid option");
-            showMyProducts();
+            acceptOffers();
         }
     }
 
-    private void showProductDetails(int index) {
-        HashMap<String, String> product = controller.getMyProductDetails(index);
-        mainView.showMessage("|----------------------------------------------|");
-        mainView.showMessage("|----------------Product Details---------------|");
-        mainView.showMessage("|----------------------------------------------|");
-        mainView.showMessage("|-0. Back                                     -|");
-        for(String key : product.keySet()) {
-            mainView.showMessage("|-" + key + ": " + product.get(key));
-        }
-        mainView.showMessage("|----------------------------------------------|");
-
-        String input = mainView.promptForInput("Enter option: ");
-        if(input.equals("0")) {
-            showMyProducts();
-        } else {
-            mainView.showError("Invalid option");
-            showProductDetails(index);
-        }
+    private void acceptOffer(int id) {
+        controller.acceptOffer(id);
+        showSellMenu();
     }
 }
