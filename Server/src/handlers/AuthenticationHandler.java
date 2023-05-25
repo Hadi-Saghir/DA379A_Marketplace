@@ -27,8 +27,10 @@ public class AuthenticationHandler extends Handler {
     protected void handleRequest(Request request, ClientHandler clientHandler) {
 
         if(request.getType() == Request.RequestType.LOGIN) {
+
             if (!authenticate(request.getUsername(), request.getPassword())) {
                 try {
+                    clientHandler.loggedIn(request.getUsername());
                     clientHandler.writeToClient(new Response(Response.ResponseType.LOGIN , Response.ResponseResult.FAILURE, null));
                 } catch (IOException e) {
                     e.printStackTrace();
