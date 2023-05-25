@@ -7,6 +7,7 @@ import view.subview.LoginMenu;
 import view.subview.MainMenu;
 import view.subview.SellMenu;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -93,5 +94,31 @@ public class MainView implements View {
 
     public void showSellMenu() {
         sellMenu.showSellMenu();
+    }
+
+    public void showBuyHist() {
+        LocalDate start, end;
+
+        do {
+            String s = promptForInput("Enter start date (yyyy-mm-dd): ");
+            try {
+                start = LocalDate.parse(s);
+            } catch(Exception e) {
+                showError("Invalid date");
+                start = null;
+            }
+        } while(start == null);
+
+        do {
+            String s = promptForInput("Enter end date (yyyy-mm-dd): ");
+            try {
+                end = LocalDate.parse(s);
+            } catch(Exception e) {
+                showError("Invalid date");
+                end = null;
+            }
+        } while(end == null);
+
+        List<String> history = controller.getBuyHist(start, end);
     }
 }

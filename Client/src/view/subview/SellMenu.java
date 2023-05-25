@@ -115,25 +115,24 @@ public class SellMenu {
     private void acceptOffers() {
         HashMap<Integer, String> products = controller.getProductsWithOffer();
 
-
         mainView.showMessage("|----------------------------------------------|");
-        mainView.showMessage("|------------------My Products-----------------|");
+        mainView.showMessage("|------------------My Offers-------------------|");
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|-0. Back                                     -|");
-        for(int i = 0; i < products.size(); i++) {
-            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
+        for(int i: products.keySet()) {
+            mainView.showMessage("|-" + (i) + ". " + products.get(i));
         }
         mainView.showMessage("|----------------------------------------------|");
 
-        String input = mainView.promptForInput("Enter option: ");
+        String input = mainView.promptForInput("Enter offer to accept: ");
         try {
             int index = Integer.parseInt(input);
-            if(index < 0 || index > products.size()) {
+            if(index < 0 || !products.containsKey(index)) {
                 throw new NumberFormatException();
             } else if(index == 0) {
                 showSellMenu();
             } else {
-                showProductDetails(index - 1);
+                acceptOffer(index);
             }
         } catch(NumberFormatException e) {
             mainView.showError("Invalid option");
@@ -141,23 +140,8 @@ public class SellMenu {
         }
     }
 
-    private void showProductDetails(int index) {
-        HashMap<String, String> product = controller.getMyProductDetails(index);
-        mainView.showMessage("|----------------------------------------------|");
-        mainView.showMessage("|----------------Product Details---------------|");
-        mainView.showMessage("|----------------------------------------------|");
-        mainView.showMessage("|-0. Back                                     -|");
-        for(String key : product.keySet()) {
-            mainView.showMessage("|-" + key + ": " + product.get(key));
-        }
-        mainView.showMessage("|----------------------------------------------|");
-
-        String input = mainView.promptForInput("Enter option: ");
-        if(input.equals("0")) {
-            acceptOffers();
-        } else {
-            mainView.showError("Invalid option");
-            showProductDetails(index);
-        }
+    private void acceptOffer(int id) {
+        controller.acceptOffer(id);
+        showSellMenu();
     }
 }

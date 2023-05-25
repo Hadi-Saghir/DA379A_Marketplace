@@ -5,6 +5,7 @@ import model.Cart;
 import shared.Product;
 import shared.Response;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +14,14 @@ public class ShoppingController {
     private final MainController mainController;
     private final Cart shoppingCart;
     private final Cart sellingCart;
+    private final Cart historyCart;
 
 
     public ShoppingController(MainController mainController) {
         this.mainController = mainController;
         this.shoppingCart = new Cart(mainController);
         this.sellingCart = new Cart(mainController);
+        this.historyCart = new Cart(mainController);
     }
 
     public void handleProducts(Response response) {
@@ -33,7 +36,12 @@ public class ShoppingController {
         sellingCart.unlock();
     }
 
-    public void lockCart() {
+    public void handleMyOffersProducts(Response response) {
+        sellingCart.updateCart((HashMap<Integer, Product>) response.MESSAGE().get(0));
+        sellingCart.unlock();
+    }
+
+    public void lockShoppingCart() {
         shoppingCart.lock();
     }
 
@@ -41,7 +49,11 @@ public class ShoppingController {
         sellingCart.lock();
     }
 
-    public void waitForCartToUpdate() {
+    public void lockHistoryCart() {
+        historyCart.lock();
+    }
+
+    public void waitForShoppingCartToUpdate() {
         shoppingCart.waitUntilUnlocked();
     }
 
@@ -49,7 +61,11 @@ public class ShoppingController {
         sellingCart.waitUntilUnlocked();
     }
 
-    public List<String> getCartForView() {
+    public void waitForHistoryCartToUpdate() {
+        historyCart.waitUntilUnlocked();
+    }
+
+    public List<String> getShoppingCartForView() {
         return shoppingCart.getCartForView();
     }
 
@@ -79,7 +95,22 @@ public class ShoppingController {
     }
 
     public HashMap<Integer, String> getProductsWithOfferForView() {
-        return sellingCart.getProductsForView();
+        HashMap<Integer, Product> products = sellingCart.getCart();
+        HashMap<Integer, String> productsWithOffer = new HashMap<>();
+        for(int i: products.keySet()) {
+            Product product = products.get(i);
+            StringBuilder row = new StringBuilder();
+            row.append(product.getUsername()).append(" ")
+                    .append(product.getType()).append(" ")
+                    .append(product.getPrice()).append(" ")
+                    .append(product.getYearOfProduction())
+                    .append(" ").append(product.getColor())
+                    .append(" ").append(product.getCondition())
+                    .append(" ").append(product.getState());
+            productsWithOffer.put(i, row.toString());
+        }
+
+        return productsWithOffer;
     }
 
     public HashMap<String, String> getMyProductDetails(int index) {
@@ -94,5 +125,26 @@ public class ShoppingController {
             mainController.requestMyProductDetails(product);
         }
         return details;
+    }
+
+
+
+    public void handlePurchaseHistory(Response response) {
+        List<Product> products = new ArrayList<>();
+
+        for(Object o : response.MESSAGE()) {
+            products.add((Product) o);
+        }
+
+        historyCart.updateCatalog(products);
+        historyCart.unlock();
+    }
+
+    public List<String> getHistoryCartForView() {
+        return historyCart.getCartForView();
+    }
+
+    public void removeProductFromSellingCart(int id) {
+        sellingCart.removeProductFromCart(id);
     }
 }

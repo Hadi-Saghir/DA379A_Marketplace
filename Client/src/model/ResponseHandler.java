@@ -1,6 +1,6 @@
 package model;
 
-import controller.MainController;
+import shared.Notification;
 import shared.Response;
 
 import java.io.IOException;
@@ -12,6 +12,7 @@ public class ResponseHandler extends Thread {
     private final ObjectInputStream in;
     private AtomicBoolean running = new AtomicBoolean(true);
     private final LinkedList<Response> responses = new LinkedList<>();
+    private final LinkedList<Notification> notifications = new LinkedList<>();
 
     public ResponseHandler(ObjectInputStream in) {
         this.in = in;
@@ -26,6 +27,8 @@ public class ResponseHandler extends Thread {
 
                 if(response instanceof Response) {
                     addResponse((Response) response);
+                } else if(response instanceof Notification) {
+                    addNotification((Notification) response);
                 } else {
                     throw new IOException();
                 }
@@ -38,23 +41,47 @@ public class ResponseHandler extends Thread {
         }
     }
 
+    private void addNotification(Notification response) {
+        synchronized(notifications) {
+            notifications.addLast(response);
+            notifications.notifyAll();
+        }
+    }
+
+    public Notification getNotification() {
+        synchronized(notifications) {
+            while(notifications.isEmpty()) {
+                try {
+                    notifications.wait();
+                } catch(InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return notifications.pop();
+        }
+    }
+
     public void stopRunning() {
         running.set(false);
     }
 
-    public synchronized Response getResponse() {
-        while(responses.isEmpty()) {
-            try {
-                wait();
-            } catch(InterruptedException e) {
-                throw new RuntimeException(e);
+    public Response getResponse() {
+        synchronized(responses) {
+            while(responses.isEmpty()) {
+                try {
+                    responses.wait();
+                } catch(InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            return responses.pop();
         }
-        return responses.pop();
     }
 
     public synchronized void addResponse(Response response) {
-        responses.addLast(response);
-        notifyAll();
+        synchronized(responses) {
+            responses.addLast(response);
+            responses.notifyAll();
+        }
     }
 }

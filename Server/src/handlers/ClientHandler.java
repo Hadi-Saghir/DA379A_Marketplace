@@ -79,7 +79,8 @@ public class ClientHandler implements Runnable {
      * ClientHandler.updateClientId(): This method is called with the current client ID and
      *  the updated with the new Client ID.*/
     public void loggedIn(String userId) {
-        ClientHandler.updateClientId(client.getCurrClientId(), client.loggedIn(userId));
+        client.loggedIn(userId);
+//        ClientHandler.updateClientId(client.getCurrClientId(), client.loggedIn(userId));
     }
     public void loggedOut() {
         ClientHandler.updateClientId(client.getCurrClientId(), client.loggedOut());

@@ -73,7 +73,7 @@ public class BuyMenu {
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|-0. Back                                     -|");
         for(int i: products.keySet()) {
-            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
+            mainView.showMessage("|-" + (i) + ". " + products.get(i));
         }
 
         String input;
@@ -88,7 +88,7 @@ public class BuyMenu {
                         throw new NumberFormatException();
                     }
 
-                    boolean added = controller.addProductToCart(index - 1);
+                    boolean added = controller.addProductToCart(index);
                     if(!added) throw new RuntimeException();
                 } catch(NumberFormatException e) {
                     mainView.showError("Invalid option");
@@ -242,5 +242,6 @@ public class BuyMenu {
     private void registerInterest() {
         String productType = getProductType();
         controller.registerInterest(productType);
+        showBuyMenu();
     }
 }

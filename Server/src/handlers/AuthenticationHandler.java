@@ -29,13 +29,14 @@ public class AuthenticationHandler extends Handler {
         if(request.getType() == Request.RequestType.LOGIN) {
 
             if (!authenticate(request.getUsername(), request.getPassword())) {
+                // enter here if cannot authenticate
                 try {
-                    clientHandler.loggedIn(request.getUsername());
                     clientHandler.writeToClient(new Response(Response.ResponseType.LOGIN , Response.ResponseResult.FAILURE, null));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            clientHandler.loggedIn(request.getUsername());
         }
     }
 }
