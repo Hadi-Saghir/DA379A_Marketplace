@@ -4,12 +4,11 @@ import java.net.Socket;
 
 public class Client {
     private Socket socket;
-    private static int clientId = 0;
-    private String currClientId;
+    private String currClientId = "";
+
 
     public Client(Socket socket) {
         this.socket = socket;
-        currClientId = String.valueOf(clientId++);
     }
 
     public Socket getSocket() {
@@ -28,7 +27,11 @@ public class Client {
 
     //Should solely be used when user logs out.
     public String loggedOut() {
-        this.currClientId = String.valueOf(clientId++);
+        this.currClientId = "";
         return this.currClientId;
+    }
+
+    public boolean isLoggedIn() {
+        return !currClientId.equals("");
     }
 }

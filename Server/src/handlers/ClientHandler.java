@@ -110,6 +110,11 @@ public class ClientHandler implements Runnable {
     public Handler getHandler(){
         return handler;
     }
+    public boolean isLoggedIn(){
+        return client.isLoggedIn();
+    }
+
+
 
 
 }

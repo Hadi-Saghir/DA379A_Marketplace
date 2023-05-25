@@ -13,12 +13,15 @@ public abstract class Handler {
         this.nextHandler = nextHandler;
     }
 
+    private boolean continueToNextHandler = true;
+    public void stopHandling(){ continueToNextHandler = false;}
+
     public void handle(Request request, ClientHandler clientHandler) {
 
         this.request = request;
         handleRequest(request, clientHandler);
 
-        if (this.nextHandler != null) {
+        if (this.nextHandler != null && continueToNextHandler) {
             nextHandler.handle(request, clientHandler);
         }
     }

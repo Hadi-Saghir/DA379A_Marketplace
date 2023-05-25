@@ -134,4 +134,6 @@ public class RequestHandler extends Handler {
         return database.getNotifications(user);
     }
 
+
+
 }

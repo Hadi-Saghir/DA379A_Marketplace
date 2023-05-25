@@ -276,6 +276,7 @@ public class Database {
     public boolean addToPurchaseHistory(int productId,int offerId) {
         String username = getBuyer(offerId);
         String insertSql = "INSERT INTO purchasehistory (productId, username, offerId) VALUES (?, ?, ?)";
+        System.out.println("TEst: " + insertSql);
         try (Connection conn = getConnection();
              PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
             insertPstmt.setInt(1, productId);
@@ -516,9 +517,9 @@ public class Database {
         //System.out.println(db.searchProducts("spor",100,1000));
         //List<?> s = db.getPurchases("Alice123","2023-01-01","2023-05-27").MESSAGE();
 
-        System.out.println("Res" + db.getCurrentOffers("Alice123"));
+        //System.out.println("Res" + db.getCurrentOffers("Alice123"));
 
-        //db.addToPurchaseHistory(62,26);
+        db.addToPurchaseHistory(62,26);
         //db.sellProduct("JohnnyBoy",28,57);
         //System.out.println("Res: " + db.getBuyer(27));
         //db.makeOffer(57,"Batman",900);

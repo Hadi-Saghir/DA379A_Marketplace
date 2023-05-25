@@ -37,10 +37,14 @@ public class ClientTest {
             handleAddProductRequest(outputStream, inputStream);
             handleAllProductsRequest(outputStream, inputStream);
      handleRegisterInterestRequest(outputStream, inputStream);
+                handleSellProductRequest(outputStream, inputStream);
 
              */
+            handleRegisterRequest(outputStream, inputStream);
+            handleLoginRequest(outputStream, inputStream);
 
-            handleSellProductRequest(outputStream, inputStream);
+
+
             //handleGetPurchaseHistoryRequest(outputStream, inputStream);
 
             // Close the connections
@@ -64,7 +68,7 @@ public class ClientTest {
 
     private static void handleLoginRequest(ObjectOutputStream outputStream, ObjectInputStream inputStream)
             throws IOException, ClassNotFoundException {
-        Request request = Request.login("Rflash", "password1");
+        Request request = Request.login("JohnnyBoy", "password1");
         sendRequest(outputStream, request);
         Response response = receiveResponse(inputStream);
         System.out.println("Received response for LOGIN request: " + response);
