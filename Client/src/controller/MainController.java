@@ -2,7 +2,6 @@ package controller;
 
 import controller.subcontrollers.ConnectionController;
 import controller.subcontrollers.LoginController;
-import model.NotificationHandler;
 import controller.subcontrollers.ShoppingController;
 import shared.Product;
 import shared.Response;
@@ -10,7 +9,6 @@ import shared.User;
 import view.View;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
@@ -71,6 +69,7 @@ public class MainController implements Controller {
                     view.showMainMenu();
                 }
             }
+            case SELL_PRODUCT -> {}
             case MAKE_OFFER -> {
                 if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
                     view.showNotification("Offer made successfully");
@@ -78,30 +77,11 @@ public class MainController implements Controller {
                     view.showError("Error making offer");
                 }
             }
-            case REGISTER_INTEREST -> {
-                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
-                    view.showNotification("Interest registered successfully");
-                } else {
-                    view.showError("Error registering interest");
-                }
+            case GET_PURCHASE_HISTORY -> {}
+            case REGISTER_INTEREST -> {}
+            case NOTIFICATION -> {
+                view.showNotification(response.MESSAGE().get(0).toString());
             }
-            case GET_CURRENT_OFFERS -> {
-                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
-                    shoppingController.handleMyOffersProducts(response);
-                } else {
-                    view.showError("Error getting offers");
-                }
-            }
-            case GET_PURCHASE_HISTORY -> {
-                if(response.RESPONSE_RESULT() == Response.ResponseResult.SUCCESS) {
-                    shoppingController.handlePurchaseHistory(response);
-                } else {
-                    view.showError("Error getting purchase history");
-                }
-            }
-
-            case SELL_PRODUCT -> {}
-
             default -> {
                 view.showError("Unknown response type");
                 view.showError(response.RESPONSE_TYPE().name());
@@ -121,14 +101,11 @@ public class MainController implements Controller {
     public void launch() {
         try {
             connectionController.connectToServer();
-            new NotificationHandler(view, connectionController.getResponseHandler()).start();
         } catch (IOException e) {
             view.showError("Error connecting to server");
             view.showError(e.getMessage());
             exit(1);
         }
-
-
 
         view.launch();
     }
@@ -209,14 +186,14 @@ public class MainController implements Controller {
     @Override
     public HashMap<Integer, String> getProductList() {
         connectionController.doAllProducts();
-        shoppingController.waitForShoppingCartToUpdate();
+        shoppingController.waitForCartToUpdate();
         return shoppingController.getProductsForView();
     }
 
     @Override
     public HashMap<Integer, String> searchProducts(String productType, double minPrice, double maxPrice, String searchCondition) {
         connectionController.doProductSearch(productType, minPrice, maxPrice, searchCondition);
-        shoppingController.waitForShoppingCartToUpdate();
+        shoppingController.waitForCartToUpdate();
         return shoppingController.getProductsForView();
     }
 
@@ -242,34 +219,15 @@ public class MainController implements Controller {
     }
 
     @Override
-    public HashMap<Integer, String> getProductsWithOffer() {
-        connectionController.getProductsWithOffer();
+    public HashMap<Integer, String> getMyProducts() {
+        connectionController.getMyProducts();
         shoppingController.waitForSellingCartToUpdate();
-        return shoppingController.getProductsWithOfferForView();
+        return shoppingController.getMyProductsForView();
     }
 
     @Override
     public HashMap<String, String> getMyProductDetails(int index) {
         return shoppingController.getMyProductDetails(index);
-    }
-
-    @Override
-    public void registerInterest(String productType) {
-        String username = loginController.getUser().getUsername();
-        connectionController.registerInterest(productType, username);
-    }
-
-    @Override
-    public List<String> getBuyHist(LocalDate start, LocalDate end) {
-        connectionController.getBuyHist(getUserId(), start, end);
-        shoppingController.waitForHistoryCartToUpdate();
-        return shoppingController.getHistoryCartForView();
-    }
-
-    @Override
-    public void acceptOffer(int id) {
-        connectionController.acceptOffer(id, getUserId());
-        shoppingController.removeProductFromSellingCart(id);
     }
 
 
@@ -285,7 +243,7 @@ public class MainController implements Controller {
 
     @Override
     public List<String> getCartForView() {
-        return shoppingController.getShoppingCartForView();
+        return shoppingController.getCartForView();
     }
 
     public String getUserId() {

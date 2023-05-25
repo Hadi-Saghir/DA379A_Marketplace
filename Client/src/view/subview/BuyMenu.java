@@ -33,7 +33,6 @@ public class BuyMenu {
         mainView.showMessage("|-2. Search products                          -|");
         mainView.showMessage("|-3. View cart                                -|");
         mainView.showMessage("|-4. Checkout                                 -|");
-        mainView.showMessage("|-5. Register interest                        -|");
         mainView.showMessage("|----------------------------------------------|");
 
         String input = mainView.promptForInput("Enter option: ");
@@ -43,7 +42,6 @@ public class BuyMenu {
             case "2" -> search();
             case "3" -> viewCart();
             case "4" -> checkout();
-            case "5" -> registerInterest();
             default -> {
                 mainView.showError("Invalid option");
                 showBuyMenu();
@@ -73,7 +71,7 @@ public class BuyMenu {
         mainView.showMessage("|----------------------------------------------|");
         mainView.showMessage("|-0. Back                                     -|");
         for(int i: products.keySet()) {
-            mainView.showMessage("|-" + (i) + ". " + products.get(i));
+            mainView.showMessage("|-" + (i + 1) + ". " + products.get(i));
         }
 
         String input;
@@ -88,7 +86,7 @@ public class BuyMenu {
                         throw new NumberFormatException();
                     }
 
-                    boolean added = controller.addProductToCart(index);
+                    boolean added = controller.addProductToCart(index - 1);
                     if(!added) throw new RuntimeException();
                 } catch(NumberFormatException e) {
                     mainView.showError("Invalid option");
@@ -98,8 +96,8 @@ public class BuyMenu {
                     input = null;
                 }
             }
+
         } while(input == null);
-        showBuyMenu();
     }
 
     private void search() {
@@ -131,7 +129,7 @@ public class BuyMenu {
             }
         } while(input == null);
 
-        return productTypes.get(Integer.parseInt(input));
+        return input;
     }
 
     private double getMinPrice() {
@@ -237,11 +235,5 @@ public class BuyMenu {
             }
 
         } while(input == null);
-    }
-
-    private void registerInterest() {
-        String productType = getProductType();
-        controller.registerInterest(productType);
-        showBuyMenu();
     }
 }

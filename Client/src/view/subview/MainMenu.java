@@ -19,7 +19,8 @@ public class MainMenu {
         System.out.println("|-0. Logout                                   -|");
         System.out.println("|-1. Buy products                             -|");
         System.out.println("|-2. Sell products                            -|");
-        System.out.println("|-3. Show buy history                         -|");
+        System.out.println("|-3. View products (selling)                  -|");
+        System.out.println("|-3. View products (buying)                   -|");
         System.out.println("|----------------------------------------------|");
         String input = mainView.promptForInput("Enter option: ");
 
@@ -27,7 +28,8 @@ public class MainMenu {
             case "0" -> controller.logout();
             case "1" -> mainView.showBuyMenu();
             case "2" -> mainView.showSellMenu();
-            case "3" -> mainView.showBuyHist();
+//            case "3" -> controller.viewProductsBuying();
+//            case "4" -> controller.viewProductsSelling();
             default -> {
                 mainView.showError("Invalid option");
                 showMainMenu();

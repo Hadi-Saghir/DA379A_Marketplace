@@ -6,11 +6,13 @@ import model.ResponseHandler;
 import model.ServerHandler;
 import shared.Product;
 import shared.Request;
+import shared.Response;
 import shared.User;
 import view.View;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.LinkedList;
 
 public class ConnectionController {
     private final MainController mainController;
@@ -70,13 +72,13 @@ public class ConnectionController {
     }
 
     public void doProductSearch(String productType, double minPrice, double maxPrice, String searchCondition) {
-        shoppingController.lockShoppingCart();
+        shoppingController.lockCart();
         Request request = Request.searchProduct(productType, minPrice, maxPrice, Product.ProductCondition.valueOf(searchCondition));
         sendRequest(request);
     }
 
     public void doAllProducts() {
-        shoppingController.lockShoppingCart();
+        shoppingController.lockCart();
         Request request = Request.allProducts();
         sendRequest(request);
     }
@@ -94,10 +96,9 @@ public class ConnectionController {
         sendRequest(request);
     }
 
-    public void getProductsWithOffer() {
+    public void getMyProducts() {
         shoppingController.lockSellingCart();
-        Request request = Request.getCurrentOffers(mainController.getUserId());
-        sendRequest(request);
+        //TODO Skicka en fråga som ger vad jag säljer just nu
     }
 
     public void requestMyProductDetails(Product product) {
@@ -107,26 +108,5 @@ public class ConnectionController {
     private void sendRequest(Request request) {
         requestHandler.sendRequest(request);
         mainController.handleResponse(responseHandler.getResponse());
-    }
-
-    public void registerInterest(String productType, String username) {
-        Request request = Request.registerInterest(productType, username);
-        sendRequest(request);
-    }
-
-    public ResponseHandler getResponseHandler() {
-        return responseHandler;
-    }
-
-    public void getBuyHist(String userId, LocalDate start, LocalDate end) {
-        shoppingController.lockHistoryCart();
-        Request request = Request.getPurchaseHistory(userId, start, end);
-        request.setUsername(userId);
-        sendRequest(request);
-    }
-
-    public void acceptOffer(int id, String userId) {
-        Request request = Request.sellProduct(id, userId);
-        sendRequest(request);
     }
 }

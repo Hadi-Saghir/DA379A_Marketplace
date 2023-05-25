@@ -24,15 +24,6 @@ public class Cart {
         this.products = products;
     }
 
-    public void updateCart(HashMap<Integer, Product> cart) {
-        this.cart.clear();
-        this.cart.putAll(cart);
-    }
-
-    public HashMap<Integer, Product> getCart() {
-        return cart;
-    }
-
     public HashMap<Integer, String> getProductsForView() {
         HashMap<Integer, String> p = new HashMap<>();
 
@@ -112,9 +103,5 @@ public class Cart {
 
     public void waitUntilUnlocked() {
         lock.waitUntilUnlocked();
-    }
-
-    public void clear() {
-        cart.clear();
     }
 }

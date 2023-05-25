@@ -2,7 +2,6 @@ package controller;
 
 import view.View;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,13 +53,7 @@ public interface Controller {
 
     void addProduct(String type, Double price, Integer yearOfProduction, String colour, String condition);
 
-    HashMap<Integer, String> getProductsWithOffer();
+    HashMap<Integer, String> getMyProducts();
 
     HashMap<String, String> getMyProductDetails(int index);
-
-    void registerInterest(String productType);
-
-    List<String> getBuyHist(LocalDate start, LocalDate end);
-
-    void acceptOffer(int id);
 }
