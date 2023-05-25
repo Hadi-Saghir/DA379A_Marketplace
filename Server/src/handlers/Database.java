@@ -454,7 +454,7 @@ public class Database {
     public synchronized Response getCurrentOffers(String username) {
         List<Object> products = new ArrayList<>();
         HashMap<Integer, Product> result = new HashMap<Integer, Product>();
-        String query = " SELECT Offer.offerid,Product.productid,Product.type, Product.condition, Offer.username,Offer.price\n" +
+        String query = " SELECT Offer.offerid,Product.productid,Product.type, Product.condition,Product.state,Product.year,Product.color, Offer.username,Offer.price\n" +
                 "        FROM Offer\n" +
                 "        JOIN Product\n" +
                 "        ON Offer.productid = Product.productid\n" +
@@ -516,7 +516,7 @@ public class Database {
         //System.out.println(db.searchProducts("spor",100,1000));
         //List<?> s = db.getPurchases("Alice123","2023-01-01","2023-05-27").MESSAGE();
 
-        System.out.println("Res" + db.getCurrentOffers("Batman"));
+        System.out.println("Res" + db.getCurrentOffers("Alice123"));
 
         //db.addToPurchaseHistory(62,26);
         //db.sellProduct("JohnnyBoy",28,57);
